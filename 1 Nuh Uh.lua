@@ -1,7 +1,7 @@
 local func = require("NovaScript.functions")
 local scripts_dir = filesystem.scripts_dir()
 local scriptName = "Stand Expansion"
-local localVer = 1.00
+local localVer = 1.01
 local response = false
 require("lua_imGUI V2")
 require("Universal_ped_list")
