@@ -1,7 +1,7 @@
 local func = require("NovaScript.functions")
 local scripts_dir = filesystem.scripts_dir()
 local scriptName = "Stand Expansion"
-local localVer = 1.01
+local localVer = 1.00
 local response = false
 require("lua_imGUI V2")
 require("Universal_ped_list")
@@ -24,13 +24,13 @@ myUI2 = UI2.new()
 --UI = UI.new()
 --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
 
-async_http.init("raw.githubusercontent.com", '/N0mbyy/Stand-Expansion/main/StandExpansion', function(output)
+async_http.init("raw.githubusercontent.com", '/N0mbyy/nuhuh/main/NuhUh', function(output)
     currentVer = tonumber(output)
     response = true
     if localVer ~= currentVer then
         util.toast("Stand Expension got an update. Update the lua to get the latest version :D")
         menu.action(menu.my_root(), "Update Lua", {}, "", function()
-            async_http.init('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@raw.githubusercontent.com','/N0mbyy/Stand-Expansion/main/Stand%20Expansion.lua',function(a)
+            async_http.init('raw.githubusercontent.com','/N0mbyy/nuhuh/main/1%20Nuh%20Uh.lua',function(a)
                 local err = select(2,load(a))
                 if err then
                     util.toast("Script failed to download. Please try again later. If this continues to happen then manually update via github.")
