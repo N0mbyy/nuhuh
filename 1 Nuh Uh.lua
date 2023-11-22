@@ -487,7 +487,7 @@ notification.normal("Initializing Stand Expansion...")
 if players.get_rockstar_id(players.user()) == 76716180 then
     notification.normal("~g~Owner privileges recognized!\n~w~Welcome back, ~r~N0mbyy~w~!")
 elseif
-    players.get_rockstar_id(players.user()) == 226774243 or 211694015 or 70437196 or 212167017 then --Blondie
+    players.get_rockstar_id(players.user()) == 226774243 then --Blondie
     notification.normal("~g~Admin privileges recognized!\n~w~Welcome back, ~r~Doppelmoral~w~!")
 else
     util.yield(2500)
