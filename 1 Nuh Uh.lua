@@ -1,7 +1,7 @@
 local func = require("NovaScript.functions")
 local scripts_dir = filesystem.scripts_dir()
 local scriptName = "Stand Expansion"
-local localVer = 1.4
+local localVer = 1.5
 local response = false
 require("lua_imGUI V2")
 require("Universal_ped_list")
@@ -58,6 +58,8 @@ local crash_tbl = {
     "6825615WSHKWJLW8YGSWY8778SGWSESBGVSSTWSFGWYHSTEWHSHWG98171S7HWRUWSHJH",
     "GHWSTFWFKWSFRWDFSRFSRTDFSGICFWSTFYWRTFYSSFSWSYWSRTYFSTWSYWSKWSFCWDFCSW",
 }
+
+local spawned_objects = {}
 
 local crash_tbl_2 = {
     {17, 32, 48, 69},
