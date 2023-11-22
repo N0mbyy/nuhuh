@@ -1,7 +1,7 @@
 local func = require("NovaScript.functions")
 local scripts_dir = filesystem.scripts_dir()
 local scriptName = "Stand Expansion"
-local localVer = 1.1
+local localVer = 1.2
 local response = false
 require("lua_imGUI V2")
 require("Universal_ped_list")
@@ -527,7 +527,7 @@ local malici= menu.list(menu.my_root(), "Malicious")--]]
 
 
 local festive_div = menu.divider(menu.my_root(), "")
-local loading_frames = {"Stand Expansion", "now integrated in stand!", "discord.gg/fickdeinemutter", "with ImGUI Option", "onlyfans.com/joebiden", "gamesense.pub", "check our socials",}
+local loading_frames = {"Stand Expansion", "now integrated in stand!", "finally added Auto-Update","discord.gg/fickdeinemutter", "with ImGUI Option", "onlyfans.com/joebiden", "gamesense.pub", "check our socials",}
 util.create_tick_handler(function()
     for _, frame in pairs(loading_frames) do
         menu.set_menu_name(festive_div, frame)
