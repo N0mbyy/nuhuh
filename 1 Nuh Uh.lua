@@ -22,7 +22,6 @@ myUI2 = UI2.new()
 --require("natives-1627063482")
 --require("natives-1651208000")
 --UI = UI.new()
---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
 
 async_http.init("raw.githubusercontent.com", '/N0mbyy/nuhuh/main/NuhUh', function(output)
     currentVer = tonumber(output)
