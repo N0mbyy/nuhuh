@@ -7480,7 +7480,7 @@ mainsettings:action("Check for updates", {"updcheck"}, "Checks for updates from 
                     local f = io.open(filesystem.scripts_dir()..SCRIPT_RELPATH, "wb")
                     f:write(a)
                     f:close()
-                    util.toast("Successfully updated! Restart the lua for the update to apply <3")
+                    util.toast("Successfully updated! Restarted the lua for the update to apply <3")
                     util.stop_script()
                 end)
                 async_http.dispatch()
