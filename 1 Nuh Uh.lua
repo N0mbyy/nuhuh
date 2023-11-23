@@ -1,7 +1,7 @@
 local func = require("NovaScript.functions")
 local scripts_dir = filesystem.scripts_dir()
 local scriptName = "Stand Expansion"
-local myVersion = 1.11
+local myVersion = 1.12
 local response = false
 local toast = util.toast
 require("lua_imGUI V2")
@@ -29,7 +29,7 @@ async_http.init("raw.githubusercontent.com", '/N0mbyy/nuhuh/main/NuhUh', functio
                 local f = io.open(filesystem.scripts_dir()..SCRIPT_RELPATH, "wb")
                 f:write(a)
                 f:close()
-                util.toast("Successfully updated! Restart the lua for the update to apply <3")
+                util.toast("Successfully updated! Restarted the lua for the update to apply <3")
                 util.restart_script()
             end)
             async_http.dispatch()
@@ -1284,7 +1284,7 @@ menu.toggle(playerss, "Exclude Selected", {"excludepussies"}, "If toggled it wil
     
     tp_players = menu.list(playerss, "Teleports", {}, "", function(); end)
     
-    menu.action(tp_players, "TP Players", {"tpplayers"}, "Teleports to you.", function()
+    menu.action(tp_players, "TP Players to you", {"tpplayers"}, "Teleports to you.", function()
     for pids = 0, 31 do
     if excludeselected then
     if pids ~= players.user() and not selectedplayer[pids] and players.exists(pids) then
@@ -1366,98 +1366,6 @@ menu.toggle(playerss, "Exclude Selected", {"excludepussies"}, "If toggled it wil
     
     menu.action(tp_players, "TP Player To MazeBank", {"tpplayersmazebank"}, "", function()
     menu.trigger_commands("apt90all " .. PLAYER.GET_PLAYER_NAME(pids))
-    end)
-    
-    crashes_kicks = menu.list(playerss, "Crashes & Kicks", {}, "", function(); end)
-    
-    menu.action(crashes_kicks, "Next Gen Crash", {}, "", function()
-    for pids = 0, 31 do
-    if excludeselected then
-    if pids ~= players.user() and not selectedplayer[pids] and players.exists(pids) then
-    menu.trigger_commands("ngcrash" .. PLAYER.GET_PLAYER_NAME(pids))
-    end
-    else
-    if pids ~= players.user() and selectedplayer[pids] and players.exists(pids) then
-    menu.trigger_commands("ngcrash" .. PLAYER.GET_PLAYER_NAME(pids))
-    end
-    end
-    end
-    end)
-    
-    menu.action(crashes_kicks, "Steamroller Crash", {}, "", function()
-    for pids = 0, 31 do
-    if excludeselected then
-    if pids ~= players.user() and not selectedplayer[pids] and players.exists(pids) then
-    menu.trigger_commands("steamroll" .. PLAYER.GET_PLAYER_NAME(pids))
-    end
-    else
-    if pids ~= players.user() and selectedplayer[pids] and players.exists(pids) then
-    menu.trigger_commands("steamroll" .. PLAYER.GET_PLAYER_NAME(pids))
-    end
-    end
-    end
-    end)
-    
-    menu.action(crashes_kicks, "Desync Kick", {desynckick}, "", function()
-    for pids = 0, 31 do
-    if excludeselected then
-    if pids ~= players.user() and not selectedplayer[pids] and players.exists(pids) then
-    menu.trigger_commands("desynckick" .. PLAYER.GET_PLAYER_NAME(pids))
-    end
-    else
-    if pids ~= players.user() and selectedplayer[pids] and players.exists(pids) then
-    menu.trigger_commands("desynckick" .. PLAYER.GET_PLAYER_NAME(pids))
-    end
-    end
-    end
-    end)
-    
-    menu.action(crashes_kicks, "Kick", {"kicking"}, "Kicks Them.", function()
-    for pids = 0, 31 do
-    if excludeselected then
-    if pids ~= players.user() and not selectedplayer[pids] and players.exists(pids) then
-    menu.trigger_commands("kick" .. PLAYER.GET_PLAYER_NAME(pids))
-    util.yield()
-    end
-    else
-    if pids ~= players.user() and selectedplayer[pids] and players.exists(pids) then
-    menu.trigger_commands("kick" .. PLAYER.GET_PLAYER_NAME(pids))
-    util.yield()
-    end
-    end
-    end
-    end)
-    
-    menu.action(crashes_kicks, "Blast Kick", {}, "Blocks Joins And Kicks Them.", function()
-    for pids = 0, 31 do
-    if excludeselected then
-    if pids ~= players.user() and not selectedplayer[pids] and players.exists(pids) then
-    menu.trigger_commands("blast" .. PLAYER.GET_PLAYER_NAME(pids))
-    util.yield()
-    end
-    else
-    if pids ~= players.user() and selectedplayer[pids] and players.exists(pids) then
-    menu.trigger_commands("blast" .. PLAYER.GET_PLAYER_NAME(pids))
-    util.yield()
-    end
-    end
-    end
-    end)
-    
-    menu.action(crashes_kicks, "Block Player", {}, "", function()
-    for pids = 0, 31 do
-    if excludeselected then
-    if pids ~= players.user() and not selectedplayer[pids] and players.exists(pids) then
-    menu.trigger_commands("historyblock" .. PLAYER.GET_PLAYER_NAME(pids))
-    util.yield()
-    end
-    else
-    if pids ~= players.user() and selectedplayer[pids] and players.exists(pids) then
-    menu.trigger_commands("historyblock" .. PLAYER.GET_PLAYER_NAME(pids))
-    util.yield()
-    end
-    end
-    end
     end)
     
     menu.divider(playerss, "Cunts")
