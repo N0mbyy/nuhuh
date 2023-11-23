@@ -1,7 +1,7 @@
 local func = require("NovaScript.functions")
 local scripts_dir = filesystem.scripts_dir()
 local scriptName = "Stand Expansion"
-local localVer = 1.6
+local localVer = 1.7
 local response = false
 require("lua_imGUI V2")
 require("Universal_ped_list")
@@ -24,10 +24,10 @@ myUI2 = UI2.new()
 --UI = UI.new()
 
 async_http.init("raw.githubusercontent.com", '/N0mbyy/nuhuh/main/NuhUh', function(output)
-    currentVer = tonumber(output)
+    githubVersion = tonumber(output)
     response = true
-    if localVer ~= currentVer then
-        util.toast("Stand Expension got an update. Update the lua to get the latest version :D")
+    if myVersion ~= githubVersion then
+        util.toast("Stand Expension updated to " ..githubVersion.. ". Update the lua to get the latest version :D")
         menu.action(menu.my_root(), "Update Lua", {}, "", function()
             async_http.init('raw.githubusercontent.com','/N0mbyy/nuhuh/main/1%20Nuh%20Uh.lua',function(a)
                 local err = select(2,load(a))
