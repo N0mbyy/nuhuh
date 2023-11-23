@@ -1,7 +1,7 @@
 local func = require("NovaScript.functions")
 local scripts_dir = filesystem.scripts_dir()
 local scriptName = "Stand Expansion"
-local localVer = 1.8
+local myVersion = 1.8
 local response = false
 local toast = util.toast
 require("lua_imGUI V2")
