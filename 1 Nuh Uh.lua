@@ -1,7 +1,7 @@
 local func = require("NovaScript.functions")
 local scripts_dir = filesystem.scripts_dir()
 local scriptName = "Stand Expansion"
-local myVersion = 1.12
+local myVersion = 1.13
 local response = false
 local toast = util.toast
 require("lua_imGUI V2")
@@ -969,6 +969,7 @@ end
 local shadow = menu.shadow_root()
 
 local lobbyFeats = menu.list(menuroot, "Lobby", {}, "")
+
 
 local custselc = menu.list(lobbyFeats, "Lobby Crashes")
 
@@ -5519,207 +5520,6 @@ function play_anim(ped, dict, name, duration)
     TASK_PLAY_ANIM(ped, dict, name, 1.0, 1.0, duration, 3, 0.5, false, false, false)
 end
 
-
-local testfeats = menu.list(menuroot, "Testys")
-
-local imgui = menu.list(testfeats, "ImGUI")
-
-local rollthedice = menu.action(testfeats, "Roll the Dice", {"rolldice"}, "Take a chance by instantly sending yourself to desktop or use the Restart GTA V Option.", function()
-    local pick = math.random(6)
-    if pick == 4 then 
-        util.log("You loose.")
-    else 
-        if pick == 3 then
-            util.log("nigger")
-        else 
-            util.log ("lmao")
-    end
-end
-end)
-
-menu.action(testfeats, "Alle zum Puff!", {}, "Geh beten ihr NNN versager", function()
-    menu.trigger_commands("posx 118")
-    menu.trigger_commands("posy -1287")
-    menu.trigger_commands("posz 28")
-    menu.trigger_commands("summonall")
-end)
-
-
-menu.toggle(imgui, "ClickUI Menu", {"ClickUI"}, "Click UI",
-    function(state)
-        UItoggle = state
-
-
-        while UItoggle do
-            local player = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(players.user())
-
-            local playerpos = ENTITY.GET_ENTITY_COORDS(player)
-
-            if PAD.IS_CONTROL_JUST_PRESSED(2, 29) then
-                myUI.toggle_cursor_mode()
-            end
-
-local tabs = {
-    [1] = { 
-        data = {
-            title = "Self",
-            icon = icons.pepe
-        },
-        content = function ()
-        myUI.subhead("Player Coords:")
-        myUI.start_horizontal()
-        myUI.label("X: ", math.floor(playerpos.x))
-        myUI.divider()
-        myUI.label("Y: ", math.floor(playerpos.y))
-        myUI.divider()
-        myUI.label("Z: ", math.floor(playerpos.z))
-        myUI.end_horizontal()
-
-        myUI.divider()
-
-        myUI.subhead("Player Stats:")
-        myUI.label("Health: ", ENTITY.GET_ENTITY_HEALTH(player))
-        myUI.label("Armor: ", PED.GET_PED_ARMOUR(player))
-        myUI.label("In Vehicle: ", PED.IS_PED_IN_ANY_VEHICLE(player, true))
-
-        myUI.divider()
-        myUI.start_horizontal()
-
-        god_mode = myUI.toggle("Godmode", god_mode, nil, function (state)
-                    menu.trigger_commands(state and "godmode on" or "godmode off")
-        end)
-
-        rapid_fire = myUI.toggle("Rapid Fire", rapid_fire, nil, function (state)
-                    menu.trigger_commands(state and "rapidfire on" or "rapidfire off")
-        end)
-
-        noclip = myUI.toggle("NoClip", noclip, nil, function (state)
-            menu.trigger_commands(state and "levitate on" or "levitate off")
-        end)
-
-        neverwanted = myUI.toggle("Never Wanted", neverwanted, nil, function (state)
-            menu.trigger_commands("wanted 0")
-            menu.trigger_commands(state and "lockwantedlevel on " or "lockwantedlevel off")
-        end)
-
-        myUI.end_horizontal()
-        myUI.divider()
-
-        myUI.start_horizontal()
-        myUI.end_horizontal()
-        
-    end},
-    [2] = {
-        data = {
-            title = "world",
-            icon = icons.world
-        },
-        content = function ()
-        myUI.subhead("session stats:")
-        myUI.label("host", PLAYER.GET_PLAYER_NAME(players.get_host()), {
-            ["r"] = 0.2,
-            ["g"] = 0.9,
-            ["b"] = 0.9,
-            ["a"] = 1
-        })
-        myUI.label("script host", PLAYER.GET_PLAYER_NAME(players.get_script_host()), {
-            ["r"] = 0.9,
-            ["g"] = 0.9,
-            ["b"] = 0.2,
-            ["a"] = 1
-        })
-
-        if NETWORK.NETWORK_IS_SESSION_STARTED() then
-            myUI.divider()
-            myUI.text("player stats")
-            myUI.label("RP: ", players.get_rp(players.user()))
-            myUI.label("Money: ", players.get_money(players.user()))
-            myUI.start_horizontal()
-            myUI.label("bank", players.get_bank(players.user()))
-            myUI.label("wallet", players.get_wallet(players.user()))
-            myUI.end_horizontal()
-        end
-
-    end},
-    [3] = {
-        data = {
-            title = "protections",
-            icon = icons.self
-        },
-        content = function ()
-        myUI.subhead("just play singleplayer lol")
-    end},
-    [4] = {
-        data = {
-            title = "Players",
-            icon = icons.world
-        },
-        content = function ()
-            local player_table = players.list()
-            for i, pid in pairs(player_table) do
-                myUI.start_horizontal()
-                myUI.label(PLAYER.GET_PLAYER_NAME(pid).." | ", players.get_rank(pid))
-                myUI.divider()
-                myUI.label("Modder: ",players.is_marked_as_modder(pid))
-                myUI.divider()
-                if myUI.button("Kick") then
-                    menu.trigger_commands("kick "..PLAYER.GET_PLAYER_NAME(pid))
-                end
-                if myUI.button("Crash") then
-                    menu.trigger_commands("crash "..PLAYER.GET_PLAYER_NAME(pid))
-                end
-                if myUI.button("TP") then
-                    menu.trigger_commands("tp "..PLAYER.GET_PLAYER_NAME(pid))
-                end
-
-                myUI.end_horizontal()
-            end
-    end},
-    
-}
-myUI.start_tab_container("Stand Expansion", 0.411, 0.325, tabs, "gokillyourself")
-util.yield()
-    end
-end
-)
-
-menu.toggle(imgui, "Playerlist ClickUI", {"PlayClick"}, "Player List in Click UI",
-    function(state2)
-        UItoggle2 = state2
-
-
-        while UItoggle2 do
-            local player = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(players.user())
-
-            local playerpos = ENTITY.GET_ENTITY_COORDS(player)
-
-            if PAD.IS_CONTROL_JUST_PRESSED(2, 29) then
-                myUI.toggle_cursor_mode()
-            end
-            myUI2.begin("", 0.00, 0.05, "kpjbgkzjsdbg")
-            local player_table = players.list()
-            for i, pid in pairs(player_table) do
-                myUI2.start_horizontal()
-                myUI2.label(PLAYER.GET_PLAYER_NAME(pid))
-                myUI2.divider()
-                if myUI2.button("kick") then
-                    menu.trigger_commands("kick "..PLAYER.GET_PLAYER_NAME(pid))
-                end
-                if myUI2.button("crash") then
-                    menu.trigger_commands("crash "..PLAYER.GET_PLAYER_NAME(pid))
-                end
-                if myUI2.button("tp to") then
-                    menu.trigger_commands("tp "..PLAYER.GET_PLAYER_NAME(pid))
-                end
-                myUI2.end_horizontal()
-            end
-            myUI2.finish()
-            util.yield()
-        end
-    end
-)
-
-
 ---------------------------------------
 
 local pedfeats = menu.list(menuroot, "Peds", {}, "")
@@ -5901,11 +5701,11 @@ end
         end
     end)
 
-local milkietoggle = MILKIE_ROOT:toggle('milkie', {}, '', function(on)
+local milkietoggle = MILKIE_ROOT:toggle('Milkie', {}, '', function(on)
     milkie = on
 end, false)
 
-MILKIE_ROOT:action('Call/debug milkie', {}, 'This also clears all of milkie\'s current tasks, so if he gets bugged this should fix it.', function(on)
+MILKIE_ROOT:action('Call/debug Milkie', {}, 'This also clears all of milkie\'s current tasks, so if he gets bugged this should fix it.', function(on)
     milkie_call_req = true
     util.toast("milkie should be called successfully!")
 end)
@@ -6927,6 +6727,13 @@ local function playerActionsSetup(pid)
     end)
 
 -----------------------------------------------------------------------------------------------------------------------------------
+
+menu.action(lobbyFeats, "Alle zum Puff!", {}, "Geh beten ihr NNN versager", function()
+    menu.trigger_commands("posx 118")
+    menu.trigger_commands("posy -1287")
+    menu.trigger_commands("posz 28")
+    menu.trigger_commands("summonall")
+end)
 
 local vans = {"burrito4", "boxville3", "camper", "gburrito", "surfer2", "boxville5", "journey", "speedo2", "youga3"}
 playerOtherTrolling:action("Send Bomb Van", {}, "", function()
