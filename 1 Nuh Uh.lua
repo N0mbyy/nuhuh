@@ -1,7 +1,7 @@
 local func = require("NovaScript.functions")
 local scripts_dir = filesystem.scripts_dir()
 local scriptName = "Stand Expansion"
-local myVersion = 1.9
+local myVersion = 1.10
 local response = false
 local toast = util.toast
 require("lua_imGUI V2")
@@ -30,7 +30,7 @@ async_http.init("raw.githubusercontent.com", '/N0mbyy/nuhuh/main/NuhUh', functio
                 f:write(a)
                 f:close()
                 util.toast("Successfully updated! Restart the lua for the update to apply <3")
-                util.stop_script()
+                util.restart_script()
             end)
             async_http.dispatch()
         end)
