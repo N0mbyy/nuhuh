@@ -1,7 +1,7 @@
 local func = require("NovaScript.functions")
 local scripts_dir = filesystem.scripts_dir()
 local scriptName = "Stand Expansion"
-local myVersion = 1.13
+local myVersion = 1.14
 local response = false
 local toast = util.toast
 require("lua_imGUI V2")
@@ -7465,6 +7465,34 @@ notifytest:action("Yellow Notification", {}, "", function()
     notification.yellow("Yellow Notification")
 end)
 
+mainsettings:action("Check for updates", {"updcheck"}, "Checks for updates from the github", function()
+    async_http.init("raw.githubusercontent.com", '/N0mbyy/nuhuh/main/NuhUh', function(output)
+        githubVersion = tonumber(output)
+        response = true
+        if myVersion ~= githubVersion then
+            util.toast("Stand Expension updated to " ..githubVersion.. ". Update the lua to get the latest version :D")
+            menu.action(mainsettings, "Update Lua", {}, "", function()
+                async_http.init('raw.githubusercontent.com','/N0mbyy/nuhuh/main/1%20Nuh%20Uh.lua',function(a)
+                    local err = select(2,load(a))
+                    if err then
+                        util.toast("Script failed to download. Please try again later. If this continues to happen then manually update via github.")
+                    return end
+                    local f = io.open(filesystem.scripts_dir()..SCRIPT_RELPATH, "wb")
+                    f:write(a)
+                    f:close()
+                    util.toast("Successfully updated! Restart the lua for the update to apply <3")
+                    util.stop_script()
+                end)
+                async_http.dispatch()
+            end)
+        end
+    end, function() response = true end)
+    async_http.dispatch()
+    repeat 
+        util.yield()
+    until response 
+    end)
+
 ----------------------------------------------
 
 util.on_stop(function()
@@ -7491,336 +7519,3 @@ end)
 players.on_join(playerActionsSetup)
 players.dispatch_on_join()
 players.add_command_hook(set_up_player_actions)
---players.add_command_hook(ihatemyself)
-
---[[ WEAPON HASHES
-weapon hash: 584646201
-actual gun: AP Pistol
---------------------------------------------------------------------
-weapon hash: 727643628
-actual gun: Ceramic Pistol
---------------------------------------------------------------------
-weapon hash: 911657153
-actual gun: Stun Gun
---------------------------------------------------------------------
-weapon hash: 1171102963
-actual gun: Stun Gun
---------------------------------------------------------------------
-weapon hash: 1198879012
-actual gun: Flare Gun
---------------------------------------------------------------------
-weapon hash: 1470379660
-actual gun: Perico Pistol
---------------------------------------------------------------------
-weapon hash: 1593441988
-actual gun: Combat Pistol
---------------------------------------------------------------------
-weapon hash: 2285322324
-actual gun: SNS Pistol Mk II
---------------------------------------------------------------------
-weapon hash: 2441047180
-actual gun: Navy Revolver
---------------------------------------------------------------------
-weapon hash: 2548703416
-actual gun: Double-Action Revolver
---------------------------------------------------------------------
-weapon hash: 2578377531
-actual gun: Pistol .50
---------------------------------------------------------------------
-weapon hash: 2939590305
-actual gun: Up-n-Atomizer
---------------------------------------------------------------------
-weapon hash: 3218215474
-actual gun: SNS Pistol
---------------------------------------------------------------------
-weapon hash: 3219281620
-actual gun: Pistol Mk II
---------------------------------------------------------------------
-weapon hash: 3249783761
-actual gun: Heavy Revolver
---------------------------------------------------------------------
-weapon hash: 3415619887
-actual gun: Heavy Revolver Mk II
---------------------------------------------------------------------
-weapon hash: 3523564046
-actual gun: Heavy Pistol
---------------------------------------------------------------------
-weapon hash: 3696079510
-actual gun: Marksman Pistol
---------------------------------------------------------------------
-weapon hash: 171789620
-actual gun: Combat PDW
---------------------------------------------------------------------
-weapon hash: 324215364
-actual gun: Micro SMG
---------------------------------------------------------------------
-weapon hash: 736523883
-actual gun: SMG
---------------------------------------------------------------------
-weapon hash: 1198256469
-actual gun: Unholy Hellbringer
---------------------------------------------------------------------
-weapon hash: 1627465347
-actual gun: Gusenberg Sweeper
---------------------------------------------------------------------
-weapon hash: 2024373456
-actual gun: SMG Mk II
---------------------------------------------------------------------
-weapon hash: 2144741730
-actual gun: Combat MG
---------------------------------------------------------------------
-weapon hash: 2634544996
-actual gun: MG
---------------------------------------------------------------------
-weapon hash: 3173288789
-actual gun: Mini SMG
---------------------------------------------------------------------
-weapon hash: 3675956304
-actual gun: Machine Pistol
---------------------------------------------------------------------
-weapon hash: 3686625920
-actual gun: Combat MG Mk II
---------------------------------------------------------------------
-weapon hash: 4024951519
-actual gun: Assault SMG
---------------------------------------------------------------------
-weapon hash: 961495388
-actual gun: Assault Rifle Mk II
---------------------------------------------------------------------
-weapon hash: 1649403952
-actual gun: Compact Rifle
---------------------------------------------------------------------
-weapon hash: 2132975508
-actual gun: Bullpup Rifle
---------------------------------------------------------------------
-weapon hash: 2210333304
-actual gun: Carbine Rifle
---------------------------------------------------------------------
-weapon hash: 2228681469
-actual gun: Bullpup Rifle Mk II
---------------------------------------------------------------------
-weapon hash: 2526821735
-actual gun: Special Carbine Mk II
---------------------------------------------------------------------
-weapon hash: 2636060646
-actual gun: Military Rifle
---------------------------------------------------------------------
-weapon hash: 2937143193
-actual gun: Advanced Rifle
---------------------------------------------------------------------
-weapon hash: 3220176749
-actual gun: Assault Rifle
---------------------------------------------------------------------
-weapon hash: 3231910285
-actual gun: Special Carbine
---------------------------------------------------------------------
-weapon hash: 3347935668
-actual gun: Heavy Rifle
---------------------------------------------------------------------
-weapon hash: 4208062921
-actual gun: Carbine Rifle Mk II
---------------------------------------------------------------------
-weapon hash: 100416529
-actual gun: Sniper Rifle
---------------------------------------------------------------------
-weapon hash: 177293209
-actual gun: Heavy Sniper Mk II
---------------------------------------------------------------------
-weapon hash: 205991906
-actual gun: Heavy Sniper
---------------------------------------------------------------------
-weapon hash: 1785463520
-actual gun: Marksman Rifle Mk II
---------------------------------------------------------------------
-weapon hash: 3342088282
-actual gun: Marksman Rifle
---------------------------------------------------------------------
-weapon hash: 419712736
-actual gun: Pipe Wrench
---------------------------------------------------------------------
-weapon hash: 940833800
-actual gun: Stone Hatchet
---------------------------------------------------------------------
-weapon hash: 1141786504
-actual gun: Golf Club
---------------------------------------------------------------------
-weapon hash: 1317494643
-actual gun: Hammer
---------------------------------------------------------------------
-weapon hash: 1737195953
-actual gun: Nightstick
---------------------------------------------------------------------
-weapon hash: 2227010557
-actual gun: Crowbar
---------------------------------------------------------------------
-weapon hash: 2343591895
-actual gun: Flashlight
---------------------------------------------------------------------
-weapon hash: 2460120199
-actual gun: Antique Cavalry Dagger
---------------------------------------------------------------------
-weapon hash: 2484171525
-actual gun: Pool Cue
---------------------------------------------------------------------
-weapon hash: 2508868239
-actual gun: Baseball Bat
---------------------------------------------------------------------
-weapon hash: 2578778090
-actual gun: Knife
---------------------------------------------------------------------
-weapon hash: 3441901897
-actual gun: Battle Axe
---------------------------------------------------------------------
-weapon hash: 3638508604
-actual gun: Knuckle Duster
---------------------------------------------------------------------
-weapon hash: 3713923289
-actual gun: Machete
---------------------------------------------------------------------
-weapon hash: 3756226112
-actual gun: Switchblade
---------------------------------------------------------------------
-weapon hash: 4191993645
-actual gun: Hatchet
---------------------------------------------------------------------
-weapon hash: 4192643659
-actual gun: Bottle
---------------------------------------------------------------------
-weapon hash: 94989220
-actual gun: Combat Shotgun
---------------------------------------------------------------------
-weapon hash: 317205821
-actual gun: Sweeper Shotgun
---------------------------------------------------------------------
-weapon hash: 487013001
-actual gun: Pump Shotgun
---------------------------------------------------------------------
-weapon hash: 984333226
-actual gun: Heavy Shotgun
---------------------------------------------------------------------
-weapon hash: 1432025498
-actual gun: Pump Shotgun Mk II
---------------------------------------------------------------------
-weapon hash: 2017895192
-actual gun: Sawed-Off Shotgun
---------------------------------------------------------------------
-weapon hash: 2640438543
-actual gun: Bullpup Shotgun
---------------------------------------------------------------------
-weapon hash: 2828843422
-actual gun: Musket
---------------------------------------------------------------------
-weapon hash: 3800352039
-actual gun: Assault Shotgun
---------------------------------------------------------------------
-weapon hash: 4019527611
-actual gun: Double Barrel Shotgun
---------------------------------------------------------------------
-weapon hash: 125959754
-actual gun: Compact Grenade Launcher
---------------------------------------------------------------------
-weapon hash: 1119849093
-actual gun: Minigun
---------------------------------------------------------------------
-weapon hash: 1672152130
-actual gun: Homing Launcher
---------------------------------------------------------------------
-weapon hash: 1752584910
-actual gun: RPG
---------------------------------------------------------------------
-weapon hash: 1834241177
-actual gun: Railgun
---------------------------------------------------------------------
-weapon hash: 2138347493
-actual gun: Firework Launcher
---------------------------------------------------------------------
-weapon hash: 2726580491
-actual gun: Grenade Launcher
---------------------------------------------------------------------
-weapon hash: 2982836145
-actual gun: RPG
---------------------------------------------------------------------
-weapon hash: 3056410471
-actual gun: Widowmaker
---------------------------------------------------------------------
-weapon hash: 3676729658
-actual gun: Compact EMP Launcher
---------------------------------------------------------------------
-weapon hash: 101631238
-actual gun: Fire Extinguisher
---------------------------------------------------------------------
-weapon hash: 126349499
-actual gun: Snowball
---------------------------------------------------------------------
-weapon hash: 406929569
-actual gun: Fertilizer Can
---------------------------------------------------------------------
-weapon hash: 600439132
-actual gun: Ball
---------------------------------------------------------------------
-weapon hash: 615608432
-actual gun: Molotov
---------------------------------------------------------------------
-weapon hash: 741814745
-actual gun: Sticky Bomb
---------------------------------------------------------------------
-weapon hash: 883325847
-actual gun: Jerry Can
---------------------------------------------------------------------
-weapon hash: 1233104067
-actual gun: Flare
---------------------------------------------------------------------
-weapon hash: 2481070269
-actual gun: Grenade
---------------------------------------------------------------------
-weapon hash: 2694266206
-actual gun: BZ Gas
---------------------------------------------------------------------
-weapon hash: 2874559379
-actual gun: Proximity Mine
---------------------------------------------------------------------
-weapon hash: 3125143736
-actual gun: Pipe Bomb
---------------------------------------------------------------------
-weapon hash: 3126027122
-actual gun: Hazardous Jerry Can
---------------------------------------------------------------------
-weapon hash: 4256991824
-actual gun: Tear Gas
---------------------------------------------------------------------
-]]
-
---[[
-
-menu.action(
-        explosions,
-        "Airstrike",
-        {"orbairstrike"},
-        "",
-        function(on_click)
-            local selectedPlayer = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
-            local playerPed = PLAYER.PLAYER_PED_ID()
-            local coords = ENTITY.GET_ENTITY_COORDS(selectedPlayer, 1)
-            local airStrike = MISC.GET_HASH_KEY("WEAPON_AIRSTRIKE_ROCKET")
-            WEAPON.REQUEST_WEAPON_ASSET(airStrike, 31, false)
-            while not WEAPON.HAS_WEAPON_ASSET_LOADED(airStrike) do
-                util.yield()
-            end
-            MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS(
-                coords.x,
-                coords.y,
-                coords.z + 50,
-                coords.x,
-                coords.y,
-                coords.z,
-                250,
-                1,
-                airStrike,
-                playerPed,
-                1,
-                0,
-                -1.0
-            )
-        end
-    )
-]]
