@@ -1,7 +1,7 @@
 local func = require("NovaScript.functions")
 local scripts_dir = filesystem.scripts_dir()
 local scriptName = "Stand Expansion"
-local localVer = 1.5
+local localVer = 1.6
 local response = false
 require("lua_imGUI V2")
 require("Universal_ped_list")
@@ -4219,7 +4219,7 @@ allplayoth:action("Check entire lobby for godmode", {}, "Checks the entire lobby
             end
         end
     end
-    util.toast(godcount .. " people in godmode!")
+    notification.normal(godcount .. " player(s) in ~r~godmode~w~!")
 end)
 
 allplayoth:action("Everyone explode-suicides", {"allsuicide"}, "Makes everyone commit suicide, with an explosion.", function()
