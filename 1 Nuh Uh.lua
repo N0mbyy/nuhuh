@@ -1,8 +1,9 @@
 local func = require("NovaScript.functions")
 local scripts_dir = filesystem.scripts_dir()
 local scriptName = "Stand Expansion"
-local localVer = 1.7
+local localVer = 1.8
 local response = false
+local toast = util.toast
 require("lua_imGUI V2")
 require("Universal_ped_list")
 require("Universal_objects_list")
@@ -1690,6 +1691,83 @@ crash2_ref:action( "Clone Crash", {"crashv28"}, "Clones the player repeatedly un
             last_ped = ped
         end
     end
+end)
+
+crash2_ref:action("Poodle Crash", {}, "", function()
+    --Defined Coords
+      local coords = players.get_position(pid)
+      coords.x = coords['x']
+      coords.y = coords['y']
+      coords.z = coords['z']
+      local pos = v3.new(coords.x, coords.y, coords.z)
+       local coords = players.get_position(pid)
+        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+        local heading = ENTITY.GET_ENTITY_HEADING(ped)
+        --Impulse Crash
+        local poodle1 = util.joaat("a_c_poodle")
+         util.request_model(poodle1)
+          local ent1 = entities.create_ped(26, poodle1, coords, heading)
+          local poodle2 = util.joaat("a_c_poodle")
+          util.request_model(poodle2)
+          local ent2 = entities.create_ped(21, poodle2, coords, heading)
+          
+          WEAPON.GIVE_WEAPON_TO_PED(ent1, -581044007, 1, false, true)
+          WEAPON.GIVE_WEAPON_TO_PED(ent2, -581044007, 1, false, true)
+          WEAPON.SET_CURRENT_PED_WEAPON(ent1, -581044007, true)
+          WEAPON.SET_CURRENT_PED_WEAPON(ent2, -581044007, true)
+          local pcoords = ENTITY.GET_ENTITY_COORDS(ent2, true)
+          pcoords.z = pcoords['z'] + 0.5
+          FIRE.ADD_EXPLOSION(pcoords.x, pcoords.y, pcoords.z, 12, 100, false, true, 0, false)
+          --Crash Attach + Rotate (Needs Rand int For maximum Crashing)
+           local OB1 = entities.create_object(0x34315488, coords, heading)
+           ENTITY.ATTACH_ENTITY_TO_ENTITY(OB1, ped, 0, 0, 0, 0, 0, 0, 0, true, true, false, true, 0, true, 2) 
+           --Entity Cram
+           entities.create_object(OB1, pcoords, heading)
+          --Attachment Overload
+           local VH1 = util.joaat("speedo2")
+           ENTITY.ATTACH_ENTITY_TO_ENTITY(VH1, ped, 0, 0, 0, 0, 0, 0, 0, true, true, false, true, 0, true, 2) 
+           local VH2 = util.joaat("nero2")
+           ENTITY.ATTACH_ENTITY_TO_ENTITY(VH2, ped, 0, 0, 0, 0, 0, 0, 0, true, true, false, true, 0, true, 2) 
+           local VH3 = util.joaat("speedo2")
+           ENTITY.ATTACH_ENTITY_TO_ENTITY(VH3, ped, 0, 0, 0, 0, 0, 0, 0, true, true, false, true, 0, true, 2) 
+           local VH4 = util.joaat("youga3")
+           ENTITY.ATTACH_ENTITY_TO_ENTITY(VH4, ped, 0, 0, 0, 0, 0, 0, 0, true, true, false, true, 0, true, 2) 
+           local VH5 = util.joaat("speedo2")
+           ENTITY.ATTACH_ENTITY_TO_ENTITY(VH5, ped, 0, 0, 0, 0, 0, 0, 0, true, true, false, true, 0, true, 2) 
+           local VH6 = util.joaat("burrito4")
+           ENTITY.ATTACH_ENTITY_TO_ENTITY(VH6, ped, 0, 0, 0, 0, 0, 0, 0, true, true, false, true, 0, true, 2) 
+           local VH7 = util.joaat("speedo2")
+           ENTITY.ATTACH_ENTITY_TO_ENTITY(VH7, ped, 0, 0, 0, 0, 0, 0, 0, true, true, false, true, 0, true, 2) 
+           local VH8 = util.joaat("nero2")
+           ENTITY.ATTACH_ENTITY_TO_ENTITY(VH8, ped, 0, 0, 0, 0, 0, 0, 0, true, true, false, true, 0, true, 2) 
+           local VH9 = util.joaat("speedo2")
+           ENTITY.ATTACH_ENTITY_TO_ENTITY(VH9, ped, 0, 0, 0, 0, 0, 0, 0, true, true, false, true, 0, true, 2) 
+          local VH10 = util.joaat("youga3")
+           ENTITY.ATTACH_ENTITY_TO_ENTITY(VH10, ped, 0, 0, 0, 0, 0, 0, 0, true, true, false, true, 0, true, 2) 
+           local VH11 = util.joaat("speedo2")
+           ENTITY.ATTACH_ENTITY_TO_ENTITY(VH11, ped, 0, 0, 0, 0, 0, 0, 0, true, true, false, true, 0, true, 2) 
+          local VH12 = util.joaat("burrito4")
+           ENTITY.ATTACH_ENTITY_TO_ENTITY(VH12, ped, 0, 0, 0, 0, 0, 0, 0, true, true, false, true, 0, true, 2) 
+           local Tcoords = v3.new(pcoords.x, pcoords.y, pcoords.z)
+           -- coords.z = coords['z'] + 1
+           entities.create_object(VH1, Tcoords, heading)
+           entities.create_object(VH2, Tcoords, heading)
+           entities.create_object(VH3, Tcoords, heading)
+           entities.create_object(VH4, Tcoords, heading)
+           entities.create_object(VH5, Tcoords, heading)
+           entities.create_object(VH6, Tcoords, heading)
+           entities.create_object(VH7, Tcoords, heading)
+           entities.create_object(VH8, Tcoords, heading)
+           entities.create_object(VH9, Tcoords, heading)
+           entities.create_object(VH10, Tcoords, heading)
+           entities.create_object(VH11, Tcoords, heading)
+           entities.create_object(VH12, Tcoords, heading)
+           --Kicks for Rebounds Crash
+           util.yield(3000)
+           --menu.trigger_commands("kick " .. players.get_name(pid))
+           --util.yield(1000)
+           --util.toast("The Femboys can Crash Rebound :sadge:") --nuh uh, you cant :D
+           menu.trigger_commands("cleararea")
 end)
 
 crash2_ref:action("Cars Crash", {"crashv13"}, "", function(on_toggle)
@@ -5275,9 +5353,8 @@ local debugFeats = menu.list(menuroot, "Debug", {}, "")
 
 menuAction(debugFeats, "Get V3 Coords", {"printcoords"}, "Toasts your coordinates.", function()
     local playerCoords = getEntityCoords(getPlayerPed(players.user()), true)
-    if SE_Notifications then
-        util.toast("X:" .. tostring(playerCoords['x']) .. " Y:".. tostring(playerCoords['y']) .. " Z:" ..tostring(playerCoords['z']))
-    end
+        notification.normal("X:" .. tostring(playerCoords['x']) .. "\nY:".. tostring(playerCoords['y']) .. "\nZ:" ..tostring(playerCoords['z']))
+        toast("X:" .. tostring(playerCoords['x']) .. "\nY:".. tostring(playerCoords['y']) .. "\nZ:" ..tostring(playerCoords['z']))
 end)
 
 menuToggleLoop(debugFeats, "Request Control?", {}, "", function ()
