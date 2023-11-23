@@ -1,7 +1,7 @@
 local func = require("NovaScript.functions")
 local scripts_dir = filesystem.scripts_dir()
 local scriptName = "Stand Expansion"
-local myVersion = 1.8
+local myVersion = 1.9.1
 local response = false
 local toast = util.toast
 require("lua_imGUI V2")
@@ -14,15 +14,6 @@ util.keep_running()
 json = require("json")
 myUI = UI.new()
 myUI2 = UI2.new()
-
---require("natives-1640181023")
---util.require_natives(1640181023)
---util.require_natives(1676318796)
---util.require_natives("natives-1660775568-uno")
---util.require_natives("natives-2944b")
---require("natives-1627063482")
---require("natives-1651208000")
---UI = UI.new()
 
 async_http.init("raw.githubusercontent.com", '/N0mbyy/nuhuh/main/NuhUh', function(output)
     githubVersion = tonumber(output)
@@ -297,16 +288,6 @@ function Streament(hash)
     end
 end
 
---local tables = {}
---
---table.peds = {
---    "A_C_MtLion_02",
---    "A_C_Pug_02",
---    "A_C_Boar_02",
---    "A_C_Coyote_02",
---    "A_C_Deer_02"
---}
-
 local next_preview
 local image_preview
 local function rotation_to_direction(rotation)
@@ -477,13 +458,6 @@ notification = {
     
 }
 
---76716180 N0mbyy Main Barcode (lllIIIlIIlIlIIIl)
-
---local in1 = menu.divider(menuroot, "Please Wait")
-
-
-
-
 util.show_corner_help('~r~Script is WIP! \n~w~Made by N0mbyy')
 notification.normal("Initializing Stand Expansion...")
 
@@ -497,38 +471,6 @@ else
 notification.normal("~g~Script successfully loaded!\n~w~Welcome back, ~r~"..user_name.."~w~!")
 end
 
---function ihatemyself(pid)
---
---if pid ~= players.user() and players.get_rockstar_id(pid) == 226774243 or 211694015 or 70437196 or 212167017 then
---    wait(3000)
---    util.toast("Blondie is in your sessions")
---    notification.darkpurple("Blondie is in your Sessions")
---end
---
---if pid ~= players.user() and players.get_rockstar_id(pid) == 76716180 then --N0mbyy Main Barcode (lllIIIlIIlIlIIIl)
---    wait(3000)
---    util.toast("N0mbyy is in your Session.")
---    notification.darkpurple("N0mbyy is in your Sessions")
---end
---
---end
-
-
-
---notification.red("Everything is WIP! Made by n0mbyy")
-
---[[local self = menu.list(menu.my_root(), "Self")
-    local chinahat_tab = menu.list(self, "China Hat")
-
-local weapon = menu.list(menu.my_root(), "Weapon")
-
-local lobby = menu.list(menu.my_root(), "Lobby")
-
-local malici= menu.list(menu.my_root(), "Malicious")--]]
-
---local in1 = menu.divider(menuroot, "Welcome to Stand Expansion!")
-
-
 local festive_div = menu.divider(menu.my_root(), "")
 local loading_frames = {"Stand Expansion", "now integrated in stand!", "finally added Auto-Update","discord.gg/fickdeinemutter", "with ImGUI Option", "onlyfans.com/joebiden", "gamesense.pub", "check our socials",}
 util.create_tick_handler(function()
@@ -537,8 +479,6 @@ util.create_tick_handler(function()
         util.yield(2000)
     end
 end)
-
-
 
 function SE_add_explosion(x, y, z, exptype, dmgscale, isheard, isinvis, camshake, nodmg)
     FIRE.ADD_EXPLOSION(x, y, z, exptype, dmgscale, isheard, isinvis, camshake, nodmg)
@@ -579,14 +519,13 @@ local function getPlayerName_pid(pid)
     return playerName
 end
 
---thank you to: https://easings.net for the functions!
 local function easeOutCubic(x)
     return 1 - ((1-x) ^ 3)
 end
 local function easeInCubic(x)
     return x * x * x
 end
-local function easeInOutCubic(x) --Thank you QUICKNET for re-writing this function!
+local function easeInOutCubic(x)
     if(x < 0.5) then
         return 4 * x * x * x;
     else
@@ -601,42 +540,39 @@ local whiteText = {r = 1.0, g = 1.0, b = 1.0, a = 1.0}
 function SmoothTeleportToCord(v3coords)
     local wppos = v3coords
     local localped = getPlayerPed(players.user())
-    if wppos ~= nil then --cam setup here
+    if wppos ~= nil then 
         if not CAM.DOES_CAM_EXIST(CCAM) then
             CAM.DESTROY_ALL_CAMS(true)
             CCAM = CAM.CREATE_CAM("DEFAULT_SCRIPTED_CAMERA", true)
             CAM.SET_CAM_ACTIVE(CCAM, true)
             CAM.RENDER_SCRIPT_CAMS(true, false, 0, true, true, 0)
         end
-        --
+
         local pc = getEntityCoords(getPlayerPed(players.user()))
-        --
-        for i = 0, 1, STP_SPEED_MODIFIER do --make the cam move up here
+
+        for i = 0, 1, STP_SPEED_MODIFIER do 
             CAM.SET_CAM_COORD(CCAM, pc.x, pc.y, pc.z + easeOutCubic(i) * STP_COORD_HEIGHT)
             directx.draw_text(0.5, 0.5, tostring(easeOutCubic(i) * STP_COORD_HEIGHT), 1, 0.6, whiteText, false)
             local look = util.v3_look_at(CAM.GET_CAM_COORD(CCAM), pc)
             CAM.SET_CAM_ROT(CCAM, look.x, look.y, look.z, 2)
             wait()
         end
-        --CAM.DO_SCREEN_FADE_OUT(1000) --fade out the screen
-        ------------
         local currentZ = CAM.GET_CAM_COORD(CCAM).z
         local coordDiffx = wppos.x - pc.x
         local coordDiffxy = wppos.y - pc.y
-        for i = 0, 1, STP_SPEED_MODIFIER / 2 do --make the camera on x/y plane
+        for i = 0, 1, STP_SPEED_MODIFIER / 2 do 
             CAM.SET_CAM_COORD(CCAM, pc.x + (easeInOutCubic(i) * coordDiffx), pc.y + (easeInOutCubic(i) * coordDiffxy), currentZ)
             wait()
         end
-        -- local groundZ = PATHFIND.GET_APPROX_HEIGHT_FOR_POINT(wppos.x, wppos.y)
-        -- ENTITY.SET_ENTITY_COORDS(localped, wppos.x, wppos.y, groundZ, false, false, false, false)
+
         local success, ground_z
         repeat
             STREAMING.REQUEST_COLLISION_AT_COORD(wppos.x, wppos.y, wppos.z)
             success, ground_z = util.get_ground_z(wppos.x, wppos.y)
             util.yield()
         until success
-        if not PED.IS_PED_IN_ANY_VEHICLE(localped, true) then --if they not in a vehicle
-            ENTITY.SET_ENTITY_COORDS(localped, wppos.x, wppos.y, ground_z, false, false, false, false) --teleport the player
+        if not PED.IS_PED_IN_ANY_VEHICLE(localped, true) then 
+            ENTITY.SET_ENTITY_COORDS(localped, wppos.x, wppos.y, ground_z, false, false, false, false) 
         else
             local veh = PED.GET_VEHICLE_PED_IS_IN(localped, false)
             local v3Out = memory.alloc()
@@ -645,23 +581,20 @@ function SmoothTeleportToCord(v3coords)
             local head = memory.read_float(headOut)
             memory.free(headOut)
             memory.free(v3Out)
-            ENTITY.SET_ENTITY_COORDS(veh, wppos.x, wppos.y, ground_z, false, false, false, false) --teleport the vehicle
+            ENTITY.SET_ENTITY_COORDS(veh, wppos.x, wppos.y, ground_z, false, false, false, false) 
             ENTITY.SET_ENTITY_HEADING(veh, head)
         end
         wait()
         local pc2 = getEntityCoords(getPlayerPed(players.user()))
         local coordDiffz = CAM.GET_CAM_COORD(CCAM).z - pc2.z
         local camcoordz = CAM.GET_CAM_COORD(CCAM).z
-        --CAM.DO_SCREEN_FADE_IN(2000) --fade in the screen
-        for i = 0, 1, STP_SPEED_MODIFIER / 2 do --move the camera down
-            local pc23 = getEntityCoords(getPlayerPed(players.user()))-- extra for x/y
+
+        for i = 0, 1, STP_SPEED_MODIFIER / 2 do 
+            local pc23 = getEntityCoords(getPlayerPed(players.user()))
             CAM.SET_CAM_COORD(CCAM, pc23.x, pc23.y, camcoordz - (easeOutCubic(i) * coordDiffz))
             wait()
         end
-        -------------
-        ----
         wait()
-        --camera deletion here
         CAM.RENDER_SCRIPT_CAMS(false, false, 0, true, true, 0)
         if CAM.IS_CAM_ACTIVE(CCAM) then
             CAM.SET_CAM_ACTIVE(CCAM, false)
@@ -675,12 +608,11 @@ end
 function SmoothTeleportToVehicle(pedInVehicle)
     local wppos = getEntityCoords(pedInVehicle)
     local localped = getPlayerPed(players.user())
-    --check for emtpy seats
     local maxPassengers = VEHICLE.GET_VEHICLE_MAX_NUMBER_OF_PASSENGERS(veh)
     local seatFree = false
     local continueQ
     local veh = PED.GET_VEHICLE_PED_IS_IN(pedInVehicle, false)
-    for i = -1, maxPassengers do --check for empty seats
+    for i = -1, maxPassengers do 
         seatFree = VEHICLE.IS_VEHICLE_SEAT_FREE(veh, i, false)
         if seatFree then
             continueQ = true
@@ -691,7 +623,7 @@ function SmoothTeleportToVehicle(pedInVehicle)
         continueQ = false
     end
     -- > --
-    if wppos ~= nil then --cam setup here
+    if wppos ~= nil then 
         if not CAM.DOES_CAM_EXIST(CCAM) then
             CAM.DESTROY_ALL_CAMS(true)
             CCAM = CAM.CREATE_CAM("DEFAULT_SCRIPTED_CAMERA", true)
@@ -701,19 +633,17 @@ function SmoothTeleportToVehicle(pedInVehicle)
         --
         local pc = getEntityCoords(getPlayerPed(players.user()))
         --
-        for i = 0, 1, STP_SPEED_MODIFIER do --make the cam move up here
+        for i = 0, 1, STP_SPEED_MODIFIER do 
             CAM.SET_CAM_COORD(CCAM, pc.x, pc.y, pc.z + easeOutCubic(i) * STP_COORD_HEIGHT)
             directx.draw_text(0.5, 0.5, tostring(easeOutCubic(i) * STP_COORD_HEIGHT), 1, 0.6, whiteText, false)
             local look = util.v3_look_at(CAM.GET_CAM_COORD(CCAM), pc)
             CAM.SET_CAM_ROT(CCAM, look.x, look.y, look.z, 2)
             wait()
         end
-        --CAM.DO_SCREEN_FADE_OUT(1000) --fade out the screen
-        ------------
         local currentZ = CAM.GET_CAM_COORD(CCAM).z
         local coordDiffx = wppos.x - pc.x
         local coordDiffxy = wppos.y - pc.y
-        for i = 0, 1, STP_SPEED_MODIFIER / 2 do --make the camera on x/y plane
+        for i = 0, 1, STP_SPEED_MODIFIER / 2 do
             CAM.SET_CAM_COORD(CCAM, pc.x + (easeInOutCubic(i) * coordDiffx), pc.y + (easeInOutCubic(i) * coordDiffxy), currentZ)
             wait()
         end
@@ -723,15 +653,13 @@ function SmoothTeleportToVehicle(pedInVehicle)
             local pc2 = getEntityCoords(getPlayerPed(players.user()))
             local coordDiffz = CAM.GET_CAM_COORD(CCAM).z - pc2.z
             local camcoordz = CAM.GET_CAM_COORD(CCAM).z
-            --CAM.DO_SCREEN_FADE_IN(2000) --fade in the screen
-            for i = 0, 1, STP_SPEED_MODIFIER / 2 do --move the camera down
-                local pc23 = getEntityCoords(pedInVehicle)-- extra for x/y
+            for i = 0, 1, STP_SPEED_MODIFIER / 2 do 
+                local pc23 = getEntityCoords(pedInVehicle)
                 CAM.SET_CAM_COORD(CCAM, pc23.x, pc23.y, camcoordz - (easeOutCubic(i) * coordDiffz))
                 wait()
             end
         end
         wait()
-        --camera deletion here
         CAM.RENDER_SCRIPT_CAMS(false, false, 0, true, true, 0)
         if CAM.IS_CAM_ACTIVE(CCAM) then
             CAM.SET_CAM_ACTIVE(CCAM, false)
@@ -744,17 +672,17 @@ end
 
 local function onStartup()
     SE_impactinvismines = memory.alloc()
-    SE_pImpactCoord = memory.alloc() -- memory allocation for explosion gun.
+    SE_pImpactCoord = memory.alloc()
     SE_LocalPed = getLocalPed()
-    SE_Notifications = false -- notifications globally
-    --------
-    SE_ArrayList = false --arraylist Global
-    SE_ArrayCount = 0 --arraylist count Global
+    SE_Notifications = false
+
+    SE_ArrayList = false
+    SE_ArrayCount = 0 
     SE_ArrayOffsetX = 0.0
     SE_ArrayOffsetY = 0.0
-    SE_ArrayScale = 0.3 --arraylist text scale
-    SE_ArrayColor = {r = 1.0, g = 1.0, b = 1.0, a = 1.0} --arraylist text color
-    --------
+    SE_ArrayScale = 0.3
+    SE_ArrayColor = {r = 1.0, g = 1.0, b = 1.0, a = 1.0}
+
 end
 
 onStartup()
@@ -933,7 +861,7 @@ local function getClosestPlayerWithRange(range)
     end
 end
 
-local function getClosestPlayerWithRange_Whitelist(range) --variation of getClosestPlayerWithinRange to work with my whitelisting feature for silent aimbot
+local function getClosestPlayerWithRange_Whitelist(range)
     local pedPointers = entities.get_all_peds_as_pointers()
     local rangesq = range * range
     local ourCoords = getEntityCoords(getLocalPed())
@@ -945,7 +873,7 @@ local function getClosestPlayerWithRange_Whitelist(range) --variation of getClos
         if vdist <= rangesq then
             local handle = entities.pointer_to_handle(pedPointers[i])
             local playerID = NETWORK.NETWORK_GET_PLAYER_INDEX_FROM_PED(handle)
-            if not AIM_WHITELIST[playerID] then --this is the whitelist check.
+            if not AIM_WHITELIST[playerID] then 
                 tbl[#tbl+1] = handle
             end
         end
@@ -1037,61 +965,12 @@ local function spawnObjectOnPlayer(hash, pid)
     return ob
 end
 
---[[
-local function get_waypoint_pos(callback)
-    if HUD.IS_WAYPOINT_ACTIVE() then
-        local blip = HUD.GET_FIRST_BLIP_INFO_ID(8)
-        local waypoint_pos = HUD.GET_BLIP_COORDS(blip)
-        return callback(waypoint_pos)
-    else
-        lang.toast("NO_WAYPOINT_SET")
-    end
-end
-]]
 
------------------------------------------------------------------------------------------------------------------------------------
-
---menu toggle for if the explosion is invisible or not, uses a GLOBAL 
---[[menuToggle(menuroot, "Invisible Explosion?", {"SE_invis", "seinvis"}, "Toggles whether the explosion will be invisible or not. On = Invisible. // BREAKS THE LONG-LASTING FIRE EFFECT OF THE MOLOTOV", function(on)
-    if on then
-        SEisExploInvis = true
-        if SE_Notifications then
-            util.toast("Explosion is invisible!")
-        end
-    else
-        SEisExploInvis = false
-        if SE_Notifications then
-            util.toast("Explosion is visible!")
-        end
-    end
-end, true) --last "true" is makes invisibility enabled by default.
-SEisExploInvis = true --set it to actually be true lmfao--]]
-
---menu toggle for if the explosion is audible or not, uses a GLOBAL
---[[menuToggle(menuroot, "Audible Explosion?", {"SE_audible", "seaudible"}, "Toggles whether the explosion will be audible or not. On = Audible.", function(on)
-    if on then
-        SEisExploAudible = true
-        if SE_Notifications then
-            util.toast("Explosion is audible!")
-        end
-    else
-        SEisExploAudible = false
-        if SE_Notifications then
-            util.toast("Explosion is not audible!")
-        end
-    end
-end)--]]
------------------------------------------------------------------------------------------------------------------------------------
 local shadow = menu.shadow_root()
 
 local lobbyFeats = menu.list(menuroot, "Lobby", {}, "")
 
 local custselc = menu.list(lobbyFeats, "Lobby Crashes")
---local lobmal = menu.list(lobbyFeats, "Malicious")
---local lobdiv = menu.divider(lobmal, "Switched into Player List")
-
---local otherFeats = menu.list(lobbyFeats, "Other", {}, "")
---local otherdiv = menu.divider(otherFeats, "Switched into Player List")
 
 local protex_ref = menu.ref_by_path("Online>Protections")
 
@@ -1103,7 +982,6 @@ local detectaction = menu.action(shadow, "Detections", {}, "Brings you to the St
 end)
 
 local modder_detections = menu.list(detections, "Modder Detections")
---local normal_detections = menu.list(detections, "Normal Detections")
 
 local rec_ref = menu.ref_by_path("Online>Quick Progress")
 
@@ -1113,24 +991,14 @@ local protects = menu.ref_by_path("Online>Protections")
 
 protects:attachAfter(detectaction)
 
---detections:attach(teststuff)
-
---local detections = menu.shadow_root():list("Detections", {"detections"}, "More ways of Detecting Modders")
-
 function set_up_player_actions(pid)
 
 local crash_root = menu.shadow_root():list('Stand Expansion')
---crash_root = menu.player_root(pid):refByRelPath("Crash"):getChildren()[1]:attachBefore(crash_root)
 
 local kick_root = menu.shadow_root():list('Stand Expansion')
---kick_root = menu.player_root(pid):refByRelPath("Kick"):getChildren()[1]:attachBefore(kick_root)
 
 local troll_root = menu.shadow_root():list('Stand Expansion')
 troll_root = menu.player_root(pid):refByRelPath("Trolling"):getChildren()[1]:attachBefore(troll_root)
-
---local detections = menu.list(protex_ref, "Detections", {}, "More Ways of detections")
-
-
 
 local crash2_ref = menu.player_root(pid):refByRelPath("Crash")
 local kick2_ref = menu.player_root(pid):refByRelPath("Kick")
@@ -1138,12 +1006,6 @@ local kick2_ref = menu.player_root(pid):refByRelPath("Kick")
 local krustykrab = crash2_ref:list("Mr. Krabs", {}, "Spectating is risky, watch out: works on 2T1 users (prob not lol)")
 
 local nmcrashes = crash2_ref:list("More model crashes", {}, "")
-
---kick2_ref:divider("STAND EXPANSION")
-
---kick2_ref:action("Stand Expansion Kick Example", {}, "", function()
---    util.toast("go KYS")
---end)
 
 --------------------------------------------------------------------------------------------------------
 
@@ -1224,8 +1086,6 @@ cages:action("Knife Cage", { "" }, "", function()
     local cage_object4 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y - .70, pos.z + .25, true, true, false)
 
     local cage_object5 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y, pos.z + .75, true, true, false)
-    --cages[#cages + 1] = cage_object
-    --cages[#cages + 1] = cage_object
     util.yield(15)
     local rot = ENTITY.GET_ENTITY_ROTATION(cage_object)
     rot.y     = 90
@@ -1245,8 +1105,6 @@ cages:action("Christmas Cage", { "" }, "", function()
     local cage_object3 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y + .75, pos.z - .5, true, true, false)
     local cage_object4 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y - .75, pos.z - .5, true, true, false)
     local cage_object5 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y, pos.z + .5, true, true, false)
-    --cages[#cages + 1] = cage_object
-    --cages[#cages + 1] = cage_object
     util.yield(15)
 
     STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(cage_object)
@@ -1263,7 +1121,6 @@ cages:action("Clear cages", {"clearcages"}, "", function()
     end
     util.toast("Clear " .. entitycount .. " cages")
 end)
-
 
 --------------------------------------------------------------------------------------------------------
 
@@ -1346,9 +1203,9 @@ local sport = players.get_port(pid)
 local smoney = players.get_money(pid)
 chat.send_message(
     "Name: " ..sname.. "\nRID: " ..srid.. "\nIP: " ..sip.. "\nPort: " ..sport.. "\nMoney: " ..smoney.. "",
-    false, -- in team chat
-    true, -- add to local history
-    true  -- networked
+    false,
+    true,
+    true
     ) 
 end)
 
@@ -1383,7 +1240,6 @@ troll_root:action('Jesus took the car', {'jesusjack'}, 'EMP\'s the car to a halt
         notification.red('Target is not in a car')
     end
 end)
-
 
 ---------------------------------------------------------------------------------------------------KICKS-------------------------------------------------------------------------------------------------------------
 
@@ -1444,7 +1300,6 @@ kick2_ref:action("Tyrannosaurus Kick", { "" }, "", function()
     c = ENTITY.GET_ENTITY_COORDS(players.user_ped())
     request_model_load(kitteh_hash)
     local kitteh = entities.create_ped(28, kitteh_hash, c, math.random(0, 270))
-    -- i pwoimise no kittehs are hurt...
     AUDIO.PLAY_PAIN(kitteh, 7, 0)
     menu.trigger_commands("spectate" .. PLAYER.GET_PLAYER_NAME(players.user()))
     cwash_in_progwess()
@@ -1455,7 +1310,6 @@ kick2_ref:action("Tyrannosaurus Kick", { "" }, "", function()
     pcall(crash_compiled_func)
     util.toast('see you again')
 end)
-
 
 kick2_ref:action("AIO kick.", {"aiok", "aiokick"}, "If 'slower, but better aio' is enabled in lobby features, then uses it here as well.", function ()
     if pid == players.user() then
@@ -1500,7 +1354,6 @@ kick2_ref:action("AIO kick.", {"aiok", "aiokick"}, "If 'slower, but better aio' 
     wait(10) 
     util.trigger_script_event(1 << pid, {-0x177132B8, math.random(-2147483647, 2147483647), 1, 115, math.random(-2147483647, 2147483647)})
     wait(10)
-    --util.toast("Main block done. // AIO")
     util.trigger_script_event(1 << pid, {memory.script_global(1893548 + (1 + (pid * 600) + 511)), pid})
     for a = -1, 1 do
         for n = -1, 1 do
@@ -1508,14 +1361,12 @@ kick2_ref:action("AIO kick.", {"aiok", "aiokick"}, "If 'slower, but better aio' 
             wait(10)
         end
     end
-    --util.toast("Second block done. // AIO")
     for a = -1, 1 do
         for n = -1, 1 do
             util.trigger_script_event(1 << pid, {1445703181, 28, a, n})
             wait(10)
         end
     end
-    --util.toast("Third block done. // AIO")
     if TXC_SLOW then
         wait(10)
         util.trigger_script_event(1 << pid, {-290218924, -32190, -71399, 19031, 85474, 4468, -2112})
@@ -1526,13 +1377,6 @@ kick2_ref:action("AIO kick.", {"aiok", "aiokick"}, "If 'slower, but better aio' 
         wait(10)
         util.trigger_script_event(1 << pid, {911179316, -38, -30, -75, -59, 85, 82})
         wait(10)
-        --[[
-        for n = -10, -7 do
-            for a = -60, 60 do
-                util.trigger_script_event(1 << pid, {0x39624029, n, 623656, a, 73473741, -7, 856844, -51251, 856844})
-                wait(10)
-            end
-        end]]
         util.trigger_script_event(1 << pid, {-290218924, -32190, -71399, 19031, 85474, 4468, -2112})
         wait(10)
         util.trigger_script_event(1 << pid, {-1386010354, 91645, -99683, 1788, 60877, 55085, 72028})
@@ -1547,17 +1391,6 @@ kick2_ref:action("AIO kick.", {"aiok", "aiokick"}, "If 'slower, but better aio' 
             end
             wait(10)
         end
-        --[[for a = -28, 20 do
-            for n = -10, 2 do
-                for b = -100, 100 do
-                    util.trigger_script_event(1 << pid, {-1782442696, b, n, a})
-                    util.log("Number 6, iteration " .. b)
-                end
-                util.log("Number 7, iteration " .. n)
-            end
-            util.log("Number 8, iteration " .. a)
-            wait(10)
-        end]]
         for a = -11, 11 do
             util.trigger_script_event(1 << pid, {2002459655, -1000000, a, -100000000})
         end
@@ -1611,8 +1444,6 @@ end)
 ----------------------------------------------------------------------------------------CRASHES-----------------------------------------------------------------------------------------------------------------------
 
 crash2_ref:action("Fragment Crash", {"2take1"}, "skidded lol", function ()
-    --for i = 1, 1 do
-    --local fragment = util.joaat("310817095")
     requestModel(fragment)
     menu.trigger_commands("spectate" .. players.get_name(pid) .. " on")
     wait(100)
@@ -1636,7 +1467,7 @@ crash2_ref:action("Fragment Crash", {"2take1"}, "skidded lol", function ()
     entities.delete_by_handle(b3)
 end)
 
-crash2_ref:action("Motorcycle jesus", {"crashv18"}, "Skid from x-force", function() --model
+crash2_ref:action("Motorcycle jesus", {"crashv18"}, "Skid from x-force", function()
     local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
     local pos = players.get_position(pid)
     local mdl = util.joaat("u_m_m_jesus_01")
@@ -1662,7 +1493,7 @@ end)
 
 local pclpid = {}
 
-crash2_ref:action( "Clone Crash", {"crashv28"}, "Clones the player repeatedly until he crashes LMFAO", function() --model
+crash2_ref:action( "Clone Crash", {"crashv28"}, "Clones the player repeatedly until he crashes LMFAO", function()
     local p = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
     local c = ENTITY.GET_ENTITY_COORDS(p)
     for i = 1, 23 do
@@ -1694,7 +1525,6 @@ crash2_ref:action( "Clone Crash", {"crashv28"}, "Clones the player repeatedly un
 end)
 
 crash2_ref:action("Poodle Crash", {}, "", function()
-    --Defined Coords
       local coords = players.get_position(pid)
       coords.x = coords['x']
       coords.y = coords['y']
@@ -1703,7 +1533,7 @@ crash2_ref:action("Poodle Crash", {}, "", function()
        local coords = players.get_position(pid)
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
         local heading = ENTITY.GET_ENTITY_HEADING(ped)
-        --Impulse Crash
+
         local poodle1 = util.joaat("a_c_poodle")
          util.request_model(poodle1)
           local ent1 = entities.create_ped(26, poodle1, coords, heading)
@@ -1718,12 +1548,12 @@ crash2_ref:action("Poodle Crash", {}, "", function()
           local pcoords = ENTITY.GET_ENTITY_COORDS(ent2, true)
           pcoords.z = pcoords['z'] + 0.5
           FIRE.ADD_EXPLOSION(pcoords.x, pcoords.y, pcoords.z, 12, 100, false, true, 0, false)
-          --Crash Attach + Rotate (Needs Rand int For maximum Crashing)
+
            local OB1 = entities.create_object(0x34315488, coords, heading)
            ENTITY.ATTACH_ENTITY_TO_ENTITY(OB1, ped, 0, 0, 0, 0, 0, 0, 0, true, true, false, true, 0, true, 2) 
-           --Entity Cram
+
            entities.create_object(OB1, pcoords, heading)
-          --Attachment Overload
+
            local VH1 = util.joaat("speedo2")
            ENTITY.ATTACH_ENTITY_TO_ENTITY(VH1, ped, 0, 0, 0, 0, 0, 0, 0, true, true, false, true, 0, true, 2) 
            local VH2 = util.joaat("nero2")
@@ -1749,7 +1579,7 @@ crash2_ref:action("Poodle Crash", {}, "", function()
           local VH12 = util.joaat("burrito4")
            ENTITY.ATTACH_ENTITY_TO_ENTITY(VH12, ped, 0, 0, 0, 0, 0, 0, 0, true, true, false, true, 0, true, 2) 
            local Tcoords = v3.new(pcoords.x, pcoords.y, pcoords.z)
-           -- coords.z = coords['z'] + 1
+
            entities.create_object(VH1, Tcoords, heading)
            entities.create_object(VH2, Tcoords, heading)
            entities.create_object(VH3, Tcoords, heading)
@@ -1762,11 +1592,8 @@ crash2_ref:action("Poodle Crash", {}, "", function()
            entities.create_object(VH10, Tcoords, heading)
            entities.create_object(VH11, Tcoords, heading)
            entities.create_object(VH12, Tcoords, heading)
-           --Kicks for Rebounds Crash
+
            util.yield(3000)
-           --menu.trigger_commands("kick " .. players.get_name(pid))
-           --util.yield(1000)
-           --util.toast("The Femboys can Crash Rebound :sadge:") --nuh uh, you cant :D
            menu.trigger_commands("cleararea")
 end)
 
@@ -1808,7 +1635,7 @@ crash2_ref:action("Cars Crash", {"crashv13"}, "", function(on_toggle)
     end
 end)
 
-crash2_ref:action("DADDY Crash", {"crashv27"}, "X-Force Big Chungus (use before 5G)", function()  --model
+crash2_ref:action("DADDY Crash", {"crashv27"}, "X-Force Big Chungus (use before 5G)", function()
     local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
     local pos = ENTITY.GET_ENTITY_COORDS(ped, true)
     local mdl = util.joaat("A_C_Cat_01")
@@ -2103,7 +1930,7 @@ crash2_ref:action("test crash 2", {}, "ching chong.", function()
 
 end)
 
-crash2_ref:action("test crash 3", {""}, "china namba uan", function() --model
+crash2_ref:action("test crash 3", {""}, "china namba uan", function()
     local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
     local pos = players.get_position(pid)
     local mdl = util.joaat("player_zero")
@@ -2948,7 +2775,7 @@ end)
 
 if menu.get_edition() >= 1 then 
     crash2_ref:action("Osama´s bomb", {"tsarbomba"}, "A pc demanding crash, if you dont have a good pc, i don't recommend using it (Unblockable uwu)", function()
-        --local outSync = menu.ref_by_path("Outgoing Syncs>Block")
+
         menu.trigger_commands("anticrashcamera on")
         menu.trigger_commands("potatomode on")
         menu.trigger_commands("trafficpotato on")
@@ -3148,7 +2975,7 @@ crash2_ref:toggle_loop("Buttplug Crash", {"asshole"}, "Works on very few menus, 
     end
 end)
 
-crash2_ref:toggle_loop("Nigger Crash", {"byepnigger"}, "du hs.", function ()
+crash2_ref:toggle_loop("NN Crash", {"byenn"}, "sit NN", function ()
     for i = 1, 10 do
     local nackt = util.joaat("a_m_m_acult_01")
     local dolphin = util.joaat("a_c_dolphin")
@@ -3163,23 +2990,23 @@ crash2_ref:toggle_loop("Nigger Crash", {"byepnigger"}, "du hs.", function ()
     requestModel(rat)
 
     local cord = getEntityCoords(getPlayerPed(pid))
-    local a1 = entities.create_ped(5, nackt, cord, 0) --nackt
+    local a1 = entities.create_ped(5, nackt, cord, 0)
     local a2 = entities.create_ped(5, nackt, cord, 0)
     local a3 = entities.create_ped(5, nackt, cord, 0)
     wait(10)
-    local b1 = entities.create_ped(5, dolphin, cord, 0) --dolphin
+    local b1 = entities.create_ped(5, dolphin, cord, 0)
     local b2 = entities.create_ped(5, dolphin, cord, 0)
     local b3 = entities.create_ped(5, dolphin, cord, 0)
     wait(10)
-    local c1 = entities.create_ped(5, fish, cord, 0) --fish
+    local c1 = entities.create_ped(5, fish, cord, 0)
     local c2 = entities.create_ped(5, fish, cord, 0)
     local c3 = entities.create_ped(5, fish, cord, 0)
     wait(10)
-    local d1 = entities.create_ped(5, niko, cord, 0) --niko
+    local d1 = entities.create_ped(5, niko, cord, 0)
     local d2 = entities.create_ped(5, niko, cord, 0)
     local d3 = entities.create_ped(5, niko, cord, 0)
     wait(10)
-    local e1 = entities.create_ped(5, rat, cord, 0) --rat
+    local e1 = entities.create_ped(5, rat, cord, 0)
     local e2 = entities.create_ped(5, rat, cord, 0)
     local e3 = entities.create_ped(5, rat, cord, 0)
     wait(300)
@@ -3268,13 +3095,6 @@ crash2_ref:action("Rope Crash V2", {"ropecrashv2"}, "", function()
     PHYSICS.ATTACH_ENTITIES_TO_ROPE(newRope, cargobob, kur, cargobob_pos.x, cargobob_pos.y, cargobob_pos.z, kur_pos.x, kur_pos.y, kur_pos.z, 2, 0, 0, "Center", "Center")
     util.toast("Crashed Lobby with Rope Crash V2")
 end)
-
----------------------------------------------------------------------------------------------------DETECTIONS--------------------------------------------------------------------------------------------------------
-
-
-
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3469,10 +3289,6 @@ local legitrapid = pvphelp:list("Legit Rapid Fire")
 local protex2 = protex_ref:list("Stand Expansion")
 
 -----------------------------------------------------------------------------------------------------------------------------------
-
---local protex = menu.list(menuroot, "Protection", {}, "")
---
---local protediv = menu.divider(protex, "Switched to Online > Protections")
 
 protex2:action("Remove things", {}, "It'll remove stuff sutck to you or really close to you.", function()
     if PED.IS_PED_MALE(PLAYER.PLAYER_PED_ID()) then
@@ -3670,11 +3486,9 @@ anticage:toggle_loop("Enable Anti-Jail", {"anticage"}, "", function()
     end
 end)
 
---fmugger = protex2:list("Objects/Peds", {}, "")
-
 local anti_mugger = protex2:list("Anti-Mugger")
 
-anti_mugger:toggle_loop("Towards me", {}, "Blocks muggers that were supposed to mug you.", function() -- thx nowiry for improving my method :D
+anti_mugger:toggle_loop("Towards me", {}, "Blocks muggers that were supposed to mug you.", function()
     if NETWORK.NETWORK_IS_SCRIPT_ACTIVE("am_gang_call", 0, true, 0) then
         local ped_netId = memory.script_local("am_gang_call", 63 + 10 + (0 * 7 + 1))
         local sender = memory.script_local("am_gang_call", 287)
@@ -3711,40 +3525,6 @@ anti_mugger:toggle_loop("Someone else", {}, "Blocks muggers from trying to mug o
         end)
     end
 end)
-
---menu.toggle_loop(fmugger, "Objects F/", {"ghostobjects"}, "Disables collisions with objects.", function()
---    local user = players.user_ped()
---    local veh = PED.GET_VEHICLE_PED_IS_USING(user)
---    local my_ents = {user, veh}
---    for i, obj_ptr in ipairs(entities.get_all_objects_as_pointers()) do
---        local net_obj = memory.read_long(obj_ptr + 0xd0)
---        local obj_handle = entities.pointer_to_handle(obj_ptr)
---        ENTITY.SET_ENTITY_ALPHA(obj_handle, 255, false)
---        CAM.SET_GAMEPLAY_CAM_IGNORE_ENTITY_COLLISION_THIS_UPDATE(obj_handle)
---        for i, data in ipairs(my_ents) do
---            ENTITY.SET_ENTITY_NO_COLLISION_ENTITY(obj_handle, data, false)
---            ENTITY.SET_ENTITY_NO_COLLISION_ENTITY(data, obj_handle, false)  
---        end
---        SHAPETEST.RELEASE_SCRIPT_GUID_FROM_ENTITY(obj_handle)
---    end
---end)
---
---menu.toggle_loop(fmugger, "Vehicles F/", {"ghostvehicles"}, "Disables collisions with vehicles.", function()
---    local user = players.user_ped()
---    local veh = PED.GET_VEHICLE_PED_IS_USING(user)
---    local my_ents = {user, veh}
---    for i, veh_ptr in ipairs(entities.get_all_vehicles_as_pointers()) do
---        local net_veh = memory.read_long(veh_ptr + 0xd0)
---        local veh_handle = entities.pointer_to_handle(veh_ptr)
---        ENTITY.SET_ENTITY_ALPHA(veh_handle, 255, false)
---        CAM.SET_GAMEPLAY_CAM_IGNORE_ENTITY_COLLISION_THIS_UPDATE(veh_handle)
---        for i, data in ipairs(my_ents) do
---            ENTITY.SET_ENTITY_NO_COLLISION_ENTITY(veh_handle, data, false)
---            ENTITY.SET_ENTITY_NO_COLLISION_ENTITY(data, veh_handle, false)  
---        end
---        SHAPETEST.RELEASE_SCRIPT_GUID_FROM_ENTITY(veh_handle)
---    end
---end)
 
 local pool_limiter = protex2:list("Pool Limiter", {}, "")
 local ped_limit = 175
@@ -3806,192 +3586,6 @@ pool_limiter:toggle_loop("Activate limiter pool", {}, "", function()
     end
 end)
 
------------------------------------------------------------------------------------------------------------------------------------
-
---local detectione = menu.list(menuroot, "detectione", {}, "read the name to know what it is, fag")
---
---normalmod = menu.list(detectione, "Normal Modders", {}, "")
---
---modder_detections:toggle_loop("GodMode", {}, "It'll pop up if godmode is detected.", function()
---    for _, pid in ipairs(players.list(false, true, true)) do
---        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
---        local pos = ENTITY.GET_ENTITY_COORDS(ped, false)
---        for i, interior in ipairs(interior_stuff) do
---            if players.is_godmode(pid) and not NETWORK.NETWORK_IS_PLAYER_FADING(pid) and ENTITY.IS_ENTITY_VISIBLE(ped) and ryze.get_spawn_state(pid) == 99 and ryze.get_interior_player_is_in(pid) == interior then
---                util.draw_debug_text(players.get_name(pid) .. " Has godmode.")
---                break
---            end
---        end
---    end 
---end)
---
---modder_detections:toggle_loop("Vehicle godmode", {}, "It'll pop up if godmode on a vehicle is detected.", function()
---    for _, pid in ipairs(players.list(false, true, true)) do
---        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
---        local pos = ENTITY.GET_ENTITY_COORDS(ped, false)
---        local player_veh = PED.GET_VEHICLE_PED_IS_USING(ped)
---        if PED.IS_PED_IN_ANY_VEHICLE(ped, false) then
---            for i, interior in ipairs(interior_stuff) do
---                if not ENTITY.GET_ENTITY_CAN_BE_DAMAGED(player_veh) and not NETWORK.NETWORK_IS_PLAYER_FADING(pid) and ENTITY.IS_ENTITY_VISIBLE(ped) and ryze.get_spawn_state(pid) == 99 and ryze.get_interior_player_is_in(pid) == interior then
---                    util.draw_debug_text(players.get_name(pid) .. " Is inside a vehicle with godmode")
---                    break
---                end
---            end
---        end
---    end 
---end)
---
---modder_detections:toggle_loop("Modded weapons", {}, "It'll pop up if a gifted weapon is detected", function()
---    for _, pid in ipairs(players.list(false, true, true)) do
---        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
---        for i, hash in ipairs(ryze.modded_weapons) do
---            local weapon_hash = util.joaat(hash)
---            if WEAPON.HAS_PED_GOT_WEAPON(ped, weapon_hash, false) and (WEAPON.IS_PED_ARMED(ped, 7) or TASK.GET_IS_TASK_ACTIVE(ped, 8) or TASK.GET_IS_TASK_ACTIVE(ped, 9)) then
---                util.toast(players.get_name(pid) .. " Is using a modded gun")
---                break
---            end
---        end
---    end
---end)
---
---modder_detections:toggle_loop("Unreleased Vehicle", {}, "It'll pop up if a unreleased vehicle is being used.", function()
---    for _, pid in ipairs(players.list(false, true, true)) do
---        local modelHash = players.get_vehicle_model(pid)
---        for i, name in ipairs(ryze.modded_vehicles) do
---            if modelHash == util.joaat(name) then
---                util.draw_debug_text(players.get_name(pid) .. " Has a modded/unreleased vehicle")
---                break
---            end
---        end
---    end
---end)
---
---modder_detections:toggle_loop("Weapon on interior grounds", {}, "It'll pop up if a weapon is being used on interior grounds", function()
---    for _, pid in ipairs(players.list(false, true, true)) do
---        local player = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
---        if players.is_in_interior(pid) and WEAPON.IS_PED_ARMED(player, 7) then
---            util.draw_debug_text(players.get_name(pid) .. " Has a weapon out on interior grounds")
---            break
---        end
---    end
---end)
---
---modder_detections:toggle_loop("Run fast", {}, "It'll pop up if a player is running faster than usual", function()
---    for _, pid in ipairs(players.list(false, true, true)) do
---        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
---        local ped_speed = (ENTITY.GET_ENTITY_SPEED(ped)* 2.236936)
---        if not util.is_session_transition_active() and ryze.get_interior_player_is_in(pid) == 0 and ryze.get_transition_state(pid) ~= 0 and not PED.IS_PED_DEAD_OR_DYING(ped) 
---        and not NETWORK.NETWORK_IS_PLAYER_FADING(pid) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_IN_ANY_VEHICLE(ped, false)
---        and not TASK.IS_PED_STILL(ped) and not PED.IS_PED_JUMPING(ped) and not ENTITY.IS_ENTITY_IN_AIR(ped) and not PED.IS_PED_CLIMBING(ped) and not PED.IS_PED_VAULTING(ped)
---        and v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(pid)) <= 300.0 and ped_speed > 30 then -- fastest run speed is about 18ish mph but using 25 to give it some headroom to prevent false positives
---            util.toast(players.get_name(pid) .. " Is Using Super Run")
---            break
---        end
---    end
---end)
---
---modder_detections:toggle_loop("Noclip", {}, "Detects if the player is levitating", function()
---    for _, pid in ipairs(players.list(false, true, true)) do
---        local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
---        local ped_ptr = entities.handle_to_pointer(ped)
---        local vehicle = PED.GET_VEHICLE_PED_IS_USING(ped)
---        local oldpos = players.get_position(pid)
---        util.yield()
---        local currentpos = players.get_position(pid)
---        local vel = ENTITY.GET_ENTITY_VELOCITY(ped)
---        if not util.is_session_transition_active() and players.exists(pid)
---        and ryze.get_interior_player_is_in(pid) == 0 and ryze.get_spawn_state(pid) ~= 0
---        and not PED.IS_PED_IN_ANY_VEHICLE(ped, false)
---        and not NETWORK.NETWORK_IS_PLAYER_FADING(pid) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_DEAD_OR_DYING(ped)
---        and not PED.IS_PED_CLIMBING(ped) and not PED.IS_PED_VAULTING(ped) and not PED.IS_PED_USING_SCENARIO(ped)
---        and not TASK.GET_IS_TASK_ACTIVE(ped, 160) and not TASK.GET_IS_TASK_ACTIVE(ped, 2)
---        and v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(pid)) <= 395.0
---        and ENTITY.GET_ENTITY_HEIGHT_ABOVE_GROUND(ped) > 5.0 and not ENTITY.IS_ENTITY_IN_AIR(ped) and entities.player_info_get_game_state(ped_ptr) == 0
---        and oldpos.x ~= currentpos.x and oldpos.y ~= currentpos.y and oldpos.z ~= currentpos.z 
---        and vel.x == 0.0 and vel.y == 0.0 and vel.z == 0.0 then
---            util.toast(players.get_name(pid) .. " Is using noclip")
---            break
---        end
---    end
---end)
---
---modder_detections:toggle_loop("Spectating", {}, "Detects if someone is spectating you", function()
---    for _, pid in ipairs(players.list(false, true, true)) do
---        for i, interior in ipairs(interior_stuff) do
---            local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
---            if not util.is_session_transition_active() and ryze.get_spawn_state(pid) ~= 0 and ryze.get_interior_player_is_in(pid) == interior
---            and not NETWORK.NETWORK_IS_PLAYER_FADING(pid) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_DEAD_OR_DYING(ped) then
---                if v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_cam_pos(pid)) < 15.0 and v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(pid)) > 20.0 then
---                    util.toast(players.get_name(pid) .. " Is watching you")
---                    break
---                end
---            end
---        end
---    end
---end)
---
---modder_detections:toggle_loop("Teleport", {}, "Detects if a player is teleporting", function()
---    for _, pid in ipairs(players.list(false, true, true)) do
---        util.create_thread(function()
---            local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
---            if not NETWORK.NETWORK_IS_PLAYER_FADING(pid) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_DEAD_OR_DYING(ped) then
---                local oldpos = players.get_position(pid)
---                util.yield(500)
---                local currentpos = players.get_position(pid)
---                for i, interior in ipairs(interior_stuff) do
---                    if v3.distance(oldpos, currentpos) > 300.0 and oldpos.x ~= currentpos.x and oldpos.y ~= currentpos.y and oldpos.z ~= currentpos.z 
---                    and ryze.get_interior_player_is_in(pid) ~= 0 and ryze.get_spawn_state(pid) == interior and PLAYER.IS_PLAYER_PLAYING(pid) and player.exists(pid) then
---                        util.toast(players.get_name(pid) .. " Has teleported")
---                    end
---                end
---            end
---        end)
---    end
---end)
---
---menu.toggle_loop(detectione, "Votekick", {}, "Detects if someone is about to get votekicked ot of the sessiona.  Known as 'smart kick' on Stand.", function()
---    for _, pid in ipairs(players.list(false, true, true)) do
---        local kickowner = NETWORK.NETWORK_SESSION_GET_KICK_VOTE(pid)
---        local kicked = NETWORK.NETWORK_SESSION_KICK_PLAYER(pid)
---        if kicked then
---            util.draw_debug_text(players.get_name(pid) .. " The player" .. kicked .. "has been votekicked by:" .. kickowner)
---            break
---        end
---    end
---end)
---
---menu.toggle_loop(detectione, "Thunder join", {}, "Detects if someone is joining your session in a unusual way.", function()
---    for _, pid in ipairs(players.list(false, true, true)) do
---        if not util.is_session_transition_active() and ryze.get_spawn_state(pid) == 0 and players.get_script_host() == pid  then
---            util.toast(players.get_name(pid) .. " Sent a detection (Thunder Join) and now modder")
---        end
---    end
---end)
-
------------------------------------------------------------------------------------------------------------------------------------
-
---local expFeats = menu.list(lobbyFeats, "Explosion Features", {}, "")
-
-
---[[local dice = menu.action(lobbyfeats, "Roll the dice", {}, "", function()
-    local pick = math.random(6)
-    if pick == 4 then 
-        chat.send_message(
-            user_name.." rolled the dice. It was a 4!",
-            false, -- in team chat
-            true, -- add to local history
-            true  -- networked
-            )
-    else
-        util.toast("Lucky Bastard ;)")
-    end
-end)--]]
-
-
---menu.divider(lobbyFeats, "Toxic Features")
---local lobmal = menu.list(lobbyFeats, "Malicious")
-
-
 local function pizzaCAll()
     for p = 0, 31, 1 do
         if p ~= players.user() and ENTITY.DOES_ENTITY_EXIST(getPlayerPed(p)) then
@@ -4038,8 +3632,6 @@ end
 Pizzaall = allplaymal:action("Black Plague Crash All", {"plagueall"}, "Blocked by most menus.", function ()
     menu.show_warning(Pizzaall, 1, "This will crash everyone with the plague. Did you mean to click this?", pizzaCAll)
 end)
-
---local lobbyremove = menu.list(lobbyFeats, "Removes", {}, "")
 
 allplaymal:action("Freemode death all.", {"allfdeath"}, "Will probably not work on some/most menus. A 'delayed kick' of sorts.", function ()
     for p = 0, 31 do
@@ -4095,14 +3687,6 @@ allplaymal:action("AIO Kick All.", {"allaiokick", "allaiok"}, "Will probably not
             wait(10) 
             util.trigger_script_event(1 << i, {0x23F74138, math.random(-2147483647, 2147483647), 1, 115, math.random(-2147483647, 2147483647)})
             wait(10) 
-            --[[
-            util.trigger_script_event(1 << i, {0xAD63290E, math.random(-2147483647, 2147483647), 1, 115, math.random(-2147483647, 2147483647)})
-            wait(10) 
-            ]]
-            --[[
-            util.trigger_script_event(1 << i, {0x39624029, math.random(-2147483647, 2147483647), 1, 115, math.random(-2147483647, 2147483647)})
-            wait(10) 
-            ]]
             util.trigger_script_event(1 << i, {-0x529CD6F2, math.random(-2147483647, 2147483647), 1, 115, math.random(-2147483647, 2147483647)})
             wait(10) 
             util.trigger_script_event(1 << i, {-0x756DBC8A, math.random(-2147483647, 2147483647), 1, 115, math.random(-2147483647, 2147483647)})
@@ -4117,7 +3701,6 @@ allplaymal:action("AIO Kick All.", {"allaiokick", "allaiok"}, "Will probably not
             wait(10) 
             util.trigger_script_event(1 << i, {-0x177132B8, math.random(-2147483647, 2147483647), 1, 115, math.random(-2147483647, 2147483647)})
             wait(10)
-            --util.toast("Main block done. // AIO")
             util.trigger_script_event(1 << i, {memory.script_global(1893548 + (1 + (i * 600) + 511)), i})
             for a = -1, 1 do
                 for n = -1, 1 do
@@ -4125,14 +3708,12 @@ allplaymal:action("AIO Kick All.", {"allaiokick", "allaiok"}, "Will probably not
                     wait(10)
                 end
             end
-            --util.toast("Second block done. // AIO")
             for a = -1, 1 do
                 for n = -1, 1 do
                     util.trigger_script_event(1 << i, {1445703181, 28, a, n})
                     wait(10)
                 end
             end
-            --util.toast("Third block done. // AIO")
             if TXC_SLOW then
                 wait(10)
                 util.trigger_script_event(1 << i, {-290218924, -32190, -71399, 19031, 85474, 4468, -2112})
@@ -4143,14 +3724,6 @@ allplaymal:action("AIO Kick All.", {"allaiokick", "allaiok"}, "Will probably not
                 wait(10)
                 util.trigger_script_event(1 << i, {911179316, -38, -30, -75, -59, 85, 82})
                 wait(10)
-                --[[
-                for n = -10, -7 do
-                    for a = -60, 60 do
-                        util.trigger_script_event(1 << i, {0x39624029, n, 623656, a, 73473741, -7, 856844, -51251, 856844})
-                        wait(10)
-                    end
-                end
-                ]]
                 util.trigger_script_event(1 << i, {-290218924, -32190, -71399, 19031, 85474, 4468, -2112})
                 wait(10)
                 util.trigger_script_event(1 << i, {-1386010354, 91645, -99683, 1788, 60877, 55085, 72028})
@@ -4165,17 +3738,6 @@ allplaymal:action("AIO Kick All.", {"allaiokick", "allaiok"}, "Will probably not
                     end
                     wait(10)
                 end
-                --[[for a = -28, 20 do
-                    for n = -10, 2 do
-                        for b = -100, 100 do
-                            util.trigger_script_event(1 << i, {-1782442696, b, n, a})
-                            util.log("Number 6, iteration " .. b)
-                        end
-                        util.log("Number 7, iteration " .. n)
-                    end
-                    util.log("Number 8, iteration " .. a)
-                    wait(10)
-                end]]
                 for a = -11, 11 do
                     util.trigger_script_event(1 << i, {2002459655, -1000000, a, -100000000})
                 end
@@ -4234,7 +3796,7 @@ allplayoth:action("Teleport everyone's vehicles to ocean (BETA)", {"alltpvehocea
         if NETWORK.NETWORK_IS_PLAYER_CONNECTED(i) then
             local ped = getPlayerPed(i)
             local pedCoords = getEntityCoords(ped)
-            for c = 0, 5 do --teleports us to them so we load their veh
+            for c = 0, 5 do
                 ENTITY.SET_ENTITY_COORDS_NO_OFFSET(getLocalPed(), pedCoords.x, pedCoords.y, pedCoords.z + 10, false, false, false)
                 wait(100)
             end
@@ -4260,7 +3822,7 @@ allplayoth:action("Teleport everyone's vehicles to Maze Bank (BETA)", {"alltpveh
         if NETWORK.NETWORK_IS_PLAYER_CONNECTED(i) then
             local pped = getPlayerPed(i)
             local pedCoords = getEntityCoords(pped)
-            for c = 0, 5 do --teleports us to them so we load their veh
+            for c = 0, 5 do
                 ENTITY.SET_ENTITY_COORDS_NO_OFFSET(getLocalPed(), pedCoords.x, pedCoords.y, pedCoords.z + 10, false, false, false)
                 wait(100)
             end
@@ -4285,9 +3847,9 @@ allplayoth:action("Check entire lobby for godmode", {}, "Checks the entire lobby
     for i = 0, 31 do
         if NETWORK.NETWORK_IS_PLAYER_CONNECTED(i) then
             local pcoords = getEntityCoords(getPlayerPed(i))
-            if INTERIOR.GET_INTERIOR_AT_COORDS(pcoords.x, pcoords.y, pcoords.z) == 0 then --check for non-interior. Using native for less false flags.
-                if (not PLAYER.IS_PLAYER_READY_FOR_CUTSCENE(i)) and (not NETWORK.IS_PLAYER_IN_CUTSCENE(i)) then --check for cutscenes
-                    if players.is_godmode(i) then --check the actual god
+            if INTERIOR.GET_INTERIOR_AT_COORDS(pcoords.x, pcoords.y, pcoords.z) == 0 then 
+                if (not PLAYER.IS_PLAYER_READY_FOR_CUTSCENE(i)) and (not NETWORK.IS_PLAYER_IN_CUTSCENE(i)) then 
+                    if players.is_godmode(i) then 
                         local pName = getPlayerName_pid(i)
                         util.toast(pName .. " is in godmode!")
                         godcount = godcount + 1
@@ -4302,11 +3864,11 @@ end)
 
 allplayoth:action("Everyone explode-suicides", {"allsuicide"}, "Makes everyone commit suicide, with an explosion.", function()
     for i = 0, 31, 1 do
-        if players.exists(i) then --checks for if the PID exists in session
+        if players.exists(i) then 
             local playerPed = getPlayerPed(i)
             local playerCoords = getEntityCoords(playerPed)
             if PED.IS_PED_IN_ANY_VEHICLE(playerPed, true) then
-                for i = 0, 50, 1 do --50 explosions to account for armored vehicles, using type 5, as a tank shell as well xD
+                for i = 0, 50, 1 do 
                     SE_add_owned_explosion(playerPed, playerCoords.x, playerCoords.y, playerCoords.z, 5, 10, SEisExploAudible, SEisExploInvis, 0)
                     wait(10)
                 end
@@ -4316,98 +3878,12 @@ allplayoth:action("Everyone explode-suicides", {"allsuicide"}, "Makes everyone c
         end
     end
 end)
------------------------------------------------------------------------------------------------------------------------------------
-
---preload
-
-
-
---menu.divider(weapon, "Sticky Bomb Gun")
-
---[[SE_stickyEntities = {}
-SE_stickyCount = 1
-----
-SE_stickyvec3 = {}
-SE_stickyvec3count = 1
-----
-ARAY_StickyBombGun = false --ArrayList setup
-----
-menuToggleLoop(weapon, "Improved Sticky Bomb Gun", {"sbgun"}, "Notes where or what you shot, to explode it later.", function ()
-    --[[
-    if SE_ArrayList then
-        ARAY_StickyBombGun = true
-    end
-    local pped = getLocalPed() --get local ped, assign to "pped"
-    if PED.IS_PED_SHOOTING(pped) then --check for shooting
-        local tarEnt = memory.alloc() --allocate memory to get Target Entity
-        local isEntFound = PLAYER.GET_ENTITY_PLAYER_IS_FREE_AIMING_AT(players.user(), tarEnt) --is the entity found withing our aiming range?
-        if isEntFound then --if the entity is found, then...
-            local entt = memory.read_int(tarEnt) --get the entity handle
-            SE_stickyEntities[SE_stickyCount] = entt --assign it to our table
-            SE_stickyCount = SE_stickyCount + 1 --make our counter + 1
-            if SE_Notifications then
-                util.toast("Entity marked.")
-            end
-        else --if we WEREN't aiming at an entity, then...
-            local minevec3 = memory.alloc() --allocate memory for target coords
-            local junk = WEAPON.GET_PED_LAST_WEAPON_IMPACT_COORD(pped, minevec3) --get target coords
-            local mv3 = memory.read_vector3(minevec3) --get v3 coords
-            SE_stickyvec3[SE_stickyvec3count] = mv3 --assign to table
-            SE_stickyvec3count = SE_stickyvec3count + 1 --counter + 1
-            memory.free(minevec3)
-            if SE_Notifications then
-                util.toast("Coordinate marked.")
-            end
-        end
-        memory.free(tarEnt)
-    end--[[
-    if SE_ArrayList then
-        if ARAY_StickyBombGun then
-            SE_ArrayCount = SE_ArrayCount + 1
-            --
-            directx.draw_text(SE_ArrayOffsetX, (SE_ArrayCount * 0.02) + SE_ArrayOffsetY, "Improved Sticky Bomb Gun", ALIGN_TOP_LEFT, SE_ArrayScale, SE_ArrayColor, false)
-            SE_ArrayCount = SE_ArrayCount - 1
-        end
-        ARAY_StickyBombGun = false
-    end
-    
-end)
-
-menuAction(weapon, "Explode All Stickybombs", {"expsb"}, "Explodes all marked entities and coordinate with one stickybomb.", function ()
-    for i = 1, #SE_stickyEntities do
-        local targetC = getEntityCoords(SE_stickyEntities[i])
-        SE_add_owned_explosion(getLocalPed(), targetC.x, targetC.y, targetC.z, 2, 10, SEisExploAudible, SEisExploInvis, 0)
-    end
-    for i = 1, #SE_stickyvec3 do
-        local tarc = SE_stickyvec3[i]
-        SE_add_owned_explosion(getLocalPed(), tarc.x, tarc.y, tarc.z, 2, 10, SEisExploAudible, SEisExploInvis, 0)
-    end
-    if SE_Notifications then
-        util.toast("Exploded all stickybombs!")
-    end
-end)
-
-menuAction(weapon, "Clear Stickybombs", {"clearsb"}, "Clears all stickybombs from this script.", function ()
-    if SE_Notifications then
-        util.toast("Stickybombs deleted!")
-    end
-    SE_stickyEntities = {}
-    SE_stickyCount = 1
-    SE_stickyvec3 = {}
-    SE_stickyvec3count = 1
-end)]]
-
-
-----
---menu.divider(weapon, "Delete Gun")
-----
-
 
 MarkedForExt = {}
 MarkedForExtCount = 1
-----
-ARAY_ExtinctionGun = false --ArrayList setup
-----
+
+ARAY_ExtinctionGun = false 
+
 deletegun:toggle_loop("Better Delete Gun", {}, "", function ()
     local localPed = getLocalPed()
     if PED.IS_PED_SHOOTING(localPed) then
@@ -4451,66 +3927,13 @@ deletegun:action("Delete.", {}, "", function ()
     end
     MarkedForExt = {}
     MarkedForExtCount = 1
-    -- resets the extinction
-    if SE_Notifications then
         util.toast("Deleted! Clearing deletion list...")
-    end
 end)
 deletegun:action("Clear Deletion List", {}, "", function ()
     MarkedForExt = {}
     MarkedForExtCount = 1
 end)
 
-
-----------------------------------------------------------------------------------------------------
-
---[[menu.divider(weapon, "Proximity Mine Gun")
-
-PROX_Coords = {}
-PROX_Count = 1
-
-menuToggleLoop(weapon, "Proximity Mine Gun", {"proxgun"}, "Only works on coordinates, not entities. For that, use sticky bomb gun.", function ()
-    local localped = getLocalPed()
-    if PED.IS_PED_SHOOTING(localped) then --check if we shooting
-        local pointer = memory.alloc() --allocate memory for coords
-        local junk = WEAPON.GET_PED_LAST_WEAPON_IMPACT_COORD(localped, pointer) --get pointer to coord
-        local coord = memory.read_vector3(pointer) --get coord (read from pointer)
-        if coord.x ~= 0.0 and coord.y ~= 0.0 and coord.z ~= 0.0 then --check for dud (if we didn't register the shot)
-            PROX_Coords[PROX_Count] = coord --assign coord to table
-            PROX_Count = PROX_Count + 1 --make the counter go up
-            if SE_Notifications then
-                util.toast("Proximity mine placed at " .. coord.x .. " " .. coord.y .. " " .. coord.z)
-            end
-        end
-        memory.free(pointer) --free the memory so we don't bruh moment the script
-    end
-end)
-
-
-
-menuToggleLoop(weapon, "Enable/Disable Proximity Mines", {"enableprox", "proxon"}, "Makes the proximity mines actually check for if entities are by them.", function ()
-    if PROX_Coords ~= nil then
-        for i = 1, #PROX_Coords do
-            local pedTable = entities.get_all_peds_as_handles()
-            for a = 1, #pedTable do
-                if ENTITY.IS_ENTITY_IN_AREA(pedTable[a], PROX_Coords[i].x + 2, PROX_Coords[i].y + 2, PROX_Coords[i].z, PROX_Coords[i].x - 2, PROX_Coords[i].y - 2, PROX_Coords[i].z + 2, true, true, true) then
-                    SE_add_owned_explosion(getLocalPed(), PROX_Coords[i].x, PROX_Coords[i].y, PROX_Coords[i].z, 2, 10, true, false, 0.4)
-                end
-            end
-        end
-    end
-end)
-
-menuAction(weapon, "Clear Proximity Mines", {"clearprox"}, "Clears all proximity mines that you've placed.", function ()
-    util.toast("Cleared all " .. #PROX_Coords .. " proximity mines!")
-    PROX_Coords = {}
-    PROX_Count = 1
-end)--]]
-
-----------------------------------------------------------------------------------------------------
---menu.divider(weapon, "Kill Aura")
-
---preload
 KA_Radius = 20
 KA_Blame = true
 KA_Players = false
@@ -4523,8 +3946,7 @@ menuToggleLoop(killaura, "KillAura", {"killaura"}, "Kills peds, optionally playe
     local toKill = {}
     local ourcoords = getEntityCoords(getLocalPed())
     local ourped = getLocalPed()
-    local weaponhash = 177293209 -- heavy sniper mk2 hash
-    --
+    local weaponhash = 177293209 
     local pedPointers = entities.get_all_peds_as_pointers()
     for i = 1, #pedPointers do
         local v3 = entities.get_position(pedPointers[i])
@@ -4581,8 +4003,6 @@ menuToggleLoop(killaura, "KillAura", {"killaura"}, "Kills peds, optionally playe
     end
     wait(100)
 end)
-
---menu.divider(killAuraSettings, "KillAura Settings")
 
 killAuraSettings:slider( "KillAura Radius", {"karadius"}, "Radius for killaura.", 1, 100, 20, 1, function (value)
     KA_Radius = value
@@ -4670,20 +4090,6 @@ killAuraSettings:action("Populate the map.", {}, "After killing a bit too many p
     MISC.POPULATE_NOW()
 end)
 
-----------------------------------------------------------------------------------------------------
-
---local socials = menu.list(menu.my_root(), "Socials", {}, "")
---
---menu.hyperlink(socials, "Discord", "https://www.tiktok.com/@bigfootjinx")
---menu.hyperlink(socials, "Youtube", "https://www.youtube.com/@flkmods")
---menu.hyperlink(socials, "Kekma", "https://kekma.net/")
---menu.hyperlink(socials, "Pornhub", "https://de.pornhub.com/view_video.php?viewkey=ph6016183b2f870")
-
-----------------------------------------------------------------------------------------------------
-
---menu.divider(weapon, "PvP / PvE Helper")
-
---preload
 AIM_Spine2 = false
 AIM_Toe0 = false
 AIM_Pelvis = false
@@ -4703,8 +4109,6 @@ AIM_NPCS = false
 AIM_LEGITSILENT = true
 AIM_HEADVEH = false
 
---local silentaim = menu.list(pvphelp, "Silent Aimbot")
-
 silentAim:toggle_loop("Silent Aimbot", {"silentaim", "saimbot"}, "A silent aimbot with bone selection.", function ()
     local ourped = getLocalPed()
     if PED.IS_PED_SHOOTING(ourped) then
@@ -4723,18 +4127,16 @@ silentAim:toggle_loop("Silent Aimbot", {"silentaim", "saimbot"}, "A silent aimbo
                 end
             end
         end
-        local weaponHash = 177293209 --heavy sniper mk2 hash
+        local weaponHash = 177293209
         local bulletSpeed = 1000
-        --util.toast("Entities in range of // " .. AIM_Dist .. " // :" .. #inRange)
         for i = 1, #inRange do
             local coord = getEntityCoords(inRange[i])
-            if (PED.IS_PED_A_PLAYER(inRange[i]) and not AIM_NPCS) or (not PED.IS_PED_A_PLAYER(inRange[i]) and AIM_NPCS) then --check if player
-                if not PED.IS_PED_DEAD_OR_DYING(inRange[i], 1) then --check for dead/dying
-                    if (ENTITY.HAS_ENTITY_CLEAR_LOS_TO_ENTITY(ourped, inRange[i], 17) and LOS_CHECK == true) or (LOS_CHECK == false) then --check if we have line of sight
-                        if (PED.IS_PED_FACING_PED(ourped, inRange[i], AIM_FOV) and FOV_CHECK == true) or (FOV_CHECK == false) then --check for FOV
-                            if not AIM_WHITELIST[NETWORK.NETWORK_GET_PLAYER_INDEX_FROM_PED(inRange[i])] then --check if PID doesn't match the whitelist
-                                if distanceBetweenTwoCoords(coord, getEntityCoords(ourped)) < 401 and AIM_LEGITSILENT and ENTITY.HAS_ENTITY_CLEAR_LOS_TO_ENTITY(ourped, inRange[i], 17) then --check if they're less than 401 meters away (hitscan), and in LOS
-                                    --shooting done here, we have all preloads
+            if (PED.IS_PED_A_PLAYER(inRange[i]) and not AIM_NPCS) or (not PED.IS_PED_A_PLAYER(inRange[i]) and AIM_NPCS) then 
+                if not PED.IS_PED_DEAD_OR_DYING(inRange[i], 1) then 
+                    if (ENTITY.HAS_ENTITY_CLEAR_LOS_TO_ENTITY(ourped, inRange[i], 17) and LOS_CHECK == true) or (LOS_CHECK == false) then 
+                        if (PED.IS_PED_FACING_PED(ourped, inRange[i], AIM_FOV) and FOV_CHECK == true) or (FOV_CHECK == false) then 
+                            if not AIM_WHITELIST[NETWORK.NETWORK_GET_PLAYER_INDEX_FROM_PED(inRange[i])] then 
+                                if distanceBetweenTwoCoords(coord, getEntityCoords(ourped)) < 401 and AIM_LEGITSILENT and ENTITY.HAS_ENTITY_CLEAR_LOS_TO_ENTITY(ourped, inRange[i], 17) then
                                     local playerID = NETWORK.NETWORK_GET_PLAYER_INDEX_FROM_PED(inRange[i])
                                     local playerName = NETWORK.NETWORK_PLAYER_GET_NAME(playerID)
                                     local pveh = PED.GET_VEHICLE_PED_IS_IN(inRange[i], false)
@@ -4745,13 +4147,12 @@ silentAim:toggle_loop("Silent Aimbot", {"silentaim", "saimbot"}, "A silent aimbo
                                     if AIM_Head then
                                         local bonec = PED.GET_PED_BONE_COORDS(inRange[i], 12844, 0, 0, 0)
                                         MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS_IGNORE_ENTITY(forwardOffset.x, forwardOffset.y, forwardOffset.z, bonec.x, bonec.y, bonec.z, AIM_DMG, true, weaponHash, getLocalPed(), true, false, bulletSpeed, pveh, true)
-                                    elseif not AIM_HEAD and AIM_HEADVEH and PED.IS_PED_IN_ANY_VEHICLE(inRange[i], false) then --check for "target head if target in is vehicle"
+                                    elseif not AIM_HEAD and AIM_HEADVEH and PED.IS_PED_IN_ANY_VEHICLE(inRange[i], false) then 
                                         util.toast("VehChecked " .. tostring(playerName))
                                         local bonec = PED.GET_PED_BONE_COORDS(inRange[i], 12844, 0, 0, 0)
                                         MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS_IGNORE_ENTITY(forwardOffset.x, forwardOffset.y, forwardOffset.z, bonec.x, bonec.y, bonec.z, AIM_DMG, true, weaponHash, getLocalPed(), true, false, bulletSpeed, pveh, true)
                                     end
                                     if AIM_Spine2 then
-                                        --(​Ped ped, int boneId, float offsetX, float offsetY, float offsetZ)
                                         local bonec = PED.GET_PED_BONE_COORDS(inRange[i], 24817, 0, 0, 0)
                                         MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS_IGNORE_ENTITY(forwardOffset.x, forwardOffset.y, forwardOffset.z, bonec.x, bonec.y, bonec.z, AIM_DMG, true, weaponHash, getLocalPed(), true, false, bulletSpeed, pveh, true)
                                     end
@@ -4768,7 +4169,6 @@ silentAim:toggle_loop("Silent Aimbot", {"silentaim", "saimbot"}, "A silent aimbo
                                         MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS_IGNORE_ENTITY(forwardOffset.x, forwardOffset.y, forwardOffset.z, bonec.x, bonec.y, bonec.z, AIM_DMG, true, weaponHash, getLocalPed(), true, false, bulletSpeed, pveh, true)
                                     end
                                 else
-                                    --shooting done here, we have all preloads
                                     local playerID = NETWORK.NETWORK_GET_PLAYER_INDEX_FROM_PED(inRange[i])
                                     local playerName = NETWORK.NETWORK_PLAYER_GET_NAME(playerID)
                                     local pveh = PED.GET_VEHICLE_PED_IS_IN(inRange[i], false)
@@ -4785,7 +4185,6 @@ silentAim:toggle_loop("Silent Aimbot", {"silentaim", "saimbot"}, "A silent aimbo
                                         MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS_IGNORE_ENTITY(forwardOffset.x, forwardOffset.y, forwardOffset.z, bonec.x, bonec.y, bonec.z, AIM_DMG, true, weaponHash, getLocalPed(), true, false, bulletSpeed, pveh, true)
                                     end
                                     if AIM_Spine2 then
-                                        --(​Ped ped, int boneId, float offsetX, float offsetY, float offsetZ)
                                         local bonec = PED.GET_PED_BONE_COORDS(inRange[i], 24817, 0, 0, 0)
                                         MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS_IGNORE_ENTITY(forwardOffset.x, forwardOffset.y, forwardOffset.z, bonec.x, bonec.y, bonec.z, AIM_DMG, true, weaponHash, getLocalPed(), true, false, bulletSpeed, pveh, true)
                                     end
@@ -4883,7 +4282,6 @@ silentAimSettings:toggle("Target ONLY NPCs", {"silentnpc"}, "Toggle this to ONLY
     end
 end)
 
---menu.divider(silentAimSettings, "-----------------")
 
 silentAimSettings:toggle("Silent Aimbot Head", {"silentaimhead", "silenthead", "saimhead"}, "Makes the aimbot target the head. Probably doesn't look legitimate, but ok.", function(on)
     if on then
@@ -4925,44 +4323,11 @@ silentAimSettings:toggle("Silent Aimbot Hand (R_HAND)", {"silentaimhand", "silen
     end
 end)
 
---GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS --for shooting the kneecaps
---https://wiki.gtanet.work/index.php?title=Bones
---IK_Head 	12844
---SKEL_Spine2 	24817
---SKEL_Pelvis 	11816
---SKEL_R_Toe0 	20781
---IK_R_Hand 	6286
-
-
-----------------------------------------------------------------------------------------------------
-
---local vehaim = menu.list(pvphelp, "Vehicle Aimbot (experimental)")
-
---[[ ugh, deprecated. I wasted an hour of my life on this goddamn bruh moment.
-menuToggleLoop(pvphelp, "Vehicle Aimbot Toggle", {}, "", function ()
-    local p = getClosestPlayerWithRange(200) --get closest player within 200 meters
-    local localped = getLocalPed()
-    local localCoords = getEntityCoords(localped)
-    if p ~= nil then --if the player isn't NIL
-        local pcoords = getEntityCoords(p)
-        local bottomlength = MISC.GET_DISTANCE_BETWEEN_COORDS(localCoords.x, localCoords.y, localCoords.z, pcoords.x, pcoords.y, pcoords.z, false) --by setting BOOL useZ to false, we get only the 2d plane. (later used in tangent)
-        local toplength = pcoords.z - localCoords.z
-        if ENTITY.HAS_ENTITY_CLEAR_LOS_TO_ENTITY(localped, p, 17) then
-            local pitch = math.atan(bottomlength, toplength)
-            -- local yaw = 
-        end
-    end
-end)]]
-
---TYSM NOWIRY AND AARON!
-
 local function setVehicleMissileSpeed(value)
     local offsets = {0x10D8, 0x70, 0x60, 0x58}
     local addr = entities.handle_to_pointer(PLAYER.PLAYER_PED_ID())
     for i = 1, (#offsets - 1) do
-        -- make sure not to read from/write to a null pointer
         if addr == 0 then
-            -- got a null pointer at some point
             return -1.0
         end
         addr = memory.read_long(addr + offsets[i])
@@ -4973,7 +4338,6 @@ local function setVehicleMissileSpeed(value)
         return -1.0
     else
         memory.write_float(addr, value)
-        --memory.read_float(addr)
     end
 end
 
@@ -4981,9 +4345,7 @@ function GetVehicleMissileSpeed()
     local offsets = {0x10D8, 0x70, 0x60, 0x58}
     local addr = entities.handle_to_pointer(PLAYER.PLAYER_PED_ID())
     for i = 1, (#offsets - 1) do
-        -- make sure not to read from/write to a null pointer
         if addr == 0 then
-            -- got a null pointer at some point
             return -1.0
         end
         addr = memory.read_long(addr + offsets[i])
@@ -5006,10 +4368,9 @@ vehaim:toggle_loop("Helicopter Aimbot", {}, "Makes the heli aim at the closest p
     if p ~= nil and not PED.IS_PED_DEAD_OR_DYING(p) and ENTITY.HAS_ENTITY_CLEAR_LOS_TO_ENTITY(localped, p, 17) and not AIM_WHITELIST[NETWORK.NETWORK_GET_PLAYER_INDEX_FROM_PED(p)] and (not players.is_in_interior(NETWORK.NETWORK_GET_PLAYER_INDEX_FROM_PED(p))) and (not players.is_godmode(NETWORK.NETWORK_GET_PLAYER_INDEX_FROM_PED(p))) then
         if PED.IS_PED_IN_ANY_VEHICLE(localped) then
             local veh = PED.GET_VEHICLE_PED_IS_IN(localped, false)
-            if VEHICLE.GET_VEHICLE_CLASS(veh) == 15 or VEHICLE.GET_VEHICLE_CLASS(veh) == 16 then --vehicle class of heli
-                --did all prechecks, time to actually face them
+            if VEHICLE.GET_VEHICLE_CLASS(veh) == 15 or VEHICLE.GET_VEHICLE_CLASS(veh) == 16 then 
                 local pcoords = PED.GET_PED_BONE_COORDS(p, 24817, 0, 0, 0)
-                local look = util.v3_look_at(localCoords, pcoords) --x = pitch (vertical), y = roll (fuck no), z = heading (horizontal)
+                local look = util.v3_look_at(localCoords, pcoords)
                 ENTITY.SET_ENTITY_ROTATION(veh, look.x, look.y, look.z, 1, true)
             end
         end
@@ -5020,7 +4381,7 @@ vehaim:action("Modify Missile Speed", {}, "Thank you so much Nowiry for this.", 
     local localped = getLocalPed()
     if PED.IS_PED_IN_ANY_VEHICLE(localped) then
         local veh = PED.GET_VEHICLE_PED_IS_IN(localped, false)
-        if VEHICLE.GET_VEHICLE_CLASS(veh) == 15 or VEHICLE.GET_VEHICLE_CLASS(veh) == 16 then --vehicle class of heli
+        if VEHICLE.GET_VEHICLE_CLASS(veh) == 15 or VEHICLE.GET_VEHICLE_CLASS(veh) == 16 then
             setVehicleMissileSpeed(VEH_MISSILE_SPEED)
         end
     end
@@ -5030,19 +4391,14 @@ vehaim:slider("Set missile speed", {"vehmissilespeed"}, "Sets the speed of your 
     VEH_MISSILE_SPEED = value
 end)
 
-----------------------------------------------------------------------------------------------------
-
---local rpgaim = menu.list(pvphelp, "RPG Aimbot")
-
 MISL_AIM = false
 MISL_RAD = 300
 MISL_SPD = 100
 MISL_LOS = true
 MISL_CAM = false
 
---Later: block rockets (spawn walls when detecting they are in range)
 
-ATTACH_CAM_TO_ENTITY_WITH_FIXED_DIRECTION = function (--[[Cam (int)]] cam, --[[Entity (int)]] entity, --[[float]] xRot, --[[float]] yRot, --[[float]] zRot, --[[float]] xOffset, --[[float]] yOffset, --[[float]] zOffset, --[[BOOL (bool)]] isRelative)
+ATTACH_CAM_TO_ENTITY_WITH_FIXED_DIRECTION = function (cam, entity, xRot, yRot, zRot, xOffset, yOffset, zOffset, isRelative)
     native_invoker.begin_call()
     native_invoker.push_arg_int(cam)
     native_invoker.push_arg_int(entity)
@@ -5052,7 +4408,6 @@ ATTACH_CAM_TO_ENTITY_WITH_FIXED_DIRECTION = function (--[[Cam (int)]] cam, --[[E
     native_invoker.end_call("202A5ED9CE01D6E7")
 end
 
---https://github.com/Sainan/gta-v-joaat-hash-db/blob/senpai/out/objects-hex.csv
 
 rpgaim:toggle("RPG Aimbot / Most Vehicles", {"rpgaim"}, "You heard me. Only the REGULAR RPG, not the homing one. Works on vehicles as well, such as Lazer or Buzzard. No guarantees, though!", function (on)
     if on then
@@ -5063,11 +4418,8 @@ rpgaim:toggle("RPG Aimbot / Most Vehicles", {"rpgaim"}, "You heard me. Only the 
                 local localped = getLocalPed()
                 local localcoords = getEntityCoords(getLocalPed())
                 RRocket = OBJECT.GET_CLOSEST_OBJECT_OF_TYPE(localcoords.x, localcoords.y, localcoords.z, 10, rockethash, false, true, true, true)
-                --local p = getClosestPlayerWithRange(MISL_RAD)
                 local p = getClosestPlayerWithRange_Whitelist(MISL_RAD)
                 local ppcoords = getEntityCoords(p)
-                --local p = getClosestNonPlayerPedWithRange(MISL_RAD)
-                ----
                 if (RRocket ~= 0) and (p ~= nil) and (not PED.IS_PED_DEAD_OR_DYING(p)) and (not AIM_WHITELIST[NETWORK.NETWORK_GET_PLAYER_INDEX_FROM_PED(p)]) and (PED.IS_PED_SHOOTING(localped)) and (not players.is_in_interior(NETWORK.NETWORK_GET_PLAYER_INDEX_FROM_PED(p))) and (ppcoords.z > 1) then
                     if (ENTITY.HAS_ENTITY_CLEAR_LOS_TO_ENTITY(localped, p, 17) and MISL_LOS) or not MISL_LOS or MISL_AIR then
                         if SE_Notifications then
@@ -5084,20 +4436,13 @@ rpgaim:toggle("RPG Aimbot / Most Vehicles", {"rpgaim"}, "You heard me. Only the 
                             end
                         end
                         local aircount = 1
-                        ----
                         Missile_Camera = 0
-
-                        --preload the fake rocket and the particle fx
-                        -- > -- Load the particleFX for the fakerocket so it networks to other players
-                        STREAMING.REQUEST_NAMED_PTFX_ASSET("core")
                         while not STREAMING.HAS_NAMED_PTFX_ASSET_LOADED("core") do
                             STREAMING.REQUEST_NAMED_PTFX_ASSET("core")
                             wait()
                         end
                         GRAPHICS.USE_PARTICLE_FX_ASSET("core")
-                        -- > -- we now have loaded our PTFX for our fake rocket.
                         GRAPHICS.START_PARTICLE_FX_NON_LOOPED_ON_ENTITY("exp_grd_rpg_lod", RRocket, 0, 0, 0, 0, 0, 0, 2, false, false, false)
-                        --while the rocket exists, we do this vvvv
                         while ENTITY.DOES_ENTITY_EXIST(RRocket) do
                             if SE_Notifications then
                                 util.toast("rocket exists")
@@ -5106,24 +4451,17 @@ rpgaim:toggle("RPG Aimbot / Most Vehicles", {"rpgaim"}, "You heard me. Only the 
                             local lc = getEntityCoords(RRocket)
                             local look = util.v3_look_at(lc, pcoords)
                             local dir = util.rot_to_dir(look)
-                            -- > -- make the fake rocket sync to the real one
                             local fakeOffset = ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(RRocket, 0, 0.5, 0)
-                            ENTITY.SET_ENTITY_COORDS(FakeRocket, fakeOffset.x, fakeOffset.y, fakeOffset.z, false, false, false, false) --(​Entity entity, float xPos, float yPos, float zPos, BOOL xAxis, BOOL yAxis, BOOL zAxis, BOOL clearArea)
+                            ENTITY.SET_ENTITY_COORDS(FakeRocket, fakeOffset.x, fakeOffset.y, fakeOffset.z, false, false, false, false)
                             ENTITY.SET_ENTITY_ROTATION(FakeRocket, look.x, look.y, look.z, 2, true)
-                            -- // -- // --
-                            -- // -- // --
                             STREAMING.REQUEST_NAMED_PTFX_ASSET("core")
                             while not STREAMING.HAS_NAMED_PTFX_ASSET_LOADED("core") do
                                 STREAMING.REQUEST_NAMED_PTFX_ASSET("core")
                                 wait()
                             end
                             GRAPHICS.USE_PARTICLE_FX_ASSET("core")
-                            -- > -- we now have loaded our PTFX for our fake rocket.
-                            --(​const char* effectName, float xPos, float yPos, float zPos, float xRot, float yRot, float zRot, float scale, BOOL xAxis, BOOL yAxis, BOOL zAxis, BOOL p11)
                             GRAPHICS.START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD("exp_grd_rpg_lod", lc.x, lc.y, lc.z, 0, 0, 0, 0.4, false, false, false, true)
-                            -- // -- // --
-                            -- // -- // --
-                            --airstrike air
+
                             if aircount < 2 and MISL_AIR then
                                 ENTITY.APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(RRocket, 1, 0, 0, 99990000, true, false, true, true)
                                 aircount = aircount + 1
@@ -5138,7 +4476,6 @@ rpgaim:toggle("RPG Aimbot / Most Vehicles", {"rpgaim"}, "You heard me. Only the 
                                         end
                                         CAM.DESTROY_ALL_CAMS(true)
                                         Missile_Camera = CAM.CREATE_CAM("DEFAULT_SCRIPTED_CAMERA", true)
-                                        --ATTACH_CAM_TO_ENTITY_WITH_FIXED_DIRECTION(Missile_Camera, RRocket, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1)
                                         CAM.SET_CAM_ACTIVE(Missile_Camera, true)
                                         CAM.RENDER_SCRIPT_CAMS(true, false, 0, true, true, 0)
                                     end
@@ -5150,7 +4487,6 @@ rpgaim:toggle("RPG Aimbot / Most Vehicles", {"rpgaim"}, "You heard me. Only the 
                                     local ddisst = SYSTEM.VDIST(pcoords.x, pcoords.y, pcoords.z, lc.x, lc.y, lc.z)
                                     if ddisst > 50 then
                                         local look2 = util.v3_look_at(CAM.GET_CAM_COORD(Missile_Camera), lc)
-                                        --local backoffset = ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(p, 0, -30, 10)
                                         local backoffset = ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(RRocket, 10, 10, -2)
                                         CAM.SET_CAM_COORD(Missile_Camera, backoffset.x, backoffset.y, backoffset.z)
                                         if lookCountD < 1 then
@@ -5162,19 +4498,16 @@ rpgaim:toggle("RPG Aimbot / Most Vehicles", {"rpgaim"}, "You heard me. Only the 
                                         CAM.SET_CAM_ROT(Missile_Camera, look2.x, look2.y, look2.z, 2)
                                     end
                                 end
-                                --CAM.SET_CAM_PARAMS(Missile_Camera, lc.x, lc.y, lc.z + 1, look.x, look.y, look.z, 100, 0, 0, 0, 0) --(​Cam cam, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float fieldOfView, Any p8, int p9, int p10, int p11)
                                 ENTITY.SET_ENTITY_ROTATION(RRocket, look.x, look.y, look.z, 2, true)
                                 ENTITY.APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(RRocket, 1, dir.x * MISL_SPD * distx, dir.y * MISL_SPD * disty, dir.z * MISL_SPD * distz, true, false, true, true)
                                 wait()
                             else
-                                -- vanilla "aimbot"
                                 ENTITY.SET_ENTITY_ROTATION(RRocket, look.x, look.y, look.z, 2, true)
                                 ENTITY.APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(RRocket, 1, dir.x * MISL_SPD, dir.y * MISL_SPD, dir.z * MISL_SPD, true, false, true, true)
                                 wait()
                             end
                         end
 
-                        --rocket has stopped existing
                         if MISL_CAM then
                             wait(2000)
                             if SE_Notifications then
@@ -5233,9 +4566,6 @@ end)
 
 ----------------------------------------------------------------------------------------------------
 
---local orbway = menu.list(pvphelp, "Orbital Waypoint")
-
---preload
 ORB_Sneaky = false
 
 orbway:action("Orbital Strike Waypoint", {"orbway", "orbwp"}, "Orbital Cannons your selected Waypoint.", function ()
@@ -5268,9 +4598,6 @@ end)
 
 ----------------------------------------------------------------------------------------------------
 
---local carsuic = menu.list(pvphelp, "Auto Car-Suicide")
-
---preload
 CAR_S_sneaky = false
 CAR_S_BLACKLIST = {}
 
@@ -5315,7 +4642,6 @@ end)
 
 ----------------------------------------------------------------------------------------------------
 
---local legitrapid = menu.list(pvphelp, "Legit Rapid Fire")
 
 LegitRapidFire = false
 LegitRapidMS = 100
@@ -5331,7 +4657,7 @@ legitrapid:toggle("Legit Rapid Fire (fast-switch)", {"legitrapidfire"}, "Quickly
                     local junk = WEAPON.GET_CURRENT_PED_WEAPON(localped, currentWpMem, 1)
                     local currentWP = memory.read_int(currentWpMem)
                     memory.free(currentWpMem)
-                    WEAPON.SET_CURRENT_PED_WEAPON(localped, 2481070269, true) --2481070269 is grenade
+                    WEAPON.SET_CURRENT_PED_WEAPON(localped, 2481070269, true) 
                     wait(LegitRapidMS)
                     WEAPON.SET_CURRENT_PED_WEAPON(localped, currentWP, true)
                 end
@@ -5402,40 +4728,6 @@ menuAction(debugFeats, "Get Heading", {}, "", function ()
     util.toast(ENTITY.GET_ENTITY_HEADING(pp))
 end)
 
---[[menuAction(debugFeats, "BLOCK TESTING", {}, "", function ()
-    local hash = 309416120
-    requestModel(hash)
-    while not hasModelLoaded(hash) do wait() end
-
-    local a1 = OBJECT.CREATE_OBJECT_NO_OFFSET(hash, 1182, 2650, 37, true, true, true)
-    ENTITY.SET_ENTITY_HEADING(a1, 88+180)
-
-    local b1 = OBJECT.CREATE_OBJECT_NO_OFFSET(hash, 1176, 2650, 37, true, true, true)
-    ENTITY.SET_ENTITY_HEADING(b1, 88+180)
-
-    local c1 = OBJECT.CREATE_OBJECT_NO_OFFSET(hash, 1185, 2647, 37, true, true, true)
-    ENTITY.SET_ENTITY_HEADING(c1, 182)
-
-    local d1 = OBJECT.CREATE_OBJECT_NO_OFFSET(hash, 1172, 2646, 37, true, true, true)
-    ENTITY.SET_ENTITY_HEADING(d1, 2)
-
-    --
-
-    local a1_2 = OBJECT.CREATE_OBJECT_NO_OFFSET(hash, 1182, 2650, 39, true, true, true)
-    ENTITY.SET_ENTITY_HEADING(a1_2, 88+180)
-
-    local b1_2 = OBJECT.CREATE_OBJECT_NO_OFFSET(hash, 1176, 2650, 39, true, true, true)
-    ENTITY.SET_ENTITY_HEADING(b1_2, 88+180)
-
-    local c1_2 = OBJECT.CREATE_OBJECT_NO_OFFSET(hash, 1185, 2647, 39, true, true, true)
-    ENTITY.SET_ENTITY_HEADING(c1_2, 182)
-
-    local d1_2 = OBJECT.CREATE_OBJECT_NO_OFFSET(hash, 1172, 2646, 39, true, true, true)
-    ENTITY.SET_ENTITY_HEADING(d1_2, 2)
-
-    noNeedModel(hash)
-end)]]
-
 menuToggleLoop(debugFeats, "Get player name from shot", {}, "", function ()
     local pped = getPlayerPed(players.user())
     if PED.IS_PED_SHOOTING(pped) then
@@ -5459,439 +4751,6 @@ menuToggleLoop(debugFeats, "Get player name from shot", {}, "", function ()
     end
 end)
 
---local toolFeats = menu.list(menuroot, "Tools", {}, "")
---
---menu.divider(toolFeats, "Smooth TP")
---
---menuAction(toolFeats, "Smooth Teleport", {"stp"}, "Teleports you to your waypoint with the camera being smooth.", function ()
---    SmoothTeleportToCord(get_waypoint_pos2())
---end)
---
---menuAction(toolFeats, "Reset Camera", {"resetstp"}, "Rendering of script cams to false, along with destroying the current cam. For if you teleport into the ocean, and the camera DIES.", function ()
---    local renderingCam = CAM.GET_RENDERING_CAM()
---    CAM.RENDER_SCRIPT_CAMS(false, false, 0, true, true, 0)
---    CAM.DESTROY_CAM(renderingCam, true)
---end)
---
---local stpsettings = menu.list(toolFeats, "SmoothTP Settings", {}, "")
---
---menu.slider(stpsettings, "Speed Modifier (x) /10", {"stpspeed"}, "Speed Modifider for smooth-tp, multiplicative. This will divide by 10, as sliders cannot take non-integers", 1, 100, 10, 1, function(value)
---    local multiply = value / 10
---    if SE_Notifications then
---        util.toast("SmoothTP Speed Multiplier set to " .. tostring(multiply) .. "!")
---    end
---    STP_SPEED_MODIFIER = 0.02 --set it again so it doesnt multiply over and over. This took too long to figure out....
---    STP_SPEED_MODIFIER = STP_SPEED_MODIFIER * multiply
---end)
---
---menu.slider(stpsettings, "Height of cam transition (meters)", {"stpheight"}, "Set the height for the camera when it's doing the transition.", 0, 10000, 300, 10, function (value)
---    local height = value
---    if SE_Notifications then
---        util.toast("SmoothTP Height set to " .. tostring(height) .. "!")
---    end
---    STP_COORD_HEIGHT = height
---end)
---
---menu.divider(toolFeats, "-=-=-=-=-=-=-=-=-")
---
-----
---menuAction(toolFeats, "Teleport high up", {"tphigh"}, "Teleports you very high up, for testing parachutes/falldamage.", function ()
---    local pcoords = getEntityCoords(getLocalPed())
---    ENTITY.SET_ENTITY_COORDS_NO_OFFSET(getLocalPed(), pcoords.x, pcoords.y, pcoords.z + 1000, false, false, false)
---end)
---
-----preload
---DR_TXT_SCALE = 0.5
---
---
---menuToggleLoop(toolFeats, "Draw position", {"drawpos"},  "", function ()
---    local pos = getEntityCoords(getLocalPed())
---    local cc = {r = 1.0, g = 1.0, b = 1.0, a = 1.0}
---    directx.draw_text(0.0, 0.0, "x: " .. pos.x .. " // y: " .. pos.y .. " // z: " .. pos.z, ALIGN_TOP_LEFT, DR_TXT_SCALE, cc, false)
---end)
---
-----preload
---EP_drawveh = true
---EP_drawped = true
---EP_drawobj = true
---EP_drawpick = true
-------
---EPS_vehx = 0.0
---EPS_vehy = 0.03
-----
---EPS_pedx = 0.0
---EPS_pedy = 0.05
-----
---EPS_objx = 0.0
---EPS_objy = 0.07
-----
---EPS_pickx = 0.0
---EPS_picky = 0.09
-----
---
---menuToggleLoop(toolFeats, "Draw Entity Pool", {"drawentpool"}, "", function ()
---    local cc = {r = 1.0, g = 1.0, b = 1.0, a = 1.0}
---    if EP_drawveh then
---        local vehpool = entities.get_all_vehicles_as_pointers()
---        directx.draw_text(EPS_vehx, EPS_vehy, "vehicles: " .. #vehpool, ALIGN_TOP_LEFT, DR_TXT_SCALE, cc, false)
---    end
---    if EP_drawped then
---        local pedpool = entities.get_all_peds_as_pointers()
---        directx.draw_text(EPS_pedx, EPS_pedy, "peds: " .. #pedpool, ALIGN_TOP_LEFT, DR_TXT_SCALE, cc, false)
---    end
---    if EP_drawobj then
---        local objpool = entities.get_all_objects_as_pointers()
---        directx.draw_text(EPS_objx, EPS_objy, "objects: " .. #objpool, ALIGN_TOP_LEFT, DR_TXT_SCALE, cc, false)
---    end
---    if EP_drawpick then
---        local pickpool = entities.get_all_pickups_as_pointers()
---        directx.draw_text(EPS_pickx, EPS_picky, "pickups: " .. #pickpool, ALIGN_TOP_LEFT, DR_TXT_SCALE, cc, false)
---    end
---end)
---
---local ePS = menu.list(toolFeats, "Entity Pool Settings", {}, "")
---menuToggle(ePS, "Draw Vehicles?", {}, "", function (toggle)
---    if toggle then
---        EP_drawveh = true
---    else
---        EP_drawveh = false
---    end
---end, true)
---menu.slider(ePS, "Vehicle Text Placement X", {"epvehposx"}, "/100", 0, 100, 0, 1, function (value)
---    EPS_vehx = value / 100
---end) 
---menu.slider(ePS, "Vehicle Text Placement Y", {"epvehposy"}, "/100", 0, 100, 3, 1, function (value)
---    EPS_vehy = value / 100
---end)
---menuToggle(ePS, "Draw Peds?", {}, "", function (toggle)
---    if toggle then 
---        EP_drawped = true
---    else
---        EP_drawped = false
---    end
---end, true)
---menu.slider(ePS, "Ped Text Placement X", {"eppedposx"}, "/100", 0, 100, 0, 1, function (value)
---    EPS_pedx = value / 100
---end)
---menu.slider(ePS, "Ped Text Placement Y", {"eppedposy"}, "/100", 0, 100, 5, 1, function (value)
---    EPS_pedy = value / 100
---end)
---menuToggle(ePS, "Draw Objects?", {}, "", function (toggle)
---    if toggle then
---        EP_drawobj = true
---    else
---        EP_drawobj = false
---    end
---end, true)
---menu.slider(ePS, "Object Text Placement X", {"epobjposx"}, "/100", 0, 100, 0, 1, function (value)
---    EPS_objx = value / 100
---end)
---menu.slider(ePS, "Object Text Placement Y", {"epobjposy"}, "/100", 0, 100, 7, 1, function (value)
---    EPS_objy = value / 100
---end)
---menuToggle(ePS, "Draw Pickups?", {}, "", function (toggle)
---    if toggle then
---        EP_drawpick = true
---    else
---        EP_drawpick = false
---    end
---end, true)
---menu.slider(ePS, "Pickups Text Placement X", {"epickjposx"}, "/100", 0, 100, 0, 1, function (value)
---    EPS_pickx = value / 100
---end)
---menu.slider(ePS, "Pickups Text Placement Y", {"epickjposy"}, "/100", 0, 100, 9, 1, function (value)
---    EPS_picky = value / 100
---end)
---
---menu.divider(toolFeats, "Settings")
---menu.slider(toolFeats, "Text Size (/10)", {"drscale"}, "Sets the scale of the text to the value you assign, divided by 10. This is because it only takes integer values.", 1, 50, 5, 1, function (value)
---    DR_TXT_SCALE = value / 10
---end)
---
---menu.divider(toolFeats, "Others")
---menuAction(toolFeats, "Set every single thing that is a minute long to 0", {}, "", function ()
---    memory.write_int(memory.script_global(262145+30775),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+30813),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+31315),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+32109),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+16756),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+16935),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+17202),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+17206),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+17207),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+17211),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+17240),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+19291),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+21103),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+21103),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+21104),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+21129),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+22400),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+22404),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+22408),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+22524),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+22858),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+23213),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+23762),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+24100),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+24417),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+24544),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+25058),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+25065),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+25436),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+28058),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+28419),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+153),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+51),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+56),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+4667),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+4138),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+7435),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+8042),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+9877),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+10395),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+10610),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+10761),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+10863),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+11191),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+11333),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+11425),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+11808),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+11812),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+12805),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+15297),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+16403),0)
---    wait(50) 
---    memory.write_int(memory.script_global(262145+23818),0)
---    --[[
---    memory.write_int(memory.script_global(262145+30775),0)
---    memory.write_int(memory.script_global(262145+30813),0)
---    memory.write_int(memory.script_global(262145+31315),0)
---    memory.write_int(memory.script_global(262145+32109),0)
---    memory.write_int(memory.script_global(262145+16756),0)
---    memory.write_int(memory.script_global(262145+16935),0)
---    memory.write_int(memory.script_global(262145+17202),0)
---    memory.write_int(memory.script_global(262145+17206),0)
---    memory.write_int(memory.script_global(262145+17207),0)
---    memory.write_int(memory.script_global(262145+17211),0)
---    memory.write_int(memory.script_global(262145+17240),0)
---    memory.write_int(memory.script_global(262145+19291),0)
---    memory.write_int(memory.script_global(262145+21103),0)
---    memory.write_int(memory.script_global(262145+21103),0)
---    memory.write_int(memory.script_global(262145+21104),0)
---    memory.write_int(memory.script_global(262145+21129),0)
---    memory.write_int(memory.script_global(262145+22400),0)
---    memory.write_int(memory.script_global(262145+22404),0)
---    memory.write_int(memory.script_global(262145+22408),0)
---    memory.write_int(memory.script_global(262145+22524),0)
---    memory.write_int(memory.script_global(262145+22858),0)
---    memory.write_int(memory.script_global(262145+23213),0)
---    memory.write_int(memory.script_global(262145+23762),0)
---    memory.write_int(memory.script_global(262145+24100),0)
---    memory.write_int(memory.script_global(262145+24417),0)
---    memory.write_int(memory.script_global(262145+24544),0)
---    memory.write_int(memory.script_global(262145+25058),0)
---    memory.write_int(memory.script_global(262145+25065),0)
---    memory.write_int(memory.script_global(262145+25436),0)
---    memory.write_int(memory.script_global(262145+28058),0)
---    memory.write_int(memory.script_global(262145+28419),0)
---    memory.write_int(memory.script_global(262145+153),0)
---    memory.write_int(memory.script_global(262145+51),0)
---    memory.write_int(memory.script_global(262145+56),0)
---    memory.write_int(memory.script_global(262145+4667),0)
---    memory.write_int(memory.script_global(262145+4138),0)
---    memory.write_int(memory.script_global(262145+7435),0)
---    memory.write_int(memory.script_global(262145+8042),0)
---    memory.write_int(memory.script_global(262145+9877),0)
---    memory.write_int(memory.script_global(262145+10395),0)
---    memory.write_int(memory.script_global(262145+10610),0)
---    memory.write_int(memory.script_global(262145+10761),0)
---    memory.write_int(memory.script_global(262145+10863),0)
---    memory.write_int(memory.script_global(262145+11191),0)
---    memory.write_int(memory.script_global(262145+11333),0)
---    memory.write_int(memory.script_global(262145+11425),0)
---    memory.write_int(memory.script_global(262145+11808),0)
---    memory.write_int(memory.script_global(262145+11812),0)
---    memory.write_int(memory.script_global(262145+12805),0)
---    memory.write_int(memory.script_global(262145+15297),0)
---    memory.write_int(memory.script_global(262145+16403),0)
---    memory.write_int(memory.script_global(262145+23818),0)
---    ]]
---end)
---
-------
---YOINK_PEDS = false
---YOINK_VEHICLES = false
---YOINK_OBJECTS = false
---YOINK_PICKUPS = false
---
---YOINK_RANGE = 500
---
---Yoinkshit = false
---
---menuToggle(toolFeats, "Yoink Control of All __", {}, "", function (yoink)
---    if yoink then
---        Yoinkshit = true
---        util.create_thread(function()
---            while Yoinkshit do
---                local yoinksq = YOINK_RANGE^2
---                local localCoord = getEntityCoords(getPlayerPed(players.user()))
---                local BigTable = {}
---                if YOINK_PEDS then
---                    local pedTable = entities.get_all_peds_as_pointers()
---                    for i = 1, #pedTable do
---                        local coord = entities.get_position(pedTable[i])
---                        local distsq = SYSTEM.VDIST2(coord.x, coord.y, coord.z, localCoord.x, localCoord.y, localCoord.z)
---                        local handle = entities.pointer_to_handle(pedTable[i])
---                        if not PED.IS_PED_A_PLAYER(handle) then
---                            if distsq <= yoinksq then
---                                BigTable[#BigTable+1] = handle
---                            end
---                        end
---                    end
---                end
---                wait()
---                if YOINK_VEHICLES then
---                    local vehTable = entities.get_all_vehicles_as_pointers()
---                    for i = 1, #vehTable do
---                        local coord = entities.get_position(vehTable[i])
---                        local distsq = SYSTEM.VDIST2(coord.x, coord.y, coord.z, localCoord.x, localCoord.y, localCoord.z)
---                        if distsq <= yoinksq then
---                            BigTable[#BigTable+1] = entities.pointer_to_handle(vehTable[i])
---                        end
---                    end
---                end
---                wait()
---                if YOINK_OBJECTS then
---                    local objTable = entities.get_all_objects_as_pointers()
---                    for i = 1, #objTable do
---                        local coord = entities.get_position(objTable[i])
---                        local distsq = SYSTEM.VDIST2(coord.x, coord.y, coord.z, localCoord.x, localCoord.y, localCoord.z)
---                        if distsq <= yoinksq then
---                            BigTable[#BigTable+1] = entities.pointer_to_handle(objTable[i])
---                        end
---                    end
---                end
---                if YOINK_PICKUPS then
---                    local pickTable = entities.get_all_pickups_as_pointers()
---                    for i = 1, #pickTable do
---                        local coord = entities.get_position(pickTable[i])
---                        local distsq = SYSTEM.VDIST2(coord.x, coord.y, coord.z, localCoord.x, localCoord.y, localCoord.z)
---                        if distsq <= yoinksq then
---                            BigTable[#BigTable+1] = entities.pointer_to_handle(pickTable[i])
---                        end
---                    end
---                end
---                for i = 1, #BigTable do
---                    NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(BigTable[i])
---                    wait()
---                end
---                util.toast("Requested control of all")
---                ----
---                wait()
---            end
---        end)
---    else
---        Yoinkshit = false
---    end
---end)
---
---local yoinkSettings = menu.list(toolFeats, "Yoink Control Settings", {}, "")
---
---menu.slider(yoinkSettings, "Range for Yoink", {"yoinkrange"}, "", 1, 5000, 500, 10, function (value)
---    YOINK_RANGE = value
---end)
---
---menuToggle(yoinkSettings, "Peds", {}, "", function (peds)
---    if peds then
---        YOINK_PEDS = true
---    else
---        YOINK_PEDS = false
---    end
---end)
---
---menuToggle(yoinkSettings, "Vehicles", {}, "", function (vehs)
---    if vehs then
---        YOINK_VEHICLES = true
---    else
---        YOINK_VEHICLES = false
---    end
---end)
---
---menuToggle(yoinkSettings, "Objects", {}, "", function (objs)
---    if objs then
---        YOINK_OBJECTS = true
---    else
---        YOINK_OBJECTS = false
---    end
---end)
---
---menuToggle(yoinkSettings, "Pickups", {}, "", function (pick)
---    if pick then
---        YOINK_PICKUPS = true
---    else
---        YOINK_PICKUPS = false
---    end
---end)
-
---------------------------------------------------------------------------------------------------------------------------
-
---local vehicleFeats = menu.list(menuroot, "Vehicle", {"vehicleFeats"}, "")
---
---local vehdiv = menu.divider(vehicleFeats, "Moved to Vehicle Tab")
-
---------------------------------------------------------------------------------------------------------------------------
-
 local ptfx_trails_list = vehh:list("PTFX Trails")
 
 local PTFX_trails = {
@@ -5907,9 +4766,6 @@ local PTFX_trails = {
     {name = "scr_sum2_hal_rider_weak_blue", asset = "scr_rcpaparazzo1", particle = "scr_sum2_hal_rider_weak_blue"},
 }
 
----------------
---PTFX TRAILS--
----------------
 local ptfx_trails = {}
 local particle_fx = {}
 local time_delay = 0
@@ -5918,8 +4774,8 @@ for i, data in PTFX_trails do
         if is_ped_in_any_vehicle(players.user_ped(), false) then
             local vehicle = entities.get_user_vehicle_as_handle(false)
             local height = func.get_model_dimensions_from_hash(get_entity_model(vehicle))
-            local posX1 = -height.x/3 --left--
-            local posX2 = height.x/3 --right--
+            local posX1 = -height.x/3 
+            local posX2 = height.x/3 
             local posY = -height.y/3
             for i, posX in {posX1, posX2} do
                 func.use_fx_asset(data.asset)
@@ -5952,7 +4808,6 @@ for i, data in PTFX_trails do
 end
 
 --------------------------------------------------------------------------------------------------------------------------
-
 
 vehh:toggle_loop("Unlock Vehicle that you shoot", {"unlockvehshot"}, "Unlocks a vehicle that you shoot. This will work on locked player cars.", function ()
     ::start::
@@ -6050,7 +4905,7 @@ vehh:toggle_loop("Turn Car On Instantly", {"turnvehonget"}, "Turns the car engin
             VEHICLE.SET_VEHICLE_ENGINE_HEALTH(veh, 1000)
             VEHICLE.SET_VEHICLE_ENGINE_ON(veh, true, true, false)
         end
-        if VEHICLE.GET_VEHICLE_CLASS(veh) == 15 then --15 is heli
+        if VEHICLE.GET_VEHICLE_CLASS(veh) == 15 then
             VEHICLE.SET_HELI_BLADES_FULL_SPEED(veh)
         end
     end
@@ -6068,10 +4923,8 @@ vehh:toggle_loop("Stop Vehicle On Getting In", {"stopvehonget"}, "Set's the car'
     end
 end)
 
---menu.divider(vehicleFeats, "Velocity Multiplier")
 local velmod = vehh:list("Velocity Multiplier")
 
---preload
 SuperVehMultiply = 1.2
 
 BetterSuperDrive = false
@@ -6082,7 +4935,6 @@ velmod:toggle("Velocity Multiplier (BIND TO HOLD)", {"vehmultiply"}, "Velocity m
         util.create_thread(function()
             while BetterSuperDrive do
                 if PED.IS_PED_IN_ANY_VEHICLE(localped, false) then
-                    --if PAD.IS_CONTROL_PRESSED(0, 71) then --71 == INPUT_VEH_ACCELERATE
                         local veh = PED.GET_VEHICLE_PED_IS_IN(localped, false)
                         local vehVel = ENTITY.GET_ENTITY_VELOCITY(veh)
                         local newVel = {x = vehVel.x * SuperVehMultiply, y = vehVel.y * SuperVehMultiply, z = vehVel.z * SuperVehMultiply}
@@ -6105,7 +4957,7 @@ velmod:toggle("Velocity Multiplier (Bound To Shift)", {"vehmultiplyshift"}, "Vel
         util.create_thread(function()
             while BetterSuperDrive do
                 if PED.IS_PED_IN_ANY_VEHICLE(localped, false) then
-                    if PAD.IS_CONTROL_PRESSED(0, 21) --[[or PAD.IS_CONTROL_PRESSED(0, 61)]] then --21 == INPUT_SPRINT || 61 == INPUT_VEH_MOVE_UP_ONLY
+                    if PAD.IS_CONTROL_PRESSED(0, 21) then 
                         local veh = PED.GET_VEHICLE_PED_IS_IN(localped, false)
                         local vehVel = ENTITY.GET_ENTITY_VELOCITY(veh)
                         local newVel = {x = vehVel.x * SuperVehMultiply, y = vehVel.y * SuperVehMultiply, z = vehVel.z * SuperVehMultiply}
@@ -6171,14 +5023,6 @@ function GenerateSpawnFeatures()
         util.toast("It took about " .. timeAfterPeds - timeBeforePeds .. " milliseconds to generate ped spawn features!")
         ----------------------------------------------------------------------------
 
-
-        ----------------------------------------------------------------------------
-
-        --local test1 = menu.ref_by_rel_path(menu.player_root(pid), "Spectate")
-        --local test2 = menu.list(test1, "LMFAO", {}, "it works!")
-        --local test3 = menu.action(test2, "NIck nock", {""}, "lol")
-
-        ----------------------------------------------------------------------------
         local spawnObjs = menu.list(spawnFeats, "Objects", {}, "")
         SPAWNED_OBJS = {}
         SPAWNED_OBJ_COUNT = 0
@@ -6211,10 +5055,6 @@ function GenerateSpawnFeatures()
         end
         local timeAfterObjs = util.current_time_millis()
 
-       -- util.toast("It took about " .. timeAfterObjs - timeBeforeObjs .. " milliseconds to generate object spawn features!")
-
-        -----
-
         menu.toggle(spawnFeats, "Spawn freezed", {}, "This will spawn the peds/objects frozen in place.", function(on)
             SPAWN_FROZEN = on
         end)
@@ -6230,25 +5070,7 @@ menuAction(spawnFeats, "Generate spawn features", {}, "Generates the spawn featu
     GenerateSpawnFeatures()
 end)
 
--- CoolFlareFly = false
--- menuToggle(vehicleFeats, "Cool Flare Fly", {"coolflarefly"}, "A really cool flight with flares. Get into a plane for this.", function (on)
---     if on then
---         CoolFlareFly = true
---         local flareHash = joaat("w_pi_flaregun_shell")
---         util.create_thread(function()
---             while CoolFlareFly do
---                 local localPed = getLocalPed()
---                 if PED.IS_PED_IN_ANY_VEHICLE(localPed, false) then
---                     local veh = PED.GET_VEHICLE_PED_IS_IN(localPed, false)
---                 end
---                 ----
---                 wait()
---             end
---         end)
---     else
---         CoolFlareFly = false
---     end
--- end)
+
 --------------------------------------------------------------------------------------------------------------------------
 
 local function request_control_of_entity(vehicle)
@@ -6315,7 +5137,6 @@ local rollthedice = menu.action(testfeats, "Roll the Dice", {"rolldice"}, "Take 
     local pick = math.random(6)
     if pick == 4 then 
         util.log("You loose.")
-        --ENTITY.APPLY_FORCE_TO_ENTITY(0, 1, 0, 0, 0, 0, 0, 0, 0, true, true, true, true, true)
     else 
         if pick == 3 then
             util.log("nigger")
@@ -6332,7 +5153,6 @@ menu.action(testfeats, "Alle zum Puff!", {}, "Geh beten ihr NNN versager", funct
     menu.trigger_commands("summonall")
 end)
 
---------------------------------------
 
 menu.toggle(imgui, "ClickUI Menu", {"ClickUI"}, "Click UI",
     function(state)
@@ -6395,20 +5215,6 @@ local tabs = {
         myUI.divider()
 
         myUI.start_horizontal()
-        --if myUI.button("example button 1") then
-        --    util.toast("2horny")
-        --end
-        --if myUI.button("example button 2") then
-        --    util.toast("2stand")
-        --end
-        --if myUI.button("Rope Crash All V1") then
-        --    menu.trigger_commands("ropecrashv1 adam_rex")
-        --    --util.toast("Crashed lobby with Rope Crash V1")
-        --end
-        --if myUI.button("Rope Crash All V2") then
-        --    menu.trigger_commands("ropecrashv2 "..user_name)
-        --    --util.toast("Crashed lobby with Rope Crash V2")
-        --end
         myUI.end_horizontal()
         
     end},
@@ -6474,9 +5280,7 @@ local tabs = {
                 if myUI.button("TP") then
                     menu.trigger_commands("tp "..PLAYER.GET_PLAYER_NAME(pid))
                 end
-                --if myUI.button("Give All Weapons") then
-                --    menu.trigger_commands("arm "..PLAYER.GET_PLAYER_NAME(pid))
-                --end
+
                 myUI.end_horizontal()
             end
     end},
@@ -6528,7 +5332,6 @@ menu.toggle(imgui, "Playerlist ClickUI", {"PlayClick"}, "Player List in Click UI
 ---------------------------------------
 
 local pedfeats = menu.list(menuroot, "Peds", {}, "")
---local miscfeats = menu.list(menuroot, "Misc", {}, "")
 
 local DUKE_ROOT = menu.list(pedfeats, "Duke")
 
@@ -6541,20 +5344,6 @@ local duke_ped = nil
 local duke_mdl_hash = util.joaat("A_C_MtLion_02")
 local duke_call_req = false
 local duke_vehicle = 0
-
---DUKE_ROOT:list_select("Peds", {}, "", {
---    [1] = {"A_C_MtLion_02"},
---    [2] = {"A_C_Boar_02"},
---    [3] = {"A_C_Coyote_02"},
---    [4] = {"A_C_Pug_02"},
---    [5] = {"A_C_Deer_02"},
---}, 1, function(nummer, tiere)
---    util.toast(tiere .. " wurde ausgewählt!")
---    duke_mdl_hash = util.joaat(tiere)
-
---DUKE_ROOT:list_select("Ped (IN ARBEIT)", {}, "Wähle ein Ped deiner wahl, um es als Haustier zu halten.", skin_folders, 1, function(index, tiere)
---    duke_mdl_hash = util.joaat("A_C_MtLion_02")
---end)
 
 util.create_tick_handler(function()
     if duke then
@@ -6569,7 +5358,6 @@ util.create_tick_handler(function()
             SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(duke_ped, 1)
             SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(duke_ped, true)
             SET_PED_CAN_RAGDOLL(duke_ped, false)    
-            --set_ped_relationship_group_hash(duke, 'rgFM_HateEveryOne')
             TASK_FOLLOW_TO_OFFSET_OF_ENTITY(duke_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
             duke_blip = ADD_BLIP_FOR_ENTITY(duke_ped)
             SET_BLIP_COLOUR(duke_blip, 57)
@@ -6650,20 +5438,6 @@ local milkie_mdl_hash = util.joaat("A_C_Cow")
 local milkie_call_req = false
 local milkie_vehicle = 0
 
---milkie_ROOT:list_select("Peds", {}, "", {
---    [1] = {"A_C_MtLion_02"},
---    [2] = {"A_C_Boar_02"},
---    [3] = {"A_C_Coyote_02"},
---    [4] = {"A_C_Pug_02"},
---    [5] = {"A_C_Deer_02"},
---}, 1, function(nummer, tiere)
---    util.toast(tiere .. " wurde ausgewählt!")
---    milkie_mdl_hash = util.joaat(tiere)
-
---milkie_ROOT:list_select("Ped (IN ARBEIT)", {}, "Wähle ein Ped deiner wahl, um es als Haustier zu halten.", skin_folders, 1, function(index, tiere)
---    milkie_mdl_hash = util.joaat("A_C_MtLion_02")
---end)
-
 util.create_tick_handler(function()
     if milkie then
         if milkie_ped == nil or not DOES_ENTITY_EXIST(milkie_ped) or GET_ENTITY_HEALTH(milkie_ped) <= 50.0 then 
@@ -6677,7 +5451,6 @@ util.create_tick_handler(function()
             SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(milkie_ped, 1)
             SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(milkie_ped, true)
             SET_PED_CAN_RAGDOLL(milkie_ped, false)    
-            --set_ped_relationship_group_hash(milkie, 'rgFM_HateEveryOne')
             TASK_FOLLOW_TO_OFFSET_OF_ENTITY(milkie_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
             milkie_blip = ADD_BLIP_FOR_ENTITY(milkie_ped)
             SET_BLIP_COLOUR(milkie_blip, 57)
@@ -6736,11 +5509,9 @@ end
             end
         end
     end)
---end)
 
 local milkietoggle = MILKIE_ROOT:toggle('milkie', {}, '', function(on)
     milkie = on
-    --playWav(resources_dir .. '\\milkie2.wav')
 end, false)
 
 MILKIE_ROOT:action('Call/debug milkie', {}, 'This also clears all of milkie\'s current tasks, so if he gets bugged this should fix it.', function(on)
@@ -6759,20 +5530,6 @@ local chop_mdl_hash = util.joaat("A_C_Chop")
 local chop_call_req = false
 local chop_vehicle = 0
 
---chop_ROOT:list_select("Peds", {}, "", {
---    [1] = {"A_C_MtLion_02"},
---    [2] = {"A_C_Boar_02"},
---    [3] = {"A_C_Coyote_02"},
---    [4] = {"A_C_Pug_02"},
---    [5] = {"A_C_Deer_02"},
---}, 1, function(nummer, tiere)
---    util.toast(tiere .. " wurde ausgewählt!")
---    chop_mdl_hash = util.joaat(tiere)
-
---chop_ROOT:list_select("Ped (IN ARBEIT)", {}, "Wähle ein Ped deiner wahl, um es als Haustier zu halten.", skin_folders, 1, function(index, tiere)
---    chop_mdl_hash = util.joaat("A_C_MtLion_02")
---end)
-
 util.create_tick_handler(function()
     if chop then
         if chop_ped == nil or not DOES_ENTITY_EXIST(chop_ped) or GET_ENTITY_HEALTH(chop_ped) <= 50.0 then 
@@ -6786,7 +5543,6 @@ util.create_tick_handler(function()
             SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(chop_ped, 1)
             SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(chop_ped, true)
             SET_PED_CAN_RAGDOLL(chop_ped, false)    
-            --set_ped_relationship_group_hash(chop, 'rgFM_HateEveryOne')
             TASK_FOLLOW_TO_OFFSET_OF_ENTITY(chop_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
             chop_blip = ADD_BLIP_FOR_ENTITY(chop_ped)
             SET_BLIP_COLOUR(chop_blip, 57)
@@ -6867,20 +5623,6 @@ local rhesus_mdl_hash = util.joaat("A_C_Rhesus")
 local rhesus_call_req = false
 local rhesus_vehicle = 0
 
---rhesus_ROOT:list_select("Peds", {}, "", {
---    [1] = {"A_C_MtLion_02"},
---    [2] = {"A_C_Boar_02"},
---    [3] = {"A_C_Coyote_02"},
---    [4] = {"A_C_Pug_02"},
---    [5] = {"A_C_Deer_02"},
---}, 1, function(nummer, tiere)
---    util.toast(tiere .. " wurde ausgewählt!")
---    rhesus_mdl_hash = util.joaat(tiere)
-
---rhesus_ROOT:list_select("Ped (IN ARBEIT)", {}, "Wähle ein Ped deiner wahl, um es als Haustier zu halten.", skin_folders, 1, function(index, tiere)
---    rhesus_mdl_hash = util.joaat("A_C_MtLion_02")
---end)
-
 util.create_tick_handler(function()
     if rhesus then
         if rhesus_ped == nil or not DOES_ENTITY_EXIST(rhesus_ped) or GET_ENTITY_HEALTH(rhesus_ped) <= 50.0 then 
@@ -6894,7 +5636,6 @@ util.create_tick_handler(function()
             SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(rhesus_ped, 1)
             SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(rhesus_ped, true)
             SET_PED_CAN_RAGDOLL(rhesus_ped, false)    
-            --set_ped_relationship_group_hash(rhesus, 'rgFM_HateEveryOne')
             TASK_FOLLOW_TO_OFFSET_OF_ENTITY(rhesus_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
             rhesus_blip = ADD_BLIP_FOR_ENTITY(rhesus_ped)
             SET_BLIP_COLOUR(rhesus_blip, 57)
@@ -6921,17 +5662,14 @@ util.create_tick_handler(function()
             else
                 if IS_VEHICLE_SEAT_FREE(cur_car, 0, false) then
                     SET_PED_INTO_VEHICLE(rhesus_ped, cur_car, 0)
-                    --play_anim(rhesus_ped, "missrhesus_vehicle@back_of_van", "rhesus_sit_loop", -1)
                     rhesus_vehicle = cur_car
                 else
                     if IS_VEHICLE_SEAT_FREE(cur_car, 1, false) then
                         SET_PED_INTO_VEHICLE(rhesus_ped, cur_car, 1)
-                        --play_anim(rhesus_ped, "missrhesus_vehicle@back_of_van", "rhesus_sit_loop", -1)
                         rhesus_vehicle = cur_car
                     else
                         if IS_VEHICLE_SEAT_FREE(cur_car, 2, false) then
                             SET_PED_INTO_VEHICLE(rhesus_ped, cur_car, 2)
-                            --play_anim(rhesus_ped, "missrhesus_vehicle@back_of_van", "rhesus_sit_loop", -1)
                             rhesus_vehicle = cur_car
                 end
             end
@@ -6975,20 +5713,6 @@ local rat_mdl_hash = util.joaat("A_C_Rat")
 local rat_call_req = false
 local rat_vehicle = 0
 
---rat_ROOT:list_select("Peds", {}, "", {
---    [1] = {"A_C_MtLion_02"},
---    [2] = {"A_C_Boar_02"},
---    [3] = {"A_C_Coyote_02"},
---    [4] = {"A_C_Pug_02"},
---    [5] = {"A_C_Deer_02"},
---}, 1, function(nummer, tiere)
---    util.toast(tiere .. " wurde ausgewählt!")
---    rat_mdl_hash = util.joaat(tiere)
-
---rat_ROOT:list_select("Ped (IN ARBEIT)", {}, "Wähle ein Ped deiner wahl, um es als Haustier zu halten.", skin_folders, 1, function(index, tiere)
---    rat_mdl_hash = util.joaat("A_C_MtLion_02")
---end)
-
 util.create_tick_handler(function()
     if rat then
         if rat_ped == nil or not DOES_ENTITY_EXIST(rat_ped) or GET_ENTITY_HEALTH(rat_ped) <= 50.0 then 
@@ -7002,7 +5726,6 @@ util.create_tick_handler(function()
             SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(rat_ped, 1)
             SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(rat_ped, true)
             SET_PED_CAN_RAGDOLL(rat_ped, false)    
-            --set_ped_relationship_group_hash(rat, 'rgFM_HateEveryOne')
             TASK_FOLLOW_TO_OFFSET_OF_ENTITY(rat_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
             rat_blip = ADD_BLIP_FOR_ENTITY(rat_ped)
             SET_BLIP_COLOUR(rat_blip, 57)
@@ -7029,17 +5752,14 @@ util.create_tick_handler(function()
             else
                 if IS_VEHICLE_SEAT_FREE(cur_car, 0, false) then
                     SET_PED_INTO_VEHICLE(rat_ped, cur_car, 0)
-                    --play_anim(rat_ped, "missrat_vehicle@back_of_van", "rat_sit_loop", -1)
                     rat_vehicle = cur_car
                 else
                     if IS_VEHICLE_SEAT_FREE(cur_car, 1, false) then
                         SET_PED_INTO_VEHICLE(rat_ped, cur_car, 1)
-                        --play_anim(rat_ped, "missrat_vehicle@back_of_van", "rat_sit_loop", -1)
                         rat_vehicle = cur_car
                     else
                         if IS_VEHICLE_SEAT_FREE(cur_car, 2, false) then
                             SET_PED_INTO_VEHICLE(rat_ped, cur_car, 2)
-                            --play_anim(rat_ped, "missrat_vehicle@back_of_van", "rat_sit_loop", -1)
                             rat_vehicle = cur_car
                 end
             end
@@ -7083,20 +5803,6 @@ local nudy_mdl_hash = util.joaat("A_F_Y_Topless_01")
 local nudy_call_req = false
 local nudy_vehicle = 0
 
---nudy_ROOT:list_select("Peds", {}, "", {
---    [1] = {"A_C_MtLion_02"},
---    [2] = {"A_C_Boar_02"},
---    [3] = {"A_C_Coyote_02"},
---    [4] = {"A_C_Pug_02"},
---    [5] = {"A_C_Deer_02"},
---}, 1, function(nummer, tiere)
---    util.toast(tiere .. " wurde ausgewählt!")
---    nudy_mdl_hash = util.joaat(tiere)
-
---nudy_ROOT:list_select("Ped (IN ARBEIT)", {}, "Wähle ein Ped deiner wahl, um es als Haustier zu halten.", skin_folders, 1, function(index, tiere)
---    nudy_mdl_hash = util.joaat("A_C_MtLion_02")
---end)
-
 util.create_tick_handler(function()
     if nudy then
         if nudy_ped == nil or not DOES_ENTITY_EXIST(nudy_ped) or GET_ENTITY_HEALTH(nudy_ped) <= 50.0 then 
@@ -7110,7 +5816,6 @@ util.create_tick_handler(function()
             SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(nudy_ped, 1)
             SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(nudy_ped, true)
             SET_PED_CAN_RAGDOLL(nudy_ped, false)    
-            --set_ped_relationship_group_hash(nudy, 'rgFM_HateEveryOne')
             TASK_FOLLOW_TO_OFFSET_OF_ENTITY(nudy_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
             nudy_blip = ADD_BLIP_FOR_ENTITY(nudy_ped)
             SET_BLIP_COLOUR(nudy_blip, 57)
@@ -7137,17 +5842,14 @@ util.create_tick_handler(function()
             else
                 if IS_VEHICLE_SEAT_FREE(cur_car, 0, false) then
                     SET_PED_INTO_VEHICLE(nudy_ped, cur_car, 0)
-                    --play_anim(nudy_ped, "missnudy_vehicle@back_of_van", "nudy_sit_loop", -1)
                     nudy_vehicle = cur_car
                 else
                     if IS_VEHICLE_SEAT_FREE(cur_car, 1, false) then
                         SET_PED_INTO_VEHICLE(nudy_ped, cur_car, 1)
-                        --play_anim(nudy_ped, "missnudy_vehicle@back_of_van", "nudy_sit_loop", -1)
                         nudy_vehicle = cur_car
                     else
                         if IS_VEHICLE_SEAT_FREE(cur_car, 2, false) then
                             SET_PED_INTO_VEHICLE(nudy_ped, cur_car, 2)
-                            --play_anim(nudy_ped, "missnudy_vehicle@back_of_van", "nudy_sit_loop", -1)
                             nudy_vehicle = cur_car
                 end
             end
@@ -7187,16 +5889,7 @@ play_ref:action("Tp zu Blondie", {"blondie"}, "bring dich zu blondie", function(
     menu.trigger_commands("tpvehlllIIIlIIlIlIII")
 end)
 
---menuAction(testfeats, "Tp zu Blondie 2", {"blondie"}, "bring dich zu blondie", function()
---    menu.trigger_commands("lllIIIlIIlIlIIII")
---    menu.trigger_commands("tpvehlllIIIlIIlIlIIII")
---end)
-
 --------------------------------------------------------------------------------------------------------------------------
-
---local recs = menu.list(menuroot, "Recovery")
---
---local recdiv = menu.divider(recs, "Moved to Stands Quick Progress Tab")
 
 local loops = recovs:list("Loops")
 
@@ -7439,10 +6132,6 @@ guns:toggle_loop("Ferris Wheel", {""}, "", function(toggled)
         util.yield(20)
     end
 end)
-
---enu.action(loops, "!! READ !!", {}, "", function()
-
---menu.divider(menu.my_root(), "Limited")
 
 limited:action("40M Limited Transaction (Slow) (Doesnt really work)", {}, "", function()
     trigger_transaction(hash.bend_job, 15000000)
@@ -7757,7 +6446,6 @@ end)
 
 --------------------------------------------------------------------------------------------------------------------------
 
---menu.divider(menuroot, "----------Settings----------")
 local mainsettings = menu.list(menuroot, "Settings")
 
 menuToggle(mainsettings, "Enable/Disable notifications", {}, "Disables notifications like 'stickybomb placed!' or 'entity marked.' Stuff like that. Those get annoying with the Pan feature especially.", function(on)
@@ -7788,36 +6476,14 @@ menu.hyperlink(socials, "Github", "https://github.com/N0mbyy")
 
 --------------------------------------------------------------------------------------------------------------------------
 
---[[
-menuAction(debugFeats, "Get Vehicle and Do something", {}, "", function ()
-    local pped = getPlayerPed(players.user())
-    local ourveh = PED.GET_VEHICLE_PED_IS_IN(pped, false)
-    VEHICLE.ROLL_DOWN_WINDOWS(ourveh)
-end)]]
-
-
------------------------------------------------------------------------------------------------------------------------------------
-
---SET_CAM_ACTIVE : set cam as active
---IS_CAM_ACTIVE : is cam active?
---CREATE_CAM : create a cam
---SET_ENTITY_CAN_BE_DAMAGED : entity damaged?
---IS_PROJECTILE_IN_AREA : is a proj in area, can BOOL for only player-owned. (Maybe rocket deleter?) (with CLEAR_AREA_OF_PROJECTILES)
-
-
-
------------------------------------------------------------------------------------------------------------------------------------
-
-
---preload explosion delay
 SE_explodeDelay = 0
-local function playerActionsSetup(pid) --set up player actions (necessary for each PID)
+local function playerActionsSetup(pid)
     menu.divider(menu.player_root(pid), scriptName)
     local playerMain = menu.list(menu.player_root(pid), scriptName, {"staexp", "StandExpansion"}, "")
     menu.divider(playerMain, scriptName)
-    local playerSuicides = menu.list(playerMain, "Suicides", {}, "") --suicides parent
-    local playerWeapons = menu.list(playerMain, "Weapons", {}, "") -- weapons parent
-    local playerTools = menu.list(playerMain, "Tools", {}, "") --tools parent
+    local playerSuicides = menu.list(playerMain, "Suicides", {}, "") 
+    local playerWeapons = menu.list(playerMain, "Weapons", {}, "") 
+    local playerTools = menu.list(playerMain, "Tools", {}, "") 
     local playerOtherTrolling = menu.list(playerMain, "Trolling", {}, "")
     
 
@@ -7934,18 +6600,15 @@ end)
 
 -----------------------------------------------------------------------------------------------------------------------------------
 
-    --suicides
-
     menuAction(playerSuicides, "Make Player Explode Themselves", {"suicide"}, "", function()
         local playerPed = getPlayerPed(pid)
         local playerCoords = getEntityCoords(playerPed)
-        -- checks for interior, godmode, and vehicle all in one if / elseif statement...
         if players.is_godmode(pid) and not players.is_in_interior(pid) then
             util.toast("Player is in godmode, stopping explode...")
         elseif players.is_in_interior(pid) then
             util.toast("Player is in an interior, stopping explode...")
         elseif PED.IS_PED_IN_ANY_VEHICLE(playerPed, true) then
-            for i = 0, 50, 1 do --50 explosions to account for armored vehicles, using type 5, as a tank shell as well xD
+            for i = 0, 50, 1 do 
                 SE_add_owned_explosion(playerPed, playerCoords.x, playerCoords.y, playerCoords.z, 5, 10, SEisExploAudible, SEisExploInvis, 0)
                 wait(10)
             end
@@ -7956,7 +6619,6 @@ end)
     menuToggleLoop(playerSuicides, "Loop Explode Suicide", {"loopsuicide"}, "Loops suicidal explosions.", function()
         local playerPed = getPlayerPed(pid)
         local playerCoords = getEntityCoords(playerPed)
-        -- checks for interior, godmode in one if / elseif statement...
         if players.is_godmode(pid) and not players.is_in_interior(pid) then
             util.toast("Player is in godmode, stopping explode...")
         elseif players.is_in_interior(pid) then
@@ -7969,7 +6631,6 @@ end)
     menuAction(playerSuicides, "Make Player Molotov Themselves", {"suimolly", "suimolotov"}, "Fire will not stay on the player if invisibility is enabled.", function()
         local playerPed = getPlayerPed(pid)
         local playerCoords = getEntityCoords(playerPed)
-        --checks for godmode and interior
         if players.is_godmode(pid) and not players.is_in_interior(pid) then
             util.toast("Player is in godmode, stopping explode...")
         elseif players.is_in_interior(pid) then
@@ -7981,7 +6642,6 @@ end)
     menuToggleLoop(playerSuicides, "Loop Molotov Suicide", {"loopsuimolly", "loopsuimolotov"}, "Loops suicidal molotovs.", function()
         local playerPed = getPlayerPed(pid)
         local playerCoords = getEntityCoords(playerPed)
-        --checks for godmode and interior
         if players.is_godmode(pid) and not players.is_in_interior(pid) then
             util.toast("Player is in godmode, stopping explode...")
         elseif players.is_in_interior(pid) then
@@ -7998,8 +6658,6 @@ end)
 
     -----------------------------------------------------------------------------------------------------------------------------------
 
-    --weapons
-
     menuToggleLoop(playerWeapons, "Explosion Gun", {"pexplogun"}, "Gives the player an explosion gun.", function ()
         local pped = getPlayerPed(pid)
         local shot = WEAPON.GET_PED_LAST_WEAPON_IMPACT_COORD(pped, SE_pImpactCoord)
@@ -8009,27 +6667,6 @@ end)
         end
     end)
 
-
-   --[[ menuToggleLoop(playerWeapons, "Kick gun", {"pkickgun"}, "Gives the player a delete gun.", function ()
-        local pped = getPlayerPed(pid)
-        if PED.IS_PED_SHOOTING(pped) then
-            local allocCord = memory.alloc()
-            local junk = WEAPON.GET_PED_LAST_WEAPON_IMPACT_COORD(pped, allocCord)
-            local coord = memory.read_vector3(allocCord)
-            if coord.x == 0 and coord.y == 0 and coord.z == 0 then
-                --check if the shot was shot into the air, and if it was, do nothing.
-            else
-                if SE_Notifications then
-                    util.toast(coord.x .. " " .. coord.y .. " " .. coord.z)
-                end
-                local ourEntity = FIRE._GET_ENTITY_INSIDE_EXPLOSION_SPHERE(1, coord.x, coord.y, coord.z, 5)
-                if ENTITY.IS_ENTITY_A_PED(ourEntity) then
-                    util.toast("Valid ped.")
-                end
-            end
-            memory.free(allocCord)
-        end
-    end)]]
     -----------------------------------------------------------------------------------------------------------------------------------
 
     local scriptev = menu.list(playerOtherTrolling, "Earrapes", {}, "Script caused events. \nPlayers with a bought mod menu can detect you.")
@@ -8128,9 +6765,6 @@ end)
         end
     end)
 
-    --other trolling
-
-    --menu.divider(playerOtherTrolling, "Vehicle Trolling")
     local vehicletrolling = menu.list(playerOtherTrolling, "Vehicle trolling", {}, "")
     menuAction(vehicletrolling, "Place wall in front of player", {}, "Places walls in front of player. Delete after half a second. Use this when they are driving forward for EPIC TROLLING.", function ()
         local ped = getPlayerPed(pid)
@@ -8150,7 +6784,6 @@ end)
         entities.delete_by_handle(b1)
     end)
 
-    --preload
     VehTroll_VehicleName = "adder"
     VehTroll_Invis = false
 
@@ -8268,11 +6901,6 @@ end)
 
     -----------------------------------------------------------------------------------------------------------------------------------
 
-
-
-
-
-    --menu.divider(playerOtherTrolling, "Toss Features")
     local ptossf = menu.list(playerOtherTrolling, "Toss Features", {}, "")
 
     menuToggleLoop(ptossf, "Toss Player Around", {"tossplayer", "toss", "ragtoss"}, "Loops no-damage explosions on the player. They will be invisible if you set them as such.", function()
@@ -8281,8 +6909,6 @@ end)
         SE_add_explosion(playerCoords['x'], playerCoords['y'], playerCoords['z'], 1, 1, SEisExploAudible, SEisExploInvis, 0, true)
     end)
 
-
-    --ty Jayphen for helping out a ton :)
     menuToggleLoop(ptossf, "Get Weapon Impact", {}, "Gets the coodinates that you want them to go to from your shot.", function()
         local SE_impactCoord = memory.alloc()
         local junk = WEAPON.GET_PED_LAST_WEAPON_IMPACT_COORD(SE_LocalPed, SE_impactCoord)
@@ -8322,10 +6948,8 @@ end)
                 end
             end
         end
-        if targetcoords.z < Want.z + 3 then --levitate the target up to the desired HEIGHT
-            SE_add_explosion(targetcoords.x, targetcoords.y, targetcoords.z - 2, 1, 1, SEisExploAudible, SEisExploInvis, 0, true) --add explosion under them
-
-            --explosions around the player, like a "wall" that stops them from ragdolling too far off to the side
+        if targetcoords.z < Want.z + 3 then 
+            SE_add_explosion(targetcoords.x, targetcoords.y, targetcoords.z - 2, 1, 1, SEisExploAudible, SEisExploInvis, 0, true) 
             SE_add_explosion(targetcoords.x - 1, targetcoords.y, targetcoords.z, 1, 1, SEisExploAudible, SEisExploInvis, 0, true)
             SE_add_explosion(targetcoords.x + 1, targetcoords.y, targetcoords.z, 1, 1, SEisExploAudible, SEisExploInvis, 0, true)
             SE_add_explosion(targetcoords.x, targetcoords.y - 1, targetcoords.z, 1, 1, SEisExploAudible, SEisExploInvis, 0, true)
@@ -8344,11 +6968,9 @@ end)
         end
     end)
 
-    --menu.divider(playerOtherTrolling, "Toxic Features")
     local ptoxic = menu.list(playerOtherTrolling, "Toxic Features", {}, "")
     -----------------------------------
     
-    --DELDEL
     menuAction(ptoxic, "Send to Warehouse", {}, "", function ()
         util.trigger_script_event(1 << pid, {-446275082, pid, 0, 1, 0})
     end)
@@ -8381,334 +7003,6 @@ end)
         CU_SE_PARAM3 = value
     end)
 
-    --menu.divider(ptoxic, "Removes")
-
-    --menuAction(ptoxic, "Freemode Death", {"fdeath"}, "Freemode death on player.", function ()
-    --    for i = -1, 1 do
-    --        for n = -1, 1 do
-    --            util.trigger_script_event(1 << pid, {-65587051, 28, i, n})
-    --        end
-    --    end
-    --    for i = -1, 1 do
-    --        for n = -1, 1 do
-    --            util.trigger_script_event(1 << pid, {1445703181, 28, i, n})
-    --        end
-    --    end
-    --    wait(100)
-    --    util.trigger_script_event(1 << pid, {-290218924, -32190, -71399, 19031, 85474, 4468, -2112})
-    --    util.trigger_script_event(1 << pid, {-227800145, -1000000, -10000000, -100000000, -100000000, -100000000})
-    --    util.trigger_script_event(1 << pid, {2002459655, -1000000, -10000, -100000000})
-    --    util.trigger_script_event(1 << pid, {911179316, -38, -30, -75, -59, 85, 82})
-    --    for i = -1, 1 do
-    --        for a = -1, 1 do
-    --            util.trigger_script_event(1 << pid, {916721383, i, a, 0, 26})
-    --        end
-    --    end
-    --end)
---
-    --menuToggleLoop(ptoxic, "AIO kick.", {"aiok", "aiokick"}, "If 'slower, but better aio' is enabled in lobby features, then uses it here as well.", function ()
-    --    if SE_Notifications then
-    --        util.toast("Player connected " .. tostring(PLAYER.GET_PLAYER_NAME(pid) .. ", commencing AIO."))
-    --    end
-    --    util.trigger_script_event(1 << pid, {0x37437C28, 1, 15, math.random(-2147483647, 2147483647)})
-    --    wait(10) 
-    --    util.trigger_script_event(1 << pid, {-1308840134, 1, 15, math.random(-2147483647, 2147483647)})
-    --    wait(10) 
-    --    util.trigger_script_event(1 << pid, {0x4E0350C6, 1, 15, math.random(-2147483647, 2147483647)})
-    --    wait(10) 
-    --    util.trigger_script_event(1 << pid, {-0x114C63AC, 1, 15, math.random(-2147483647, 2147483647)})
-    --    wait(10) 
-    --    util.trigger_script_event(1 << pid, {-0x15F5B1D4, 1, 15, math.random(-2147483647, 2147483647)})
-    --    wait(10) 
-    --    util.trigger_script_event(1 << pid, {-0x249FE11B, 1, 15, math.random(-2147483647, 2147483647)})
-    --    wait(10) 
-    --    util.trigger_script_event(1 << pid, {-0x76B11968, 1, 15, math.random(-2147483647, 2147483647)})
-    --    wait(10) 
-    --    util.trigger_script_event(1 << pid, {0x9C050EC, 1, 15, math.random(-2147483647, 2147483647)})
-    --    wait(10) 
-    --    util.trigger_script_event(1 << pid, {0x3B873479, 1, 15, math.random(-2147483647, 2147483647)})
-    --    wait(10) 
-    --    util.trigger_script_event(1 << pid, {0x23F74138, math.random(-2147483647, 2147483647), 1, 115, math.random(-2147483647, 2147483647)})
-    --    wait(10) 
-    --    --[[
-    --    util.trigger_script_event(1 << pid, {0xAD63290E, math.random(-2147483647, 2147483647), 1, 115, math.random(-2147483647, 2147483647)})
-    --    wait(10)
-    --    ]]
-    --    --[[ 
-    --    util.trigger_script_event(1 << pid, {0x39624029, math.random(-2147483647, 2147483647), 1, 115, math.random(-2147483647, 2147483647)})
-    --    wait(10) 
-    --    ]]
-    --    util.trigger_script_event(1 << pid, {-0x529CD6F2, math.random(-2147483647, 2147483647), 1, 115, math.random(-2147483647, 2147483647)})
-    --    wait(10) 
-    --    util.trigger_script_event(1 << pid, {-0x756DBC8A, math.random(-2147483647, 2147483647), 1, 115, math.random(-2147483647, 2147483647)})
-    --    wait(10) 
-    --    util.trigger_script_event(1 << pid, {-0x69532BA0, math.random(-2147483647, 2147483647), 1, 115, math.random(-2147483647, 2147483647)})
-    --    wait(10) 
-    --    util.trigger_script_event(1 << pid, {0x68C5399F, math.random(-2147483647, 2147483647), 1, 115, math.random(-2147483647, 2147483647)})
-    --    wait(10) 
-    --    util.trigger_script_event(1 << pid, {0x7DE8CAC0, math.random(-2147483647, 2147483647), 1, 115, math.random(-2147483647, 2147483647)})
-    --    wait(10) 
-    --    util.trigger_script_event(1 << pid, {0x285DDF33, math.random(-2147483647, 2147483647), 1, 115, math.random(-2147483647, 2147483647)})
-    --    wait(10) 
-    --    util.trigger_script_event(1 << pid, {-0x177132B8, math.random(-2147483647, 2147483647), 1, 115, math.random(-2147483647, 2147483647)})
-    --    wait(10)
-    --    --util.toast("Main block done. // AIO")
-    --    util.trigger_script_event(1 << pid, {memory.script_global(1893548 + (1 + (pid * 600) + 511)), pid})
-    --    for a = -1, 1 do
-    --        for n = -1, 1 do
-    --            util.trigger_script_event(1 << pid, {-65587051, 28, a, n})
-    --            wait(10)
-    --        end
-    --    end
-    --    --util.toast("Second block done. // AIO")
-    --    for a = -1, 1 do
-    --        for n = -1, 1 do
-    --            util.trigger_script_event(1 << pid, {1445703181, 28, a, n})
-    --            wait(10)
-    --        end
-    --    end
-    --    --util.toast("Third block done. // AIO")
-    --    if TXC_SLOW then
-    --        wait(10)
-    --        util.trigger_script_event(1 << pid, {-290218924, -32190, -71399, 19031, 85474, 4468, -2112})
-    --        wait(10)
-    --        util.trigger_script_event(1 << pid, {-227800145, -1000000, -10000000, -100000000, -100000000, -100000000})
-    --        wait(10)
-    --        util.trigger_script_event(1 << pid, {2002459655, -1000000, -10000, -100000000})
-    --        wait(10)
-    --        util.trigger_script_event(1 << pid, {911179316, -38, -30, -75, -59, 85, 82})
-    --        wait(10)
-    --        --[[
-    --        for n = -10, -7 do
-    --            for a = -60, 60 do
-    --                util.trigger_script_event(1 << pid, {0x39624029, n, 623656, a, 73473741, -7, 856844, -51251, 856844})
-    --                wait(10)
-    --            end
-    --        end]]
-    --        util.trigger_script_event(1 << pid, {-290218924, -32190, -71399, 19031, 85474, 4468, -2112})
-    --        wait(10)
-    --        util.trigger_script_event(1 << pid, {-1386010354, 91645, -99683, 1788, 60877, 55085, 72028})
-    --        wait(10)
-    --        util.trigger_script_event(1 << pid, {-227800145, -1000000, -10000000, -100000000, -100000000, -100000000})
-    --        wait(10)
-    --        for g = -28, 0 do
-    --            for n = -1, 1 do
-    --                for a = -1, 1 do
-    --                    util.trigger_script_event(1 << pid, {1445703181, g, n, a})
-    --                end
-    --            end
-    --            wait(10)
-    --        end
-    --        --[[for a = -28, 20 do
-    --            for n = -10, 2 do
-    --                for b = -100, 100 do
-    --                    util.trigger_script_event(1 << pid, {-1782442696, b, n, a})
-    --                    util.log("Number 6, iteration " .. b)
-    --                end
-    --                util.log("Number 7, iteration " .. n)
-    --            end
-    --            util.log("Number 8, iteration " .. a)
-    --            wait(10)
-    --        end]]
-    --        for a = -11, 11 do
-    --            util.trigger_script_event(1 << pid, {2002459655, -1000000, a, -100000000})
-    --        end
-    --        for a = -10, 10 do
-    --            for n = 30, -30 do
-    --                util.trigger_script_event(1 << pid, {911179316, a, n, -75, -59, 85, 82})
-    --            end
-    --        end
-    --        for a = -10, 10 do
-    --            util.trigger_script_event(1 << pid, {-65587051, a, -1, -1})
-    --        end
-    --        util.trigger_script_event(1 << pid, {951147709, pid, 1000000, nil, nil}) 
-    --        for a = -10, 10 do
-    --            util.trigger_script_event(1 << pid, {-1949011582, a, 1518380048})
-    --        end
-    --        for a = -10, 4 do
-    --            for n = -10, 5 do
-    --                util.trigger_script_event(1 << pid, {1445703181, 28, a, n})
-    --            end
-    --        end
-    --    end
-    --    if SE_Notifications then
-    --        util.toast("Fourth block done. // AIO")
-    --        util.toast("Iteration " .. pid .. " complete of AIO kick.")
-    --        util.toast("Player " .. PLAYER.GET_PLAYER_NAME(pid) .. " done.")
-    --    end
-    --end)
-    --
---[[--menuToggleLoop(menuroot, "Nigger", {"GehBeten"}, "Du hs", function()
-    --menu.trigger_command("killall")
-    --wait(3000)
-end)----]]
---
-    --menuToggleLoop(ptoxic, "Buttplug Crash", {"asshole"}, "Works on very few menus, but works on legits.", function ()
-    --    for i = 1, 10 do
-    --    local cord = getEntityCoords(getPlayerPed(pid))
-    --    requestModel(-930879665)
-    --    wait(10)
-    --    requestModel(3613262246)
-    --    wait(10)
-    --    requestModel(452618762)
-    --    wait(10)
-    --    requestModel(1360563376)
-    --    wait(10)
-    --    while not hasModelLoaded(-930879665) do wait() end
-    --    while not hasModelLoaded(3613262246) do wait() end
-    --    while not hasModelLoaded(452618762) do wait() end
-    --    while not hasModelLoaded(1360563376) do wait() end
-    --    local a1 = entities.create_object(-930879665, cord)
-    --    local a2 = entities.create_object(-930879665, cord)
-    --    local a3 = entities.create_object(-930879665, cord)
-    --    wait(10)
-    --    local b1 = entities.create_object(3613262246, cord)
-    --    local b2 = entities.create_object(3613262246, cord)
-    --    local b3 = entities.create_object(3613262246, cord)
-    --    wait(10)
-    --    local c1 = entities.create_object(452618762, cord)
-    --    local c2 = entities.create_object(452618762, cord)
-    --    local c3 = entities.create_object(452618762, cord)
-    --    wait(10)
-    --    local d1 = entities.create_object(3613262246, cord)
-    --    local d2 = entities.create_object(3613262246, cord)
-    --    local d3 = entities.create_object(3613262246, cord)
-    --    wait(10)
-    --    local e1 = entities.create_object(1360563376, cord)
-    --    local e2 = entities.create_object(1360563376, cord)
-    --    local e3 = entities.create_object(1360563376, cord)
-    --    wait(300)
-    --    entities.delete_by_handle(a1)
-    --    entities.delete_by_handle(a2)
-    --    entities.delete_by_handle(a3)
-    --    entities.delete_by_handle(b1)
-    --    entities.delete_by_handle(b2)--]]
-    --    entities.delete_by_handle(b3)
-    --    entities.delete_by_handle(c1)
-    --    entities.delete_by_handle(c2)
-    --    entities.delete_by_handle(c3)
-    --    entities.delete_by_handle(d1)
-    --    entities.delete_by_handle(c2)
-    --    entities.delete_by_handle(c3)
-    --    entities.delete_by_handle(d1)
-    --    entities.delete_by_handle(d2)
-    --    entities.delete_by_handle(d3)
-    --    entities.delete_by_handle(e1)
-    --    entities.delete_by_handle(e2)
-    --    entities.delete_by_handle(e3)
-    --    noNeedModel(452618762)
-    --    wait(10)
-    --    noNeedModel(3613262246)
-    --    wait(10)
-    --    noNeedModel(-930879665)
-    --    wait(10)
-    --    noNeedModel(1360563376)
-    --    wait(10)
-    --    noNeedModel(1360563376)
-    --    wait(10)
-    --    end
-    --    if SE_Notifications then
-    --        util.toast("Finished.")
-    --    end
-    --end)
---
-    -------------------------------------------------------------
---
---
---
-    --menuToggleLoop(ptoxic, "Nigger Crash", {"byepnigger"}, "du hs.", function ()
-    --    for i = 1, 10 do
-    --    local nackt = util.joaat("a_m_m_acult_01")
-    --    local dolphin = util.joaat("a_c_dolphin")
-    --    local fish = util.joaat("a_c_fish")
-    --    local niko = util.joaat("mp_m_niko_01")
-    --    local rat = util.joaat("a_c_rat")
-    --    
-    --    requestModel(nackt)
-    --    requestModel(dolphin)
-    --    requestModel(fish)
-    --    requestModel(niko)
-    --    requestModel(rat)
---
-    --    local cord = getEntityCoords(getPlayerPed(pid))
-    --    local a1 = entities.create_ped(5, nackt, cord, 0) --nackt
-    --    local a2 = entities.create_ped(5, nackt, cord, 0)
-    --    local a3 = entities.create_ped(5, nackt, cord, 0)
-    --    wait(10)
-    --    local b1 = entities.create_ped(5, dolphin, cord, 0) --dolphin
-    --    local b2 = entities.create_ped(5, dolphin, cord, 0)
-    --    local b3 = entities.create_ped(5, dolphin, cord, 0)
-    --    wait(10)
-    --    local c1 = entities.create_ped(5, fish, cord, 0) --fish
-    --    local c2 = entities.create_ped(5, fish, cord, 0)
-    --    local c3 = entities.create_ped(5, fish, cord, 0)
-    --    wait(10)
-    --    local d1 = entities.create_ped(5, niko, cord, 0) --niko
-    --    local d2 = entities.create_ped(5, niko, cord, 0)
-    --    local d3 = entities.create_ped(5, niko, cord, 0)
-    --    wait(10)
-    --    local e1 = entities.create_ped(5, rat, cord, 0) --rat
-    --    local e2 = entities.create_ped(5, rat, cord, 0)
-    --    local e3 = entities.create_ped(5, rat, cord, 0)
-    --    wait(300)
-    --    end
-    --    if SE_Notifications then
-    --        util.toast("Finished.")
-    --    end
-    --end)
---
---
-    --menuAction(ptoxic, "Fragment Crash", {"2take1"}, "skidded lol", function ()
-    --    --for i = 1, 1 do
-    --    --local fragment = util.joaat("310817095")
-    --    requestModel(fragment)
-    --    menu.trigger_commands("spectate" .. players.get_name(pid) .. " on")
-    --    wait(100)
-    --    local cord = getEntityCoords(getPlayerPed(pid))
-    --    local a1 = entities.create_object(310817095, cord)
-    --    local a2 = entities.create_object(310817095, cord)
-    --    local a3 = entities.create_object(310817095, cord)
-    --    local b1 = entities.create_object(310817095, cord)
-    --    local b2 = entities.create_object(310817095, cord)
-    --    local b3 = entities.create_object(310817095, cord)
-    --    wait(100)
-    --    menu.trigger_commands("ragdoll" .. players.get_name(pid) .. " on")
-    --    wait(6500)
-    --    entities.delete_by_handle(a1)
-    --    entities.delete_by_handle(a2)
-    --    entities.delete_by_handle(a3)
-    --    entities.delete_by_handle(b1)
-    --    entities.delete_by_handle(b2)--]]
-    --    entities.delete_by_handle(b3)
-    --end)
-    -----------------------------------------------------------------------------------------------------------------------------------
-
-    --[[
-    menu.divider(playerOtherTrolling, "Less Toxic")
-    menuAction(playerOtherTrolling, "Give them a wanted star!", {"gwant"}, "Kills some peds to give the player 1 (sometimes 2) wanted star(s).", function ()
-        local hash = joaat("G_M_M_ChiGoon_02")
-        local ped = getPlayerPed(pid)
-        local c = getEntityCoords(ped)
-        local myped = getLocalPed()
-        requestModel(hash)
-        while not hasModelLoaded(hash) do wait() end
-        local peds = {}
-        for i = 1, 5 do
-            peds[i] = PED.CREATE_PED(24, hash, c.x, c.y, c.z + 10, 0, true, false)
-            wait(10)
-        end
-        SE_add_owned_explosion(ped, c.x, c.y, c.z + 10, 2, 20, false, true, 0)
-        SE_add_owned_explosion(ped, c.x, c.y, c.z + 9, 2, 20, false, true, 0)
-        SE_add_owned_explosion(ped, c.x, c.y, c.z + 8, 2, 20, false, true, 0)
-        wait(3000)
-        for i = 1, #peds do
-            entities.delete_by_handle(peds[i])
-        end
-        noNeedModel(hash)
-    end)
-    ]]
-
-    -----------------------------------------------------------------------------------------------------------------------------------
 
     local moche = menu.list(playerTools, "Move Check")
 
@@ -8809,8 +7103,6 @@ end)----]]
         end
     end)
 
-    --menu.divider(playerTools, "Smooth-Teleport")
-
     menuAction(playerTools, "Smooth Teleport", {"stp"}, "Smooth-Teleport to player. If they are in a vehicle, it smooth-teleports into their vehicle.", function()
         local targetPed = getPlayerPed(pid)
         local targetCoords = getEntityCoords(targetPed)
@@ -8823,178 +7115,10 @@ end)----]]
 
     ----------------------------------------------------------------------------
 
-
---crash_ref:action('Test Button in crash menu 2', {''}, 'Button that toast Goodbye', function ()
---    util.toast('Goodbye')
---end)
-
 local kicks = menu.list(playerMain, "Kicks")
 local crashes = menu.list(playerMain, "Crashes")
 
 local crashdivid = menu.divider(crashes, "All moved to Crash Tab in Player List")
-
-
---local sescrashes = menu.list(crashes, "Session crashes", {}, "")
---local twotake = menu.list(crashes, "Other crashes", {}, "")
-
-
---menuAction(crashes, "Freemode Death", {"fdeath"}, "Freemode death on player.", function ()
---    for i = -1, 1 do
---        for n = -1, 1 do
---            util.trigger_script_event(1 << pid, {-65587051, 28, i, n})
---        end
---    end
---    for i = -1, 1 do
---        for n = -1, 1 do
---            util.trigger_script_event(1 << pid, {1445703181, 28, i, n})
---        end
---    end
---    wait(100)
---    util.trigger_script_event(1 << pid, {-290218924, -32190, -71399, 19031, 85474, 4468, -2112})
---    util.trigger_script_event(1 << pid, {-227800145, -1000000, -10000000, -100000000, -100000000, -100000000})
---    util.trigger_script_event(1 << pid, {2002459655, -1000000, -10000, -100000000})
---    util.trigger_script_event(1 << pid, {911179316, -38, -30, -75, -59, 85, 82})
---    for i = -1, 1 do
---        for a = -1, 1 do
---            util.trigger_script_event(1 << pid, {916721383, i, a, 0, 26})
---        end
---    end
---end)
-
-
-
---local begcrash = {
---    "Hey bro, it would be pretty poggers to close your game for me",
---    "pwease cwash yowour game fowor me",
---    "Close your game. I'm not asking.",
---    "Please close your game, please please please please please",
---    "Hey bro, it would be pretty poggers to close your game for me",
---    "pwease cwash yowour game fowor me",
---    "Close your game. I'm not asking.",
---    "Please close your game, please please please please please",
---    "Hey bro, it would be pretty poggers to close your game for me",
---    "pwease cwash yowour game fowor me",
---    "Close your game. I'm not asking.",
---    "Please close your game, please please please please please",
---    "Hey bro, it would be pretty poggers to close your game for me",
---    "pwease cwash yowour game fowor me",
---    "Close your game. I'm not asking.",
---    "Please close your game, please please please please please",
---    "Please close your game, please please please please please",
---}
---
---menu.toggle_loop(crashes, "Frame crashing", {}, "Blocked by popular menus", function()
---    menu.trigger_commands("sendpm" .. players.get_name(players.user()).. " " .. begcrash[math.random(1, #begcrash)])
---    util.yield()
---    menu.trigger_commands("sendpm" .. players.get_name(players.user()))
---end)
-
---menu.divider(crashes, "(Sesion)")
-
---menu.divider(crashes, "(Ryze Exclusive)")
-
-
-
---local kicks = menu.list(malicious, "Kicks", {}, "")
-
-
---local sekicks = menu.list(kicks, "Kick by Script", {}, "")
-
-menu.divider(kicks, "Switched to Player List")
-
-
---menuAction(crashes, "Fragment Crash", {"2take1"}, "skidded lol", function ()
---    --for i = 1, 1 do
---    --local fragment = util.joaat("310817095")
---    requestModel(fragment)
---    menu.trigger_commands("spectate" .. players.get_name(pid) .. " on")
---    wait(100)
---    local cord = getEntityCoords(getPlayerPed(pid))
---    local a1 = entities.create_object(310817095, cord)
---    local a2 = entities.create_object(310817095, cord)
---    local a3 = entities.create_object(310817095, cord)
---    local b1 = entities.create_object(310817095, cord)
---    local b2 = entities.create_object(310817095, cord)
---    local b3 = entities.create_object(310817095, cord)
---    wait(100)
---    menu.trigger_commands("ragdoll" .. players.get_name(pid) .. " on")
---    wait(6500)
---    menu.trigger_commands("ragdoll" .. players.get_name(pid) .. " off")
---    menu.trigger_commands("spectate" .. players.get_name(pid) .. " off")
---    entities.delete_by_handle(a1)
---    entities.delete_by_handle(a2)
---    entities.delete_by_handle(a3)
---    entities.delete_by_handle(b1)
---    entities.delete_by_handle(b2)--]]
---    entities.delete_by_handle(b3)
---end)
-
---crash2_ref:toggle("Cancer Crash [NOT WORKING]", {"2t1cancer"}, "skidded lol", function (f, pid)
---enu.add_player_feature("Crash - Cancer Crash", "toggle", playerparents["Player Crashes"], function(f, pid)
---    if players.exists(pid) then
---            local vehs = {}
---            local c = getEntityCoords(getPlayerPed(pid))
---            local m = {
---                "dubsta",
---                "astron",
---                "huntley",
---                "patriot",
---                "ingot",
---                "asea",
---                "stratum",
---                "adder",
---                "ninef",
---                "baller",
---                "comet2",
---                "zentorno",
---                "bifta",
---            }
---            
---            for i=1,#m do
---                local h = gameplay.get_hash_key(m[i])
---                menu.notify(h)
---                streaming.request_model(h)
---                while not streaming.has_model_loaded(h) do
---                    system.wait(0)
---                end
---                c.z = c.z + 1.0
---                vehs[i] = vehicle.create_vehicle(h, c, 0, true, false)
---                streaming.set_model_as_no_longer_needed(h)
---            end
---            while f.on do
---                for i=1,#vehs do
---                    entity.set_entity_visible(vehs[i], false)
---                    native.call(0x2FA133A4A9D37ED8, vehs[i], 0, true)
---                    native.call(0x2FA133A4A9D37ED8, vehs[i], 1, true)
---                    native.call(0x2FA133A4A9D37ED8, vehs[i], 2, true)
---                    native.call(0x2FA133A4A9D37ED8, vehs[i], 3, true)
---                    native.call(0x2FA133A4A9D37ED8, vehs[i], 4, true)
---                    native.call(0x2FA133A4A9D37ED8, vehs[i], 5, true)
---                    native.call(0x2FA133A4A9D37ED8, vehs[i], 6, true)
---                    native.call(0x2FA133A4A9D37ED8, vehs[i], 7, true)
---                    system.wait(0)
---                    native.call(0xD4D4F6A4AB575A33, vehs[i], 0, false)
---                    native.call(0xD4D4F6A4AB575A33, vehs[i], 1, false)
---                    native.call(0xD4D4F6A4AB575A33, vehs[i], 2, false)
---                    native.call(0xD4D4F6A4AB575A33, vehs[i], 3, false)
---                    native.call(0xD4D4F6A4AB575A33, vehs[i], 4, false)
---                    native.call(0xD4D4F6A4AB575A33, vehs[i], 5, false)
---                    native.call(0xD4D4F6A4AB575A33, vehs[i], 6, false)
---                    native.call(0xD4D4F6A4AB575A33, vehs[i], 7, false)
---                end
---                system.wait(100)
---                for i=1,#vehs do
---                    network.request_control_of_entity(vehs[i])
---                    native.call(0x115722B1B9C14C1C, vehs[i])
---                end
---                system.wait(100)
---            end
---            for i=1,#vehs do
---                entity.delete_entity(vehs[i])
---                return
---            end
---        end
---    end)
 
     ----------------------------------------------------------------------------
 
@@ -9076,39 +7200,7 @@ menu.divider(kicks, "Switched to Player List")
     end)
 
     ----------------------------------------------------------------------------
-
-    --local freeze = menu.list(playerMain, "Freeze type", {}, "")
---
-    --player_toggle_loop(freeze, pid, "Freeze event", {}, "Works better than most of the other ones.", function()
-    --    util.trigger_script_event(1 << pid , {330622597, pid, 0, 0, 0, 0, 0})
-    --end)
---
-    --player_toggle_loop(freeze, pid, "Freeze event 2", {}, "More nerfed than the first one.", function()
-    --    util.trigger_script_event(1 << pid, {-1796714618, pid, 0, 1, 0, 0})
-    --    util.yield(500)
-    --end)
---
-    --player_toggle_loop(freeze, pid, "Native freeze", {}, "Practically useless in most of the menus.", function()
-    --    local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
-    --    TASK.CLEAR_PED_TASKS_IMMEDIATELY(pid)
-    --end)
---
-    --player_toggle_loop(freeze, pid, "Powerful freeze", {}, "Freezes/throws everyone at the same time.", function()
-    --    local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
-    --    util.trigger_script_event(1 << pid, {-93722397, pid, 0, 0, 0, 0, 0})
-    --    util.trigger_script_event(1 << pid, {330622597, pid, 0, 0, 0, 0, 0})
-    --    TASK.CLEAR_PED_TASKS_IMMEDIATELY(pid)
-    --    util.yield(500)
-    --end)
-
-    ----------------------------------------------------------------------------
-
-    --players.add_command_hook(function(pid, player_root)
-    --    player_root:divider("Sup")
-    --    local kekw = player_root:list("Geh Beten")
-    --end)
     
-
     local playset = menu.list(playerMain, "Settings")
 
     menuToggle(playset, "Blacklist from Silent Aimbot", {"aimblacklist"}, "Blacklists the selected player from silent aimbot.", function(on)
@@ -9201,336 +7293,3 @@ end)
 players.on_join(playerActionsSetup)
 players.dispatch_on_join()
 players.add_command_hook(set_up_player_actions)
---players.add_command_hook(ihatemyself)
-
---[[ WEAPON HASHES
-weapon hash: 584646201
-actual gun: AP Pistol
---------------------------------------------------------------------
-weapon hash: 727643628
-actual gun: Ceramic Pistol
---------------------------------------------------------------------
-weapon hash: 911657153
-actual gun: Stun Gun
---------------------------------------------------------------------
-weapon hash: 1171102963
-actual gun: Stun Gun
---------------------------------------------------------------------
-weapon hash: 1198879012
-actual gun: Flare Gun
---------------------------------------------------------------------
-weapon hash: 1470379660
-actual gun: Perico Pistol
---------------------------------------------------------------------
-weapon hash: 1593441988
-actual gun: Combat Pistol
---------------------------------------------------------------------
-weapon hash: 2285322324
-actual gun: SNS Pistol Mk II
---------------------------------------------------------------------
-weapon hash: 2441047180
-actual gun: Navy Revolver
---------------------------------------------------------------------
-weapon hash: 2548703416
-actual gun: Double-Action Revolver
---------------------------------------------------------------------
-weapon hash: 2578377531
-actual gun: Pistol .50
---------------------------------------------------------------------
-weapon hash: 2939590305
-actual gun: Up-n-Atomizer
---------------------------------------------------------------------
-weapon hash: 3218215474
-actual gun: SNS Pistol
---------------------------------------------------------------------
-weapon hash: 3219281620
-actual gun: Pistol Mk II
---------------------------------------------------------------------
-weapon hash: 3249783761
-actual gun: Heavy Revolver
---------------------------------------------------------------------
-weapon hash: 3415619887
-actual gun: Heavy Revolver Mk II
---------------------------------------------------------------------
-weapon hash: 3523564046
-actual gun: Heavy Pistol
---------------------------------------------------------------------
-weapon hash: 3696079510
-actual gun: Marksman Pistol
---------------------------------------------------------------------
-weapon hash: 171789620
-actual gun: Combat PDW
---------------------------------------------------------------------
-weapon hash: 324215364
-actual gun: Micro SMG
---------------------------------------------------------------------
-weapon hash: 736523883
-actual gun: SMG
---------------------------------------------------------------------
-weapon hash: 1198256469
-actual gun: Unholy Hellbringer
---------------------------------------------------------------------
-weapon hash: 1627465347
-actual gun: Gusenberg Sweeper
---------------------------------------------------------------------
-weapon hash: 2024373456
-actual gun: SMG Mk II
---------------------------------------------------------------------
-weapon hash: 2144741730
-actual gun: Combat MG
---------------------------------------------------------------------
-weapon hash: 2634544996
-actual gun: MG
---------------------------------------------------------------------
-weapon hash: 3173288789
-actual gun: Mini SMG
---------------------------------------------------------------------
-weapon hash: 3675956304
-actual gun: Machine Pistol
---------------------------------------------------------------------
-weapon hash: 3686625920
-actual gun: Combat MG Mk II
---------------------------------------------------------------------
-weapon hash: 4024951519
-actual gun: Assault SMG
---------------------------------------------------------------------
-weapon hash: 961495388
-actual gun: Assault Rifle Mk II
---------------------------------------------------------------------
-weapon hash: 1649403952
-actual gun: Compact Rifle
---------------------------------------------------------------------
-weapon hash: 2132975508
-actual gun: Bullpup Rifle
---------------------------------------------------------------------
-weapon hash: 2210333304
-actual gun: Carbine Rifle
---------------------------------------------------------------------
-weapon hash: 2228681469
-actual gun: Bullpup Rifle Mk II
---------------------------------------------------------------------
-weapon hash: 2526821735
-actual gun: Special Carbine Mk II
---------------------------------------------------------------------
-weapon hash: 2636060646
-actual gun: Military Rifle
---------------------------------------------------------------------
-weapon hash: 2937143193
-actual gun: Advanced Rifle
---------------------------------------------------------------------
-weapon hash: 3220176749
-actual gun: Assault Rifle
---------------------------------------------------------------------
-weapon hash: 3231910285
-actual gun: Special Carbine
---------------------------------------------------------------------
-weapon hash: 3347935668
-actual gun: Heavy Rifle
---------------------------------------------------------------------
-weapon hash: 4208062921
-actual gun: Carbine Rifle Mk II
---------------------------------------------------------------------
-weapon hash: 100416529
-actual gun: Sniper Rifle
---------------------------------------------------------------------
-weapon hash: 177293209
-actual gun: Heavy Sniper Mk II
---------------------------------------------------------------------
-weapon hash: 205991906
-actual gun: Heavy Sniper
---------------------------------------------------------------------
-weapon hash: 1785463520
-actual gun: Marksman Rifle Mk II
---------------------------------------------------------------------
-weapon hash: 3342088282
-actual gun: Marksman Rifle
---------------------------------------------------------------------
-weapon hash: 419712736
-actual gun: Pipe Wrench
---------------------------------------------------------------------
-weapon hash: 940833800
-actual gun: Stone Hatchet
---------------------------------------------------------------------
-weapon hash: 1141786504
-actual gun: Golf Club
---------------------------------------------------------------------
-weapon hash: 1317494643
-actual gun: Hammer
---------------------------------------------------------------------
-weapon hash: 1737195953
-actual gun: Nightstick
---------------------------------------------------------------------
-weapon hash: 2227010557
-actual gun: Crowbar
---------------------------------------------------------------------
-weapon hash: 2343591895
-actual gun: Flashlight
---------------------------------------------------------------------
-weapon hash: 2460120199
-actual gun: Antique Cavalry Dagger
---------------------------------------------------------------------
-weapon hash: 2484171525
-actual gun: Pool Cue
---------------------------------------------------------------------
-weapon hash: 2508868239
-actual gun: Baseball Bat
---------------------------------------------------------------------
-weapon hash: 2578778090
-actual gun: Knife
---------------------------------------------------------------------
-weapon hash: 3441901897
-actual gun: Battle Axe
---------------------------------------------------------------------
-weapon hash: 3638508604
-actual gun: Knuckle Duster
---------------------------------------------------------------------
-weapon hash: 3713923289
-actual gun: Machete
---------------------------------------------------------------------
-weapon hash: 3756226112
-actual gun: Switchblade
---------------------------------------------------------------------
-weapon hash: 4191993645
-actual gun: Hatchet
---------------------------------------------------------------------
-weapon hash: 4192643659
-actual gun: Bottle
---------------------------------------------------------------------
-weapon hash: 94989220
-actual gun: Combat Shotgun
---------------------------------------------------------------------
-weapon hash: 317205821
-actual gun: Sweeper Shotgun
---------------------------------------------------------------------
-weapon hash: 487013001
-actual gun: Pump Shotgun
---------------------------------------------------------------------
-weapon hash: 984333226
-actual gun: Heavy Shotgun
---------------------------------------------------------------------
-weapon hash: 1432025498
-actual gun: Pump Shotgun Mk II
---------------------------------------------------------------------
-weapon hash: 2017895192
-actual gun: Sawed-Off Shotgun
---------------------------------------------------------------------
-weapon hash: 2640438543
-actual gun: Bullpup Shotgun
---------------------------------------------------------------------
-weapon hash: 2828843422
-actual gun: Musket
---------------------------------------------------------------------
-weapon hash: 3800352039
-actual gun: Assault Shotgun
---------------------------------------------------------------------
-weapon hash: 4019527611
-actual gun: Double Barrel Shotgun
---------------------------------------------------------------------
-weapon hash: 125959754
-actual gun: Compact Grenade Launcher
---------------------------------------------------------------------
-weapon hash: 1119849093
-actual gun: Minigun
---------------------------------------------------------------------
-weapon hash: 1672152130
-actual gun: Homing Launcher
---------------------------------------------------------------------
-weapon hash: 1752584910
-actual gun: RPG
---------------------------------------------------------------------
-weapon hash: 1834241177
-actual gun: Railgun
---------------------------------------------------------------------
-weapon hash: 2138347493
-actual gun: Firework Launcher
---------------------------------------------------------------------
-weapon hash: 2726580491
-actual gun: Grenade Launcher
---------------------------------------------------------------------
-weapon hash: 2982836145
-actual gun: RPG
---------------------------------------------------------------------
-weapon hash: 3056410471
-actual gun: Widowmaker
---------------------------------------------------------------------
-weapon hash: 3676729658
-actual gun: Compact EMP Launcher
---------------------------------------------------------------------
-weapon hash: 101631238
-actual gun: Fire Extinguisher
---------------------------------------------------------------------
-weapon hash: 126349499
-actual gun: Snowball
---------------------------------------------------------------------
-weapon hash: 406929569
-actual gun: Fertilizer Can
---------------------------------------------------------------------
-weapon hash: 600439132
-actual gun: Ball
---------------------------------------------------------------------
-weapon hash: 615608432
-actual gun: Molotov
---------------------------------------------------------------------
-weapon hash: 741814745
-actual gun: Sticky Bomb
---------------------------------------------------------------------
-weapon hash: 883325847
-actual gun: Jerry Can
---------------------------------------------------------------------
-weapon hash: 1233104067
-actual gun: Flare
---------------------------------------------------------------------
-weapon hash: 2481070269
-actual gun: Grenade
---------------------------------------------------------------------
-weapon hash: 2694266206
-actual gun: BZ Gas
---------------------------------------------------------------------
-weapon hash: 2874559379
-actual gun: Proximity Mine
---------------------------------------------------------------------
-weapon hash: 3125143736
-actual gun: Pipe Bomb
---------------------------------------------------------------------
-weapon hash: 3126027122
-actual gun: Hazardous Jerry Can
---------------------------------------------------------------------
-weapon hash: 4256991824
-actual gun: Tear Gas
---------------------------------------------------------------------
-]]
-
---[[
-
-menu.action(
-        explosions,
-        "Airstrike",
-        {"orbairstrike"},
-        "",
-        function(on_click)
-            local selectedPlayer = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
-            local playerPed = PLAYER.PLAYER_PED_ID()
-            local coords = ENTITY.GET_ENTITY_COORDS(selectedPlayer, 1)
-            local airStrike = MISC.GET_HASH_KEY("WEAPON_AIRSTRIKE_ROCKET")
-            WEAPON.REQUEST_WEAPON_ASSET(airStrike, 31, false)
-            while not WEAPON.HAS_WEAPON_ASSET_LOADED(airStrike) do
-                util.yield()
-            end
-            MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS(
-                coords.x,
-                coords.y,
-                coords.z + 50,
-                coords.x,
-                coords.y,
-                coords.z,
-                250,
-                1,
-                airStrike,
-                playerPed,
-                1,
-                0,
-                -1.0
-            )
-        end
-    )
-]]
