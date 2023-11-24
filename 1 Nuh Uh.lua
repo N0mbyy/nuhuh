@@ -97,8 +97,7 @@ local function playWav(wav)
     while pb:isPlaying() do util.yield() end
 end
 
-local version = "1"
-local image = "DIA_VICTIM"
+local image = "WEB_POWCLEANSE"
 
 local user_name = players.get_name(players.user())
 local plpid = PLAYER.GET_PLAYER_NAME(pid)
