@@ -460,7 +460,7 @@ notification = {
 util.show_corner_help('~r~Script is WIP! \n~w~Made by N0mbyy')
 notification.normal("Initializing Stand Expansion...")
 
-if players.get_rockstar_id(players.user()) == 76716180 then
+if players.get_rockstar_id(players.user()) == 76716180 or 208144868 then
     notification.normal("~g~Owner privileges recognized!\n~w~Welcome back, ~r~N0mbyy~w~!")
 elseif
     players.get_rockstar_id(players.user()) == 226774243 then --Blondie
