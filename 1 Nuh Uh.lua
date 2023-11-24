@@ -1527,21 +1527,28 @@ cages:action("Knife Cage", { "" }, "", function()
     while not STREAMING.HAS_MODEL_LOADED(hash) do
         util.yield()
     end
-    local cage_object = OBJECT.CREATE_OBJECT(hash, pos.x - .70, pos.y, pos.z, true, true, false)
-    local cage_object2 = OBJECT.CREATE_OBJECT(hash, pos.x + .70, pos.y, pos.z, true, true, false)
-    local cage_object3 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y + .70, pos.z, true, true, false)
-    local cage_object4 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y - .70, pos.z, true, true, false)
+    local knife = OBJECT.CREATE_OBJECT(hash, pos.x - .70, pos.y, pos.z, true, true, false)
+    local knife2 = OBJECT.CREATE_OBJECT(hash, pos.x + .70, pos.y, pos.z, true, true, false)
+    local knife3 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y + .70, pos.z, true, true, false)
+    local knife4 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y - .70, pos.z, true, true, false)
 
-    local cage_object = OBJECT.CREATE_OBJECT(hash, pos.x - .70, pos.y, pos.z + .25, true, true, false)
-    local cage_object2 = OBJECT.CREATE_OBJECT(hash, pos.x + .70, pos.y, pos.z + .25, true, true, false)
-    local cage_object3 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y + .70, pos.z + .25, true, true, false)
-    local cage_object4 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y - .70, pos.z + .25, true, true, false)
+    local knife = OBJECT.CREATE_OBJECT(hash, pos.x - .70, pos.y, pos.z + .25, true, true, false)
+    local knife2 = OBJECT.CREATE_OBJECT(hash, pos.x + .70, pos.y, pos.z + .25, true, true, false)
+    local knife3 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y + .70, pos.z + .25, true, true, false)
+    local knife4 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y - .70, pos.z + .25, true, true, false)
 
-    local cage_object5 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y, pos.z + .75, true, true, false)
+    local knife5 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y, pos.z + .75, true, true, false)
+
+    spawned_objects[#spawned_objects + 1] = knife
+    spawned_objects[#spawned_objects + 1] = knife2
+    spawned_objects[#spawned_objects + 1] = knife3
+    spawned_objects[#spawned_objects + 1] = knife4
+    spawned_objects[#spawned_objects + 1] = knife5
+
     util.yield(15)
-    local rot = ENTITY.GET_ENTITY_ROTATION(cage_object)
+    local rot = ENTITY.GET_ENTITY_ROTATION(knife)
     rot.y     = 90
-    STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(cage_object)
+    STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(knife)
 end)
 
 cages:action("Christmas Cage", { "" }, "", function()
@@ -1552,14 +1559,20 @@ cages:action("Christmas Cage", { "" }, "", function()
     while not STREAMING.HAS_MODEL_LOADED(hash) do
         util.yield()
     end
-    local cage_object = OBJECT.CREATE_OBJECT(hash, pos.x - .75, pos.y, pos.z - .5, true, true, false)
-    local cage_object2 = OBJECT.CREATE_OBJECT(hash, pos.x + .75, pos.y, pos.z - .5, true, true, false)
-    local cage_object3 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y + .75, pos.z - .5, true, true, false)
-    local cage_object4 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y - .75, pos.z - .5, true, true, false)
-    local cage_object5 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y, pos.z + .5, true, true, false)
+    local chritree = OBJECT.CREATE_OBJECT(hash, pos.x - .75, pos.y, pos.z - .5, true, true, false)
+    local chritree2 = OBJECT.CREATE_OBJECT(hash, pos.x + .75, pos.y, pos.z - .5, true, true, false)
+    local chritree3 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y + .75, pos.z - .5, true, true, false)
+    local chritree4 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y - .75, pos.z - .5, true, true, false)
+    local chritree5 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y, pos.z + .5, true, true, false)
     util.yield(15)
 
-    STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(cage_object)
+    spawned_objects[#spawned_objects + 1] = chritree
+    spawned_objects[#spawned_objects + 1] = chritree2
+    spawned_objects[#spawned_objects + 1] = chritree3
+    spawned_objects[#spawned_objects + 1] = chritree4
+    spawned_objects[#spawned_objects + 1] = chritree5
+
+    STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(chritree)
 end)
 
 cages:action("Clear cages", {"clearcages"}, "", function()
