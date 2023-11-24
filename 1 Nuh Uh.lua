@@ -1519,7 +1519,7 @@ cages:action("Container", {"cage"}, "", function()
     ENTITY.FREEZE_ENTITY_POSITION(container, true)
 end)
 
-cages:action("Knife Cage", { "" }, "", function()
+cages:action("Money Cage", { "" }, "", function()
     local pos = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid))
     local hash = util.joaat("bkr_prop_moneypack_03a")
     STREAMING.REQUEST_MODEL(hash)
@@ -1527,28 +1527,28 @@ cages:action("Knife Cage", { "" }, "", function()
     while not STREAMING.HAS_MODEL_LOADED(hash) do
         util.yield()
     end
-    local knife = OBJECT.CREATE_OBJECT(hash, pos.x - .70, pos.y, pos.z, true, true, false)
-    local knife2 = OBJECT.CREATE_OBJECT(hash, pos.x + .70, pos.y, pos.z, true, true, false)
-    local knife3 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y + .70, pos.z, true, true, false)
-    local knife4 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y - .70, pos.z, true, true, false)
+    local money = OBJECT.CREATE_OBJECT(hash, pos.x - .70, pos.y, pos.z, true, true, false)
+    local money2 = OBJECT.CREATE_OBJECT(hash, pos.x + .70, pos.y, pos.z, true, true, false)
+    local money3 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y + .70, pos.z, true, true, false)
+    local money4 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y - .70, pos.z, true, true, false)
 
-    local knife = OBJECT.CREATE_OBJECT(hash, pos.x - .70, pos.y, pos.z + .25, true, true, false)
-    local knife2 = OBJECT.CREATE_OBJECT(hash, pos.x + .70, pos.y, pos.z + .25, true, true, false)
-    local knife3 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y + .70, pos.z + .25, true, true, false)
-    local knife4 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y - .70, pos.z + .25, true, true, false)
+    local money = OBJECT.CREATE_OBJECT(hash, pos.x - .70, pos.y, pos.z + .25, true, true, false)
+    local money2 = OBJECT.CREATE_OBJECT(hash, pos.x + .70, pos.y, pos.z + .25, true, true, false)
+    local money3 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y + .70, pos.z + .25, true, true, false)
+    local money4 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y - .70, pos.z + .25, true, true, false)
 
-    local knife5 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y, pos.z + .75, true, true, false)
+    local money5 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y, pos.z + .75, true, true, false)
 
-    spawned_objects[#spawned_objects + 1] = knife
-    spawned_objects[#spawned_objects + 1] = knife2
-    spawned_objects[#spawned_objects + 1] = knife3
-    spawned_objects[#spawned_objects + 1] = knife4
-    spawned_objects[#spawned_objects + 1] = knife5
+    spawned_objects[#spawned_objects + 1] = money
+    spawned_objects[#spawned_objects + 1] = money2
+    spawned_objects[#spawned_objects + 1] = money3
+    spawned_objects[#spawned_objects + 1] = money4
+    spawned_objects[#spawned_objects + 1] = money5
 
     util.yield(15)
-    local rot = ENTITY.GET_ENTITY_ROTATION(knife)
+    local rot = ENTITY.GET_ENTITY_ROTATION(money)
     rot.y     = 90
-    STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(knife)
+    STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(money)
 end)
 
 cages:action("Christmas Cage", { "" }, "", function()
