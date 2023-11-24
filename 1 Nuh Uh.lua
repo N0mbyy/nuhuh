@@ -686,7 +686,7 @@ local function onStartup()
     SE_impactinvismines = memory.alloc()
     SE_pImpactCoord = memory.alloc()
     SE_LocalPed = getLocalPed()
-    senotifys = true
+    senotifys = false
 
     SE_ArrayList = false
     SE_ArrayCount = 0 
