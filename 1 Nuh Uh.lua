@@ -1,7 +1,7 @@
 local func = require("NovaScript.functions")
 local scripts_dir = filesystem.scripts_dir()
 local scriptName = "Stand Expansion"
-local myVersion = 1.14
+local myVersion = 1.15
 local response = false
 local toast = util.toast
 require("lua_imGUI V2")
@@ -601,7 +601,11 @@ function SmoothTeleportToCord(v3coords)
         end
         CAM.DESTROY_CAM(CCAM, true)
     else
-        util.toast("No waypoint set!")
+        if senotifys then
+            notification.normal("No waypoint set!")
+        else
+            util.toast("No waypoint set!")
+        end
     end
 end
 
@@ -619,7 +623,11 @@ function SmoothTeleportToVehicle(pedInVehicle)
         end
     end
     if seatFree == false then
-        util.toast("No seats available in said vehicle.")
+        if senotifys then
+            notification.normal("No seats available in said vehicle")
+        else
+            util.toast("No seats available in said vehicle.")
+        end
         continueQ = false
     end
     -- > --
@@ -666,7 +674,11 @@ function SmoothTeleportToVehicle(pedInVehicle)
         end
         CAM.DESTROY_CAM(CCAM, true)
     else
-        util.toast("No waypoint set!")
+        if senotifys then
+            notification.normal("No waypoint set")
+        else
+            util.toast("No waypoint set!")
+        end
     end
 end
 
@@ -674,7 +686,7 @@ local function onStartup()
     SE_impactinvismines = memory.alloc()
     SE_pImpactCoord = memory.alloc()
     SE_LocalPed = getLocalPed()
-    SE_Notifications = false
+    senotifys = true
 
     SE_ArrayList = false
     SE_ArrayCount = 0 
@@ -701,7 +713,9 @@ local function fastNet(entity, playerID)
         end
     end
     ::continue::
-    if SE_Notifications then
+    if senotifys then
+        notification.normal("Has control")
+    else
         util.toast("Has control.")
     end
     NETWORK.NETWORK_REQUEST_CONTROL_OF_NETWORK_ID(netID)
@@ -740,7 +754,9 @@ local function netIt(entity, playerID)
         wait(50)
         end
     else
-        if SE_Notifications then
+        if senotifys then
+            notification.normal("Has control")
+        else
             util.toast("Has control.")
         end
     end
@@ -780,7 +796,9 @@ local function netItAll(entity)
         wait(50)
         end
     else
-        if SE_Notifications then
+        if senotifys then
+            notification.normal("Has control")
+        else
             util.toast("Has control.")
         end
     end
@@ -822,7 +840,11 @@ local function get_waypoint_pos2()
         local waypoint_pos = HUD.GET_BLIP_COORDS(blip)
         return waypoint_pos
     else
-        util.toast("NO_WAYPOINT_SET")
+        if senotifys then
+            notification.normal("NO_WAYPOINT_SET")
+        else
+            util.toast("NO_WAYPOINT_SET")
+        end
     end
 end
 
@@ -938,14 +960,22 @@ end
 local function rqModel (hash)
     STREAMING.REQUEST_MODEL(hash)
     local count = 0
-    util.toast("Requesting model...")
+    if senotifys then
+        notification.normal("Requesting model..")
+    else
+        util.toast("Requesting model...")
+    end
     while not STREAMING.HAS_MODEL_LOADED(hash) and count < 100 do
         STREAMING.REQUEST_MODEL(hash)
         count = count + 1
         wait(10)
     end
     if not STREAMING.HAS_MODEL_LOADED(hash) then
-        util.toast("Tried for 1 second, couldn't load this specified model!")
+        if senotifys then
+            notification.normal("Tried for 1 second, couldn't load this specified model")
+        else
+            util.toast("Tried for 1 second, couldn't load this specified model!")
+        end
     end
 end
 
@@ -993,6 +1023,13 @@ local recovs = rec_ref:list("Stand Expansion", {}, "")
 local protects = menu.ref_by_path("Online>Protections")
 
 protects:attachAfter(detectaction)
+
+menu.action(lobbyFeats, "Alle zum Puff!", {}, "Geh beten ihr NNN versager", function()
+    menu.trigger_commands("posx 118")
+    menu.trigger_commands("posy -1287")
+    menu.trigger_commands("posz 28")
+    menu.trigger_commands("summonall")
+end)
 
 menu.toggle(playerss, "Exclude Selected", {"excludepussies"}, "If toggled it will select all players apart from selected players.", function(on_toggle)
     if on_toggle then
@@ -1291,13 +1328,21 @@ menu.toggle(playerss, "Exclude Selected", {"excludepussies"}, "If toggled it wil
     if pids ~= players.user() and not selectedplayer[pids] and players.exists(pids) then
     util.yield(2000)
     menu.trigger_commands("summon " .. PLAYER.GET_PLAYER_NAME(pids))
-    util.toast("Give them a second to get on..." .. PLAYER.GET_PLAYER_NAME(pids))
+    if senotifys then
+        notification.normal("Give them a second to get on..." .. PLAYER.GET_PLAYER_NAME(pids))
+    else
+        util.toast("Give them a second to get on..." .. PLAYER.GET_PLAYER_NAME(pids))
+    end
     end
     else
     if pids ~= players.user() and selectedplayer[pids] and players.exists(pids) then
     util.yield(2000)
     menu.trigger_commands("summon " .. PLAYER.GET_PLAYER_NAME(pids))
-    util.toast("Give them a second to get on..." .. PLAYER.GET_PLAYER_NAME(pids))
+    if senotifys then
+        notification.normal("Give them a second to get on..." .. PLAYER.GET_PLAYER_NAME(pids))
+    else
+        util.toast("Give them a second to get on..." .. PLAYER.GET_PLAYER_NAME(pids))
+    end
     end
     end
     end
@@ -1338,12 +1383,20 @@ menu.toggle(playerss, "Exclude Selected", {"excludepussies"}, "If toggled it wil
     if excludeselected then
     if pids ~= players.user() and not selectedplayer[pids] and players.exists(pids) then
     menu.trigger_commands("wptp " .. PLAYER.GET_PLAYER_NAME(pids))
-    util.toast("Teleporting..." .. PLAYER.GET_PLAYER_NAME(pids))
+    if senotifys then
+        notification.normal("Teleporting..." .. PLAYER.GET_PLAYER_NAME(pids))
+    else
+        util.toast("Teleporting..." .. PLAYER.GET_PLAYER_NAME(pids))
+    end
     end
     else
     if pids ~= players.user() and selectedplayer[pids] and players.exists(pids) then
     menu.trigger_commands("wptp " .. PLAYER.GET_PLAYER_NAME(pids))
-    util.toast("Teleporting..." .. PLAYER.GET_PLAYER_NAME(pids))
+    if senotifys then
+        notification.normal("Teleporting..." .. PLAYER.GET_PLAYER_NAME(pids))
+    else
+        util.toast("Teleporting..." .. PLAYER.GET_PLAYER_NAME(pids))
+    end
     end
     end
     end
@@ -1354,12 +1407,20 @@ menu.toggle(playerss, "Exclude Selected", {"excludepussies"}, "If toggled it wil
     if excludeselected then
     if pids ~= players.user() and not selectedplayer[pids] and players.exists(pids) then
     menu.trigger_commands("wpsummon " .. PLAYER.GET_PLAYER_NAME(pids))
-    util.toast("Teleporting..." .. PLAYER.GET_PLAYER_NAME(pids))
+    if senotifys then
+        notification.normal("Teleporting..." .. PLAYER.GET_PLAYER_NAME(pids))
+    else
+        util.toast("Teleporting..." .. PLAYER.GET_PLAYER_NAME(pids))
+    end
     end
     else
     if pids ~= players.user() and selectedplayer[pids] and players.exists(pids) then
     menu.trigger_commands("wpsummon " .. PLAYER.GET_PLAYER_NAME(pids))
-    util.toast("Teleporting..." .. PLAYER.GET_PLAYER_NAME(pids))
+    if senotifys then
+        notification.normal("Teleporting..." .. PLAYER.GET_PLAYER_NAME(pids))
+    else
+        util.toast("Teleporting..." .. PLAYER.GET_PLAYER_NAME(pids))
+    end
     end
     end
     end
@@ -1511,7 +1572,11 @@ cages:action("Clear cages", {"clearcages"}, "", function()
         spawned_objects[i] = nil
         entitycount += 1
     end
-    util.toast("Clear " .. entitycount .. " cages")
+    if senotifys then
+        notification.normal("Cleared " ..entitycount.. " objects of cages")
+    else
+        util.toast("Cleared " ..entitycount.. " objects of cages")
+    end
 end)
 
 --------------------------------------------------------------------------------------------------------
@@ -1637,7 +1702,11 @@ end)
 
 kick2_ref:action("SE Kick", { "" }, "", function()
     if pid == players.user() then
-        util.toast('Dont try to Kick yourself, idiot')
+        if senotifys then
+            notification.normal("Dont try to kick yourself, idiot")
+        else
+            util.toast('Dont try to Kick yourself, idiot')
+        end
         return
     end
     util.trigger_script_event(1 << pid, { 111242367, pid, -210634234 })
@@ -1645,7 +1714,11 @@ end)
 
 kick2_ref:action("Net Bail Kick", { "" }, "", function()
     if pid == players.user() then
-        util.toast('Dont try to Kick yourself, idiot')
+                if senotifys then
+            notification.normal("Dont try to kick yourself, idiot")
+        else
+            util.toast('Dont try to Kick yourself, idiot')
+        end
         return
     end
     util.trigger_script_event(1 << pid,
@@ -1654,7 +1727,11 @@ end)
 
 kick2_ref:action("Null Drop Kick", { "" }, "", function()
     if pid == players.user() then
-        util.toast('Dont try to Kick yourself, idiot')
+        if senotifys then
+            notification.normal("Dont try to kick yourself, idiot")
+        else
+            util.toast('Dont try to Kick yourself, idiot')
+        end
         return
     end
     util.trigger_script_event(1 << pid, { 0xB9BA4D30, pid, 0x4, -1, 1, 1, 1 })
@@ -1662,11 +1739,19 @@ end)
 
 kick2_ref:action("Tyrannosaurus Kick", { "" }, "", function()
     if pid == players.user() then
-        util.toast('Stupid trying to kick himself?')
+        if senotifys then
+            notification.normal("Dont try to kick yourself, idiot")
+        else
+            util.toast('Dont try to Kick yourself, idiot')
+        end
         return
     end
     if pid == players.get_host() then
-        util.toast('Fool wants to kick the host?')
+        if senotifys then
+            notification.normal("Why u trying to kick the host, fool")
+        else
+            util.toast('Why u trying to kick the host, fool')
+        end
         return
     end
 
@@ -1700,12 +1785,20 @@ kick2_ref:action("Tyrannosaurus Kick", { "" }, "", function()
     end
     local crash_compiled_func = load(crash_str .. '\"' .. cur_crash_meth .. PLAYER.GET_PLAYER_NAME(pid) .. '\")')
     pcall(crash_compiled_func)
-    util.toast('see you again')
+    if senotifys then
+        notification.normal("see you again")
+    else
+        util.toast('see you again')
+    end
 end)
 
 kick2_ref:action("AIO kick.", {"aiok", "aiokick"}, "If 'slower, but better aio' is enabled in lobby features, then uses it here as well.", function ()
     if pid == players.user() then
-        util.toast('Dont try to Kick yourself, idiot')
+                if senotifys then
+            notification.normal("Dont try to kick yourself, idiot")
+        else
+            util.toast('Dont try to Kick yourself, idiot')
+        end
         return
     end
     util.trigger_script_event(1 << pid, {0x37437C28, 1, 15, math.random(-2147483647, 2147483647)})
@@ -1809,7 +1902,11 @@ end)
 
 kick2_ref:action("Adaptive kick", {}, "", function()
     if pid == players.user() then
-        util.toast('Dont try to Kick yourself, idiot')
+                if senotifys then
+            notification.normal("Dont try to kick yourself, idiot")
+        else
+            util.toast('Dont try to Kick yourself, idiot')
+        end
         return
     end
     menu.trigger_commands("scripthost")
@@ -1820,7 +1917,11 @@ end)
 
 kick2_ref:action("Script kick v1", {}, "", function()
     if pid == players.user() then
-        util.toast('Dont try to Kick yourself, idiot')
+                if senotifys then
+            notification.normal("Dont try to kick yourself, idiot")
+        else
+            util.toast('Dont try to Kick yourself, idiot')
+        end
         return
     end
     util.trigger_script_event(1 << pid, {1104117595, pid, 1, 0, 2, math.random(14, 267), 3, 1})
@@ -2152,14 +2253,12 @@ end)
 
 local peds = 5
 krustykrab:slider("Number of spatulas", {}, "sends spatules ah~", 1, 45, 1, 1, function(amount)
-    util.toast(players.get_name(pid).. " Has spatulas being sent to him/her")
     peds = amount
 end)
 
 local crash_ents = {}
 local crash_toggle = false
 krustykrab:toggle("Number of spatulas", {}, "Spectating is risky, watch out.", function(val)
-    util.toast(players.get_name(pid).. " Has spatulas being sent to him/her")
     local crash_toggle = val
     ryze.BlockSyncs(pid, function()
         if val then
@@ -2276,7 +2375,11 @@ crash2_ref:action("Weed crash", {"crashv14"}, "", function()
         util.request_model(-930879665)
         util.yield(10)
     end
-    util.toast("Finished.")
+    if senotifys then
+        notification.normal("Finished")
+    else
+        util.toast("Finished.")
+    end
 end)
 
 menu.action(nmcrashes, "Yatch V1", {"bigyachtyv1"}, "Crash event (A1:EA0FF6AD) sending prop yatch.", function()
@@ -2417,13 +2520,21 @@ local crash_tbl_2 = {
 }
 
 crash2_ref:action("Femboy Cwash", {"cwash"}, "I dont know if stils cwashes the pwayer.", function()
-    if pid == players.user() then 
-        util.toast('nya nya! you cant cwash youwself.. >_<')
+    if pid == players.user() then
+        if senotifys then
+            notification.normal("nya nya! you cant cwash youwself.. >_<")
+        else
+            util.toast('nya nya! you cant cwash youwself.. >_<')
+        end
         return 
     end
 
     if pid == players.get_host() then 
-        util.toast('nya nya.. unfowtunatewy, u cannot cwash the host >_<')
+        if senotifys then
+            notification.normal("nya nya.. unfowtunatewy, u cannot cwash the host >_<")
+        else
+            util.toast('nya nya.. unfowtunatewy, u cannot cwash the host >_<')
+        end
         return
     end
 
@@ -2460,7 +2571,11 @@ crash2_ref:action("Femboy Cwash", {"cwash"}, "I dont know if stils cwashes the p
     end
     local crash_compiled_func = load(crash_str .. '\"' .. cur_crash_meth .. PLAYER.GET_PLAYER_NAME(pid) .. '\")')
     pcall(crash_compiled_func)
-    util.toast('bye bye! nya nya >_<')
+    if senotifys then
+        notification.normal("bye bye! nya nya >_<")
+    else
+        util.toast('bye bye! nya nya >_<')
+    end
 end)
 
 crash2_ref:action("Host Crash (only for host)", { "" }, "", function()
@@ -2545,7 +2660,11 @@ crash2_ref:action("Yi Yu Crash", { "" }, "", function()
 end)
 
 crash2_ref:action("Bro Hug?", { "" }, "By MMT", function()
-    util.toast("I'll try to convince them to leave :) ")
+    if senotifys then
+        notification.normal("I'll try to convince them to leave :)")
+    else
+        util.toast("I'll try to convince them to leave :) ")
+    end
     PLAYER.SET_PLAYER_PARACHUTE_PACK_MODEL_OVERRIDE(PLAYER.PLAYER_ID(), 0xE5022D03)
     TASK.CLEAR_PED_TASKS_IMMEDIATELY(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(players.user()))
     util.yield(20)
@@ -2617,8 +2736,8 @@ crash2_ref:action("iz5mc kill mom crash V2", { "" }, "", function()
         STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(-930879665)
         util.yield(10)
     end
-    if SE_Notifications then
-        notification("Finished.", colors.red)
+    if senotifys then
+        notification.normal("Finished.")
     end
 end)
 crash2_ref:action("iz5mc kill mom crash V3", { "" }, "", function()
@@ -2658,7 +2777,6 @@ crash2_ref:action("Medusa crash", { "" }, "", function()
             end
         end
     end
-    util.toast("Crash done QWQ")
     menu.trigger_commands("anticrashcam off")
     hunter = nil
     plauuepos = nil
@@ -3006,8 +3124,6 @@ if menu.get_edition() >= 1 then
         menu.trigger_commands("anticrashcamera on")
         menu.trigger_commands("potatomode on")
         menu.trigger_commands("trafficpotato on")
-        util.toast("Iniciando...")
-        util.toast("Poor guy")
         menu.trigger_commands("rlag3"..players.get_name(pid))
         util.yield(2500)
         menu.trigger_commands("crashv1"..players.get_name(pid))
@@ -3028,7 +3144,11 @@ if menu.get_edition() >= 1 then
         util.yield(2000)
         menu.trigger_commands("crash"..players.get_name(pid))
         util.yield(1800)
-        util.toast("wait until everything cleans up by itself...")
+        if senotifys then
+            notification.normal("wait until everything cleans up by itself..")
+        else
+            util.toast("wait until everything cleans up by itself...")
+        end
         menu.trigger_commands("rlag3"..players.get_name(pid))
         menu.trigger_commands("rcleararea")
         menu.trigger_commands("potatomode off")
@@ -3043,8 +3163,7 @@ if menu.get_edition() >= 2 then
         menu.trigger_commands("anticrashcamera on")
         menu.trigger_commands("potatomode on")
         menu.trigger_commands("trafficpotato on")
-        util.toast("Iniciando...")
-        util.toast("Poor man")
+
         menu.trigger_commands("rlag3"..players.get_name(pid))
         util.yield(2500)
         menu.trigger_commands("crashv1"..players.get_name(pid))
@@ -3067,7 +3186,11 @@ if menu.get_edition() >= 2 then
         util.yield(200)
         menu.trigger_commands("flashcrash"..players.get_name(pid))
         util.yield(1800)
-        util.toast("wait until everything cleans up by itself...")
+        if senotifys then
+            notification.normal("wait until everything cleans up by itself..")
+        else
+            util.toast("wait until everything cleans up by itself...")
+        end
         menu.trigger_commands("rlag3"..players.get_name(pid))
         menu.trigger_commands("rcleararea")
         menu.trigger_commands("potatomode off")
@@ -3083,8 +3206,6 @@ if menu.get_edition() >= 3 then
         menu.trigger_commands("anticrashcamera on")
         menu.trigger_commands("potatomode on")
         menu.trigger_commands("trafficpotato on")
-        util.toast("Iniciando...")
-        util.toast("Poor guy")
         menu.trigger_commands("rlag3"..players.get_name(pid))
         util.yield(2500)
         menu.trigger_commands("crashv27"..players.get_name(pid))
@@ -3123,7 +3244,11 @@ if menu.get_edition() >= 3 then
             menu.trigger_commands("slaughter"..players.get_name(pid))
         end
         util.yield(1500)
-        util.toast("wait until everything cleans up by itself...")
+        if senotifys then
+            notification.normal("wait until everything cleans up by itself..")
+        else
+            util.toast("wait until everything cleans up by itself...")
+        end
         menu.trigger_commands("rlag3"..players.get_name(pid))
         menu.trigger_commands("rcleararea")
         menu.trigger_commands("potatomode off")
@@ -3197,7 +3322,9 @@ crash2_ref:toggle_loop("Buttplug Crash", {"asshole"}, "Works on very few menus, 
     noNeedModel(1360563376)
     wait(10)
     end
-    if SE_Notifications then
+    if senotifys then
+        notification.normal("Finished")
+    else
         util.toast("Finished.")
     end
 end)
@@ -3238,7 +3365,9 @@ crash2_ref:toggle_loop("NN Crash", {"byenn"}, "sit NN", function ()
     local e3 = entities.create_ped(5, rat, cord, 0)
     wait(300)
     end
-    if SE_Notifications then
+    if senotifys then
+        notification.normal("Finished")
+    else
         util.toast("Finished.")
     end
 end)
@@ -3302,7 +3431,11 @@ crash2_ref:action("Rope Crash V1", {"ropecrashv1"}, "", function()
     entities.delete_by_handle(veh); entities.delete_by_handle(ped)
     PHYSICS.DELETE_CHILD_ROPE(rope)
     PHYSICS.ROPE_UNLOAD_TEXTURES()
-    util.toast("Crashed Lobby with Rope Crash V1")
+    if senotifys then
+        notification.normal("Crashed Lobby with Rope Crash V1")
+    else
+        util.toast("Crashed Lobby with Rope Crash V1")
+    end
         end
     end
 end)
@@ -3320,7 +3453,11 @@ crash2_ref:action("Rope Crash V2", {"ropecrashv2"}, "", function()
     ENTITY.SET_ENTITY_INVINCIBLE(kur, true)
     newRope = PHYSICS.ADD_ROPE(pos.x, pos.y, pos.z, 0, 0, 0, 1, 1, 0.0000000000000000000000000000000000001, 1, 1, true, true, true, 1.0, true, "Center")
     PHYSICS.ATTACH_ENTITIES_TO_ROPE(newRope, cargobob, kur, cargobob_pos.x, cargobob_pos.y, cargobob_pos.z, kur_pos.x, kur_pos.y, kur_pos.z, 2, 0, 0, "Center", "Center")
-    util.toast("Crashed Lobby with Rope Crash V2")
+    if senotifys then
+        notification.normal("Crashed Lobby with Rope Crash V2")
+    else
+        util.toast("Crashed Lobby with Rope Crash V2")
+    end
 end)
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3364,7 +3501,11 @@ modder_detections:toggle_loop("Modded weapons", {}, "It'll pop up if a gifted we
         for i, hash in ipairs(ryze.modded_weapons) do
             local weapon_hash = util.joaat(hash)
             if WEAPON.HAS_PED_GOT_WEAPON(ped, weapon_hash, false) and (WEAPON.IS_PED_ARMED(ped, 7) or TASK.GET_IS_TASK_ACTIVE(ped, 8) or TASK.GET_IS_TASK_ACTIVE(ped, 9)) then
-                util.toast(players.get_name(player_id) .. " Is using a modded gun")
+                if senotifys then
+                    notification.normal(players.get_name(player_id) .. " Is using a modded gun")
+                else
+                    util.toast(players.get_name(player_id) .. " Is using a modded gun")
+                end
                 break
             end
         end
@@ -3401,7 +3542,11 @@ modder_detections:toggle_loop("Run fast", {}, "It'll pop up if a player is runni
         and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_IN_ANY_VEHICLE(ped, false)
         and not TASK.IS_PED_STILL(ped) and not PED.IS_PED_JUMPING(ped) and not ENTITY.IS_ENTITY_IN_AIR(ped) and not PED.IS_PED_CLIMBING(ped) and not PED.IS_PED_VAULTING(ped)
         and v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(player_id)) <= 300.0 and ped_speed > 30 then -- fastest run speed is about 18ish mph but using 25 to give it some headroom to prevent false positives
-            util.toast(players.get_name(player_id) .. " Is Using Super Run")
+            if senotifys then
+                notification.normal(players.get_name(player_id) .. " Is using Super Run")
+            else
+                util.toast(players.get_name(player_id) .. " Is using Super Run")
+            end
             break
         end
     end
@@ -3439,7 +3584,11 @@ modder_detections:toggle_loop("Spectating", {}, "Detects if someone is spectatin
             if not util.is_session_transition_active() and ryze.get_spawn_state(player_id) ~= 0 and ryze.get_interior_player_is_in(player_id) == interior
             and not NETWORK.NETWORK_IS_PLAYER_FADING(player_id) and ENTITY.IS_ENTITY_VISIBLE(ped) and not PED.IS_PED_DEAD_OR_DYING(ped) then
                 if v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_cam_pos(player_id)) < 15.0 and v3.distance(ENTITY.GET_ENTITY_COORDS(players.user_ped(), false), players.get_position(player_id)) > 20.0 then
-                    util.toast(players.get_name(player_id) .. " Is watching you")
+                    if senotifys then
+                        notification.normal(players.get_name(player_id) .. " Is watching you")
+                    else
+                        util.toast(players.get_name(player_id) .. " Is watching you")
+                    end
                     break
                 end
             end
@@ -3458,7 +3607,11 @@ modder_detections:toggle_loop("Teleport", {}, "Detects if a player is teleportin
                 for i, interior in ipairs(interior_stuff) do
                     if v3.distance(oldpos, currentpos) > 300.0 and oldpos.x ~= currentpos.x and oldpos.y ~= currentpos.y and oldpos.z ~= currentpos.z 
                     and ryze.get_interior_player_is_in(player_id) ~= 0 and ryze.get_spawn_state(player_id) == interior and PLAYER.IS_PLAYER_PLAYING(player_id) and player.exists(player_id) then
-                        util.toast(players.get_name(player_id) .. " Has teleported")
+                        if senotifys then
+                            notification.normal(players.get_name(player_id) .. " has teleported")
+                        else
+                            util.toast(players.get_name(player_id) .. " has teleported")
+                        end
                     end
                 end
             end
@@ -3480,7 +3633,11 @@ end)
 menu.toggle_loop(detections, "Thunder join", {}, "Detects if someone is joining your session in a unusual way.", function()
     for _, player_id in ipairs(players.list(false, true, true)) do
         if not util.is_session_transition_active() and ryze.get_spawn_state(player_id) == 0 and players.get_script_host() == player_id  then
-            util.toast(players.get_name(player_id) .. " Sent a detection (Thunder Join) and now is modder")
+            if senotifys then
+                notification.normal(players.get_name(player_id) .. " Sent a detection (Thunder Join) and now is modder")
+            else
+                util.toast(players.get_name(player_id) .. " Sent a detection (Thunder Join) and now is modder")
+            end
         end
     end
 end)
@@ -3561,7 +3718,11 @@ end)
 
 if bailOnAdminJoin then
     if players.is_marked_as_admin(pid) then
-        util.toast(players.get_name(pid) .. " There's an admin, hopping the fuck out")
+        if senotifys then
+            notification.normal(players.get_name(pid) .. " There's an admin, hopping the fuck out")
+        else
+            util.toast(players.get_name(pid) .. " There's an admin, hopping the fuck out")
+        end
         menu.trigger_commands("quickbail")
         return
     end
@@ -3601,7 +3762,11 @@ bloqmodders = protex2:list("Modder Protections", {}, "")
 bloqmodders:toggle_loop("Block clones", {}, "Blocks the clones that try to spawn.", function()
     for i, ped in ipairs(entities.get_all_peds_as_handles()) do
     if ENTITY.GET_ENTITY_MODEL(ped) == ENTITY.GET_ENTITY_MODEL(players.user_ped()) and not PED.IS_PED_A_PLAYER(ped) and not util.is_session_transition_active() then
-        util.toast("Clone Detected. Deleting")
+        if senotifys then
+            notification.normal("Clone detected. Deleting")
+        else
+            util.toast("Clone detected. Deleting")
+        end
         entities.delete_by_handle(ped)
         util.yield(150)
         end
@@ -3630,7 +3795,11 @@ bloqmodders:toggle("Prevent crashes", {}, "Tries to block the crashes \nActive i
         menu.trigger_commands("rclearworld")
         util.yield(1000)
         menu.trigger_commands("rcleararea")
-        util.toast("Crash prevented :b")
+        if senotifys then
+            notification.normal("Crash prevented")
+        else
+            util.toast("Crash prevented :)")
+        end
     end
 end)
 
@@ -3656,7 +3825,11 @@ end
 
 bloqmodders:toggle_loop("Anti Transaction error ", {}, "Blocks my own script in order for this to work LMFAO.", function()
     if util.spoof_script("am_destroy_veh", SCRIPT.TERMINATE_THIS_THREAD) then
-        util.toast("Finishing script (Detected)")
+        if senotifys then
+            notification.normal("Finishing Script (Detected)")
+        else
+            util.toast("Finishing Script (Detected)")
+        end
     end
 
     if HUD.GET_WARNING_SCREEN_MESSAGE_HASH() == -991495373 then
@@ -3700,7 +3873,11 @@ anticage:toggle_loop("Enable Anti-Jail", {"anticage"}, "", function()
         CAM.SET_GAMEPLAY_CAM_IGNORE_ENTITY_COLLISION_THIS_UPDATE(obj_handle)
         for i, data in ipairs(my_ents) do
             if data ~= 0 and ENTITY.IS_ENTITY_TOUCHING_ENTITY(data, obj_handle) and alpha > 0 then
-                util.toast("Someone is trying to cage you.")
+                if senotifys then
+                    notification.normal("Someone is trying to cage you")
+                else
+                    util.toast("Someone is trying to cage you")
+                end
                 ENTITY.SET_ENTITY_NO_COLLISION_ENTITY(obj_handle, data, false)
                 ENTITY.SET_ENTITY_NO_COLLISION_ENTITY(data, obj_handle, false)
                 ENTITY.SET_ENTITY_ALPHA(obj_handle, alpha, false)
@@ -3728,7 +3905,11 @@ anti_mugger:toggle_loop("Towards me", {}, "Blocks muggers that were supposed to 
             and NETWORK.NETWORK_REQUEST_CONTROL_OF_NETWORK_ID(memory.read_int(ped_netId))) then
                 local mugger = NETWORK.NET_TO_PED(memory.read_int(ped_netId))
                 entities.delete_by_handle(mugger)
-                util.toast("Blocked mugger from " .. players.get_name(memory.read_int(sender)))
+                if senotifys then
+                    notification.normal("Blocked mugger from " .. players.get_name(memory.read_int(sender)))
+                else
+                    util.toast("Blocked mugger from " .. players.get_name(memory.read_int(sender)))
+                end
             end
         end)
     end
@@ -3747,7 +3928,11 @@ anti_mugger:toggle_loop("Someone else", {}, "Blocks muggers from trying to mug o
             and NETWORK.NETWORK_REQUEST_CONTROL_OF_NETWORK_ID(memory.read_int(ped_netId)) then
                 local mugger = NETWORK.NET_TO_PED(memory.read_int(ped_netId))
                 entities.delete_by_handle(mugger)
-                util.toast("Block mugger sent by " .. players.get_name(memory.read_int(sender)) .. " to " .. players.get_name(memory.read_int(target)))
+                if senotifys then
+                    notification.normal("Block mugger sent by " .. players.get_name(memory.read_int(sender)) .. " to " .. players.get_name(memory.read_int(target)))
+                else
+                    util.toast("Block mugger sent by " .. players.get_name(memory.read_int(sender)) .. " to " .. players.get_name(memory.read_int(target)))
+                end
             end
         end)
     end
@@ -3786,7 +3971,11 @@ pool_limiter:toggle_loop("Activate limiter pool", {}, "", function()
                 util.yield()
                 entities.delete_by_handle(ped)
             end
-            util.toast("Cleaning peds' bools...")
+            if senotifys then
+                notification.normal("Cleaning peds´ bools..")
+            else
+                util.toast("Cleaining peds´ bools...")
+            end
         end
     end
     local veh__count = 0
@@ -3797,7 +3986,11 @@ pool_limiter:toggle_loop("Activate limiter pool", {}, "", function()
             for _, veh in ipairs(entities.get_all_vehicles_as_handles()) do
                 entities.delete_by_handle(veh)
             end
-            util.toast("Cleaning vehicle's bools ...")
+            if senotifys then
+                notification.normal("Cleaning vehicle´s bools..")
+            else
+                util.toast("Cleaning vehicle´s bools...")
+            end
         end
     end
     local obj_count = 0
@@ -3808,7 +4001,11 @@ pool_limiter:toggle_loop("Activate limiter pool", {}, "", function()
             for _, obj in pairs(entities.get_all_objects_as_handles()) do
                 entities.delete_by_handle(obj)
             end
-            util.toast("Cleaning object's bools...")
+            if senotifys then
+                notification.normal("Cleaning object´s bools..")
+            else
+                util.toast("Cleaning object´s bools...")
+            end
         end
     end
 end)
@@ -3846,13 +4043,14 @@ local function pizzaCAll()
                 noNeedModel(-930879665)
                 wait(10)
             end
-            if SE_Notifications then
+            if senotifys then
+                notification.normal("Finished with player // " .. tostring(PLAYER.GET_PLAYER_NAME(p)) .. " // of index " .. p)
+            else
                 util.toast("Finished with player // " .. tostring(PLAYER.GET_PLAYER_NAME(p)) .. " // of index " .. p)
             end
         end
     end
 end
-
 
 -----------------------------------------------------------------------------------------------------------------
 
@@ -3893,7 +4091,11 @@ allplaymal:action("AIO Kick All.", {"allaiokick", "allaiok"}, "Will probably not
     menu.trigger_commands("scripthost")
     for i = 0, 31 do
         if i ~= players.user() and NETWORK.NETWORK_IS_PLAYER_CONNECTED(i) then
-            util.toast("Player connected " .. tostring(PLAYER.GET_PLAYER_NAME(i) .. ", commencing AIO."))
+            if senotifys then
+                notification.normal("Player connected " .. tostring(PLAYER.GET_PLAYER_NAME(i) .. ", commencing AIO."))
+            else
+                util.toast("Player connected " .. tostring(PLAYER.GET_PLAYER_NAME(i) .. ", commencing AIO."))
+            end
             util.trigger_script_event(1 << i, {0x37437C28, 1, 15, math.random(-2147483647, 2147483647)})
             wait(10) 
             util.trigger_script_event(1 << i, {-1308840134, 1, 15, math.random(-2147483647, 2147483647)})
@@ -3986,9 +4188,11 @@ allplaymal:action("AIO Kick All.", {"allaiokick", "allaiok"}, "Will probably not
                     end
                 end
             end
-            util.toast("Fourth block done. // AIO")
-            util.toast("Iteration " .. i .. " complete of AIO kick.")
-            util.toast("Player " .. PLAYER.GET_PLAYER_NAME(i) .. " done.")
+            if senotifys then
+                notification.normal("Player " .. PLAYER.GET_PLAYER_NAME(i) .. " done.")
+            else
+                util.toast("Player " .. PLAYER.GET_PLAYER_NAME(i) .. " done.")
+            end
         end
     end
     wait(100)
@@ -4078,7 +4282,11 @@ allplayoth:action("Check entire lobby for godmode", {}, "Checks the entire lobby
                 if (not PLAYER.IS_PLAYER_READY_FOR_CUTSCENE(i)) and (not NETWORK.IS_PLAYER_IN_CUTSCENE(i)) then 
                     if players.is_godmode(i) then 
                         local pName = getPlayerName_pid(i)
-                        util.toast(pName .. " is in godmode!")
+                        if senotifys then
+                            notification.normal(pName .. " is in godmode!")
+                        else
+                            util.toast(pName .. " is in godmode!")
+                        end
                         godcount = godcount + 1
                         wait(100)
                     end
@@ -4088,6 +4296,7 @@ allplayoth:action("Check entire lobby for godmode", {}, "Checks the entire lobby
     end
     notification.normal(godcount .. " player(s) in ~r~godmode~w~!")
 end)
+
 
 allplayoth:action("Everyone explode-suicides", {"allsuicide"}, "Makes everyone commit suicide, with an explosion.", function()
     for i = 0, 31, 1 do
@@ -4126,20 +4335,26 @@ deletegun:toggle_loop("Better Delete Gun", {}, "", function ()
                     if not seatFree then
                         local targetPed = VEHICLE.GET_PED_IN_VEHICLE_SEAT(pedVeh, i, false)
                         MarkedForExt[MarkedForExtCount] = targetPed
-                        if SE_Notifications then
+                        if senotifys then
+                            notification.normal("Marked for extinction! Index " .. MarkedForExtCount)
+                        else
                             util.toast("Marked for extinction! Index " .. MarkedForExtCount)
                         end
                         MarkedForExtCount = MarkedForExtCount + 1
                     end
                 end
                 MarkedForExt[MarkedForExtCount] = pedVeh
-                if SE_Notifications then
+                if senotifys then
+                    notification.normal("Marked for extinction! Index " .. MarkedForExtCount)
+                else
                     util.toast("Marked for extinction! Index " .. MarkedForExtCount)
                 end
                 MarkedForExtCount = MarkedForExtCount + 1
             else
                 MarkedForExt[MarkedForExtCount] = entt
-                if SE_Notifications then
+                if senotifys then
+                    notification.normal("Marked for extinction! Index " .. MarkedForExtCount)
+                else
                     util.toast("Marked for extinction! Index " .. MarkedForExtCount)
                 end
                 MarkedForExtCount = MarkedForExtCount + 1
@@ -4154,7 +4369,11 @@ deletegun:action("Delete.", {}, "", function ()
     end
     MarkedForExt = {}
     MarkedForExtCount = 1
+    if senotifys then
+        notification.normal("Deleted! Clearing deletion list..")
+    else
         util.toast("Deleted! Clearing deletion list...")
+    end
 end)
 deletegun:action("Clear Deletion List", {}, "", function ()
     MarkedForExt = {}
@@ -4367,15 +4586,21 @@ silentAim:toggle_loop("Silent Aimbot", {"silentaim", "saimbot"}, "A silent aimbo
                                     local playerID = NETWORK.NETWORK_GET_PLAYER_INDEX_FROM_PED(inRange[i])
                                     local playerName = NETWORK.NETWORK_PLAYER_GET_NAME(playerID)
                                     local pveh = PED.GET_VEHICLE_PED_IS_IN(inRange[i], false)
-                                    if SE_Notifications then
+                                    if senotifys then
+                                        notification.normal("Targeted: " .. tostring(playerName) .. " with Legit Aim")
+                                    else
                                         util.toast("Targeted: " .. tostring(playerName) .. " with Legit Aim")
                                     end
                                     local forwardOffset = ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(ourped, 0, 1, 2)
                                     if AIM_Head then
                                         local bonec = PED.GET_PED_BONE_COORDS(inRange[i], 12844, 0, 0, 0)
                                         MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS_IGNORE_ENTITY(forwardOffset.x, forwardOffset.y, forwardOffset.z, bonec.x, bonec.y, bonec.z, AIM_DMG, true, weaponHash, getLocalPed(), true, false, bulletSpeed, pveh, true)
-                                    elseif not AIM_HEAD and AIM_HEADVEH and PED.IS_PED_IN_ANY_VEHICLE(inRange[i], false) then 
-                                        util.toast("VehChecked " .. tostring(playerName))
+                                    elseif not AIM_HEAD and AIM_HEADVEH and PED.IS_PED_IN_ANY_VEHICLE(inRange[i], false) then
+                                        if senotifys then
+                                            notification.normal("VehChecked " .. tostring(playerName))
+                                        else
+                                            util.toast("VehChecked " .. tostring(playerName))
+                                        end
                                         local bonec = PED.GET_PED_BONE_COORDS(inRange[i], 12844, 0, 0, 0)
                                         MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS_IGNORE_ENTITY(forwardOffset.x, forwardOffset.y, forwardOffset.z, bonec.x, bonec.y, bonec.z, AIM_DMG, true, weaponHash, getLocalPed(), true, false, bulletSpeed, pveh, true)
                                     end
@@ -4399,7 +4624,9 @@ silentAim:toggle_loop("Silent Aimbot", {"silentaim", "saimbot"}, "A silent aimbo
                                     local playerID = NETWORK.NETWORK_GET_PLAYER_INDEX_FROM_PED(inRange[i])
                                     local playerName = NETWORK.NETWORK_PLAYER_GET_NAME(playerID)
                                     local pveh = PED.GET_VEHICLE_PED_IS_IN(inRange[i], false)
-                                    if SE_Notifications then
+                                    if senotifys then
+                                        notification.normal(("Targeted: " .. tostring(playerName))
+                                    else
                                         util.toast("Targeted: " .. tostring(playerName))
                                     end
                                     local forwardOffset = ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(inRange[i], 0, 1, 1)
@@ -4407,7 +4634,11 @@ silentAim:toggle_loop("Silent Aimbot", {"silentaim", "saimbot"}, "A silent aimbo
                                         local bonec = PED.GET_PED_BONE_COORDS(inRange[i], 12844, 0, 0, 0)
                                         MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS_IGNORE_ENTITY(forwardOffset.x, forwardOffset.y, forwardOffset.z, bonec.x, bonec.y, bonec.z, AIM_DMG, true, weaponHash, getLocalPed(), true, false, bulletSpeed, pveh, true)
                                     elseif not AIM_HEAD and AIM_HEADVEH and PED.IS_PED_IN_ANY_VEHICLE(inRange[i], false) then
-                                        util.toast("VehChecked " .. tostring(playerName))
+                                        if senotifys then
+                                            notification.normal("VehChecked " .. tostring(playerName))
+                                        else
+                                            util.toast("VehChecked " .. tostring(playerName))
+                                        end
                                         local bonec = PED.GET_PED_BONE_COORDS(inRange[i], 12844, 0, 0, 0)
                                         MISC.SHOOT_SINGLE_BULLET_BETWEEN_COORDS_IGNORE_ENTITY(forwardOffset.x, forwardOffset.y, forwardOffset.z, bonec.x, bonec.y, bonec.z, AIM_DMG, true, weaponHash, getLocalPed(), true, false, bulletSpeed, pveh, true)
                                     end
@@ -4459,7 +4690,11 @@ rapid_khanjali = weplist:toggle_loop("Rapid fire Khanjali", {}, "", function()
     if ENTITY.GET_ENTITY_MODEL(player_veh) == util.joaat("khanjali") then
         VEHICLE.SET_VEHICLE_MOD(player_veh, 10, math.random(-1, 0), false)
     else
-        util.toast("get inside a khanjali.")
+        if senotifys then
+            notification.normal("get inside a khanjali")
+        else
+            util.toast("get inside a khanjali")
+        end
         menu.trigger_command(rapid_khanjali, "off")
     end
 end)
@@ -4649,7 +4884,9 @@ rpgaim:toggle("RPG Aimbot / Most Vehicles", {"rpgaim"}, "You heard me. Only the 
                 local ppcoords = getEntityCoords(p)
                 if (RRocket ~= 0) and (p ~= nil) and (not PED.IS_PED_DEAD_OR_DYING(p)) and (not AIM_WHITELIST[NETWORK.NETWORK_GET_PLAYER_INDEX_FROM_PED(p)]) and (PED.IS_PED_SHOOTING(localped)) and (not players.is_in_interior(NETWORK.NETWORK_GET_PLAYER_INDEX_FROM_PED(p))) and (ppcoords.z > 1) then
                     if (ENTITY.HAS_ENTITY_CLEAR_LOS_TO_ENTITY(localped, p, 17) and MISL_LOS) or not MISL_LOS or MISL_AIR then
-                        if SE_Notifications then
+                        if senotifys then
+                            notification.normal("Precusors done")
+                        else
                             util.toast("Precusors done!")
                         end
                         NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(RRocket)
@@ -4658,7 +4895,9 @@ rpgaim:toggle("RPG Aimbot / Most Vehicles", {"rpgaim"}, "You heard me. Only the 
                                 NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(RRocket)
                             end
                         else
-                            if SE_Notifications then
+                            if senotifys then
+                                notificaion.normal("has control")
+                            else
                                 util.toast("has control")
                             end
                         end
@@ -4671,7 +4910,9 @@ rpgaim:toggle("RPG Aimbot / Most Vehicles", {"rpgaim"}, "You heard me. Only the 
                         GRAPHICS.USE_PARTICLE_FX_ASSET("core")
                         GRAPHICS.START_PARTICLE_FX_NON_LOOPED_ON_ENTITY("exp_grd_rpg_lod", RRocket, 0, 0, 0, 0, 0, 0, 2, false, false, false)
                         while ENTITY.DOES_ENTITY_EXIST(RRocket) do
-                            if SE_Notifications then
+                            if senotifys then
+                                notification.normal("rocket exists")
+                            else
                                 util.toast("rocket exists")
                             end
                             local pcoords = PED.GET_PED_BONE_COORDS(p, 20781, 0, 0, 0)
@@ -4698,7 +4939,9 @@ rpgaim:toggle("RPG Aimbot / Most Vehicles", {"rpgaim"}, "You heard me. Only the 
                             if MISL_AIR then
                                 if MISL_CAM then
                                     if not CAM.DOES_CAM_EXIST(Missile_Camera) then
-                                        if SE_Notifications then
+                                        if senotifys then
+                                            notification.normal("camera setup")
+                                        else
                                             util.toast("camera setup")
                                         end
                                         CAM.DESTROY_ALL_CAMS(true)
@@ -4737,7 +4980,9 @@ rpgaim:toggle("RPG Aimbot / Most Vehicles", {"rpgaim"}, "You heard me. Only the 
 
                         if MISL_CAM then
                             wait(2000)
-                            if SE_Notifications then
+                            if senotifys then
+                                notification.normal("cam remove")
+                            else
                                 util.toast("cam remove")
                             end
                             CAM.RENDER_SCRIPT_CAMS(false, false, 0, true, true, 0)
@@ -4797,7 +5042,9 @@ ORB_Sneaky = false
 
 orbway:action("Orbital Strike Waypoint", {"orbway", "orbwp"}, "Orbital Cannons your selected Waypoint.", function ()
     local wpos = get_waypoint_pos2()
-    if SE_Notifications then
+    if senotifys then
+        notification.normal("Selected Waypoint Coordinates: " .. wpos.x .. " " .. wpos.y .. " " .. wpos.z)
+    else
         util.toast("Selected Waypoint Coordinates: " .. wpos.x .. " " .. wpos.y .. " " .. wpos.z)
     end
     if ORB_Sneaky then
@@ -4930,7 +5177,11 @@ menuToggleLoop(debugFeats, "Request Control?", {}, "", function ()
                 end
             end
             if not NETWORK.NETWORK_HAS_CONTROL_OF_ENTITY(ent) then util.toast("Waited 2 seconds, couldn't get control!") goto start end
-            util.toast("Has control!")
+            if senotifys then
+                notification.normal("Has control")
+            else
+                util.toast("Has control")
+            end
         end
         memory.free(contr)
     end
@@ -4944,7 +5195,11 @@ menuToggleLoop(debugFeats, "Get V3 Of Entity", {"entcoords"}, "Toasts the coodin
         local found = PLAYER.GET_ENTITY_PLAYER_IS_FREE_AIMING_AT(players.user(), pointer)
         if found then
             local v3coords = getEntityCoords(memory.read_int(pointer))
-            util.toast(v3coords.x .. " " .. v3coords.y .. " " .. v3coords.z)
+            if senotifys then
+                notification.normal(v3coords.x .. " " .. v3coords.y .. " " .. v3coords.z)
+            else
+                util.toast(v3coords.x .. " " .. v3coords.y .. " " .. v3coords.z)
+            end
         end
         memory.free(pointer)
     end
@@ -4952,7 +5207,11 @@ end)
 
 menuAction(debugFeats, "Get Heading", {}, "", function ()
     local pp = getLocalPed()
-    util.toast(ENTITY.GET_ENTITY_HEADING(pp))
+    if senotifys then
+        notification.normal(ENTITY.GET_ENTITY_HEADING(pp))
+    else
+        util.toast(ENTITY.GET_ENTITY_HEADING(pp))
+    end
 end)
 
 menuToggleLoop(debugFeats, "Get player name from shot", {}, "", function ()
@@ -4961,17 +5220,26 @@ menuToggleLoop(debugFeats, "Get player name from shot", {}, "", function ()
         local playerPointer = memory.alloc(4)
         local isEntFound = PLAYER.GET_ENTITY_PLAYER_IS_FREE_AIMING_AT(players.user(), playerPointer)
         if isEntFound then
-            util.toast("Entity found!")
+            if senotifys then
+                notification.normal("Entity found")
+            else
+                util.toast("Entity found!")
+            end
             local playerHandle = memory.read_int(playerPointer)
             if ENTITY.IS_ENTITY_A_PED(playerHandle) then
-                util.toast("Is a ped!")
-                util.toast(tostring(playerHandle))
+                if senotifys then
+                    notification.normal("Is a ped! \n" ..tostring(playerHandle))
+                else
+                    util.toast("Is a ped! \n" ..tostring(playerHandle))
+                end
                 if PED.IS_PED_A_PLAYER(playerHandle) then
-                    util.toast("Is a player!")
                     local playerID = NETWORK.NETWORK_GET_PLAYER_INDEX_FROM_PED(playerHandle)
-                    util.toast(playerID .. " is their playerID!")
                     local playerName = NETWORK.NETWORK_PLAYER_GET_NAME(playerID)
-                    util.toast(playerName .. " is their name!")
+                    if senotifys then
+                        notification.normal("Is a player! \n" ..playerID .. " is their playerID! \n" ..playerName .. " is their name!")
+                    else
+                        util.toast("Is a player! \n" ..playerID .. " is their playerID! \n" ..playerName .. " is their name!")
+                    end
                 end
             end
         end
@@ -5018,7 +5286,11 @@ for i, data in PTFX_trails do
             end
             time_delay = time_delay + 1
         else
-            util.toast("Your not in any vehicle.")
+            if senotifys then
+                notification.normal("You are not in any vehicle")
+            else
+                util.toast("You are not in any vehicle")
+            end
             for j = 1, #ptfx_trails do
                 if ptfx_trails[j] == ptfx_trails[i] then
                     ptfx_trails[j].value = false
@@ -5055,10 +5327,18 @@ vehh:toggle_loop("Unlock Vehicle that you shoot", {"unlockvehshot"}, "Unlocks a 
                     end
                 end
                 if not NETWORK.NETWORK_HAS_CONTROL_OF_ENTITY(vehicle) then
-                    util.toast("Waited 2 secs, couldn't get control!")
+                    if senotifys then
+                        notification.normal("Couldn´t get control after 2 seconds")
+                    else
+                        util.toast("Couldn´t get control after 2 seconds")
+                    end
                     goto start
                 else
-                    util.toast("Has control.")
+                    if senotifys then
+                        notification.normal("Has control")
+                    else
+                        util.toast("Has Control")
+                    end
                 end
                 VEHICLE.SET_VEHICLE_DOORS_LOCKED(vehicle, 1)
                 VEHICLE.SET_VEHICLE_DOORS_LOCKED_FOR_ALL_PLAYERS(vehicle, true)
@@ -5072,10 +5352,16 @@ vehh:toggle_loop("Unlock Vehicle that you shoot", {"unlockvehshot"}, "Unlocks a 
                     end
                 end
                 if not NETWORK.NETWORK_HAS_CONTROL_OF_ENTITY(entity) then
-                    util.toast("Waited 2 secs, couldn't get control!")
+                    if senotifys then
+                        notification.normal("Couldn´t get control after 2 seconds")
+                    else
+                        util.toast("Couldn´t get control after 2 seconds")
+                    end
                     goto start
                 else
-                    if SE_Notifications then
+                    if senotifys then
+                        notification.normal("Has control")
+                    else
                         util.toast("Has control.")
                     end
                 end
@@ -5108,10 +5394,16 @@ vehh:toggle_loop("Unlock vehicle that you try to get into", {"unlockvehget"}, "U
                 end
             end
             if not NETWORK.NETWORK_HAS_CONTROL_OF_ENTITY(veh) then
-                util.toast("Waited 2 secs, couldn't get control!")
+                if senotifys then
+                    notification.normal("Couldn´t get control after 2 seconds")
+                else
+                    util.toast("Couldn´t get control after 2 seconds")
+                end
                 goto start
             else
-                if SE_Notifications then
+                if senotifys then
+                    notificaion.normal("Has control")
+                else
                     util.toast("Has control.")
                 end
             end
@@ -5226,7 +5518,11 @@ function GenerateSpawnFeatures()
                 SPAWNED_PEDS_COUNT = 0
                 SPAWNED_PEDS = {}
             else
-                util.toast("No peds left!")
+                if senotifys then
+                    notification.normal("No Peds left")
+                else
+                    util.toast("No Peds left")
+                end
             end
         end)
         menu.divider(spawnPeds, "Spawns")
@@ -5247,7 +5543,11 @@ function GenerateSpawnFeatures()
         end
         local timeAfterPeds = util.current_time_millis()
 
-        util.toast("It took about " .. timeAfterPeds - timeBeforePeds .. " milliseconds to generate ped spawn features!")
+        if senotifys then
+            notification.normal("It took about " .. timeAfterPeds - timeBeforePeds .. " milliseconds to generate ped spawn features!")
+        else
+            util.toast("It took about " .. timeAfterPeds - timeBeforePeds .. " milliseconds to generate ped spawn features!")
+        end
         ----------------------------------------------------------------------------
 
         local spawnObjs = menu.list(spawnFeats, "Objects", {}, "")
@@ -5262,7 +5562,11 @@ function GenerateSpawnFeatures()
                 SPAWNED_OBJS = {}
                 SPAWNED_OBJ_COUNT = 0
             else
-                util.toast("No objects left!")
+                if senotifys then
+                    notification.normal("No objects left")
+                else
+                    util.toast("No objects left")
+                end
             end
         end)
         for i = 1, #UNIVERSAL_OBJECTS_LIST do
@@ -5289,7 +5593,11 @@ function GenerateSpawnFeatures()
             SPAWN_GOD = on
         end)
     else
-        util.toast("Spawn features already have been generated!")
+        if senotifys then
+            notification.normal("Spawn features already have been generated")
+        else
+            util.toast("Spawn features already have been generated")
+        end
     end
 end
 
@@ -5450,7 +5758,11 @@ end, false)
 
 local calldebug DUKE_ROOT:action('Call/debug Duke', {}, 'This also clears all of Duke\'s current tasks, so if he gets bugged this should fix it.', function(on)
     duke_call_req = true
-    util.toast("Duke should be called successfully!")
+    if senotifys then
+        notification.darkgreen("Duke should be called successfully")
+    else
+        util.toast("Duke should be called successfully")
+    end
 end)
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -5542,7 +5854,11 @@ end, false)
 
 MILKIE_ROOT:action('Call/debug Milkie', {}, 'This also clears all of milkie\'s current tasks, so if he gets bugged this should fix it.', function(on)
     milkie_call_req = true
-    util.toast("milkie should be called successfully!")
+    if senotifys then
+        notification.darkgreen("Milkie should be called successfully")
+    else
+        util.toast("Milkie should be called successfully")
+    end
 end)
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -5635,7 +5951,11 @@ end, false)
 
 chop_ROOT:action('Call/debug chop', {}, 'This also clears all of chop\'s current tasks, so if he gets bugged this should fix it.', function(on)
     chop_call_req = true
-    util.toast("chop should be called successfully!")
+    if senotifys then
+        notification.darkgreen("Chop should be called successfully")
+    else
+        util.toast("Chop should be called successfully")
+    end
 end)
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -5725,7 +6045,11 @@ end, false)
 
 rhesus_ROOT:action('Call/debug Rhesus', {}, 'This also clears all of rhesus\'s current tasks, so if he gets bugged this should fix it.', function(on)
     rhesus_call_req = true
-    util.toast("Rhesus should be called successfully!")
+    if senotifys then
+        notification.darkgreen("Rhesus should be called successfully")
+    else
+        util.toast("Rhesus should be called successfully")
+    end
 end)
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -5815,7 +6139,11 @@ end, false)
 
 rat_ROOT:action('Call/debug Ratty', {}, 'This also clears all of rat\'s current tasks, so if he gets bugged this should fix it.', function(on)
     rat_call_req = true
-    util.toast("Ratty should be called successfully!")
+    if senotifys then
+        notification.darkgreen("Ratty should be called successfully")
+    else
+        util.toast("Ratty should be called successfully")
+    end
 end)
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -5905,7 +6233,11 @@ end, false)
 
 nudy_ROOT:action('Call/debug Nudy', {}, 'This also clears all of nudy\'s current tasks, so if she gets bugged this should fix it.', function(on)
     nudy_call_req = true
-    util.toast("Nudy should be called successfully!")
+    if senotifys then
+        notification.darkgreen("Nudy should be called successfully")
+    else
+        util.toast("Nudy should be called successfully")
+    end
 end)
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -5952,7 +6284,11 @@ loops:toggle("50K Loop", {}, "", function(on_tick)
 end)
 
 guns:action("                                     !! READ !!", {}, "If the props wont spawn anymore, switch session.", function()
-    util.toast("If the props wont spawn anymore, switch session.")
+    if senotifys then
+        notification.normal("If the props wont spawn anymore, switch session")
+    else
+        util.toast("If the props wont spawn anymore, switch session.")
+    end
 end)
 
 local obj = {expl = false}	
@@ -6474,11 +6810,11 @@ end)
 
 local mainsettings = menu.list(menuroot, "Settings")
 
-menuToggle(mainsettings, "Enable/Disable notifications", {}, "Disables notifications like 'stickybomb placed!' or 'entity marked.' Stuff like that. Those get annoying with the Pan feature especially.", function(on)
+menuToggle(mainsettings, "Enable Minimap Notifications", {}, "Changes every notification from the Lua to the minimap notifications from Stand Expansion", function(on)
     if on then
-        SE_Notifications = true
+        senotifys = true
     else
-        SE_Notifications = false
+        senotifys = false
     end
 end)
 
@@ -6563,13 +6899,6 @@ local function playerActionsSetup(pid)
 
 -----------------------------------------------------------------------------------------------------------------------------------
 
-menu.action(lobbyFeats, "Alle zum Puff!", {}, "Geh beten ihr NNN versager", function()
-    menu.trigger_commands("posx 118")
-    menu.trigger_commands("posy -1287")
-    menu.trigger_commands("posz 28")
-    menu.trigger_commands("summonall")
-end)
-
 local vans = {"burrito4", "boxville3", "camper", "gburrito", "surfer2", "boxville5", "journey", "speedo2", "youga3"}
 playerOtherTrolling:action("Send Bomb Van", {}, "", function()
     local player_pos = players.get_position(pid)
@@ -6637,9 +6966,17 @@ end)
         local playerPed = getPlayerPed(pid)
         local playerCoords = getEntityCoords(playerPed)
         if players.is_godmode(pid) and not players.is_in_interior(pid) then
-            util.toast("Player is in godmode, stopping explode...")
+            if senotifys then
+                notification.normal("Player is in godmode, stopping explosions")
+            else
+                util.toast("Player is in godmode, stopping explosions")
+            end
         elseif players.is_in_interior(pid) then
-            util.toast("Player is in an interior, stopping explode...")
+            if senotifys then
+                notification.normal("Player is in an interior, stopping explosions")
+            else
+                util.toast("Player is in an interior, stopping explosions")
+            end
         elseif PED.IS_PED_IN_ANY_VEHICLE(playerPed, true) then
             for i = 0, 50, 1 do 
                 SE_add_owned_explosion(playerPed, playerCoords.x, playerCoords.y, playerCoords.z, 5, 10, SEisExploAudible, SEisExploInvis, 0)
@@ -6653,9 +6990,17 @@ end)
         local playerPed = getPlayerPed(pid)
         local playerCoords = getEntityCoords(playerPed)
         if players.is_godmode(pid) and not players.is_in_interior(pid) then
-            util.toast("Player is in godmode, stopping explode...")
+            if senotifys then
+                notification.normal("Player is in godmode, stopping explosions")
+            else
+                util.toast("Player is in godmode, stopping explosions")
+            end
         elseif players.is_in_interior(pid) then
-            util.toast("Player is in an interior, stopping explode...")
+            if senotifys then
+                notification.normal("Player is in an interior, stopping explosions")
+            else
+                util.toast("Player is in an interior, stopping explosions")
+            end
         else
             SE_add_owned_explosion(playerPed, playerCoords.x, playerCoords.y, playerCoords.z, 1, 10, SEisExploAudible, SEisExploInvis, 0)
         end
@@ -6665,9 +7010,17 @@ end)
         local playerPed = getPlayerPed(pid)
         local playerCoords = getEntityCoords(playerPed)
         if players.is_godmode(pid) and not players.is_in_interior(pid) then
-            util.toast("Player is in godmode, stopping explode...")
+            if senotifys then
+                notification.normal("Player is in godmode, stopping explosions")
+            else
+                util.toast("Player is in godmode, stopping explosions")
+            end
         elseif players.is_in_interior(pid) then
-            util.toast("Player is in an interior, stopping explode...")
+            if senotifys then
+                notification.normal("Player is in an interior, stopping explosions")
+            else
+                util.toast("Player is in an interior, stopping explosions")
+            end
         else
             SE_add_owned_explosion(playerPed, playerCoords.x, playerCoords.y, playerCoords.z, 3, 10, SEisExploAudible, SEisExploInvis, 0)
         end
@@ -6676,9 +7029,17 @@ end)
         local playerPed = getPlayerPed(pid)
         local playerCoords = getEntityCoords(playerPed)
         if players.is_godmode(pid) and not players.is_in_interior(pid) then
-            util.toast("Player is in godmode, stopping explode...")
+            if senotifys then
+                notification.normal("Player is in godmode, stopping explosions")
+            else
+                util.toast("Player is in godmode, stopping explosions")
+            end
         elseif players.is_in_interior(pid) then
-            util.toast("Player is in an interior, stopping explode...")
+            if senotifys then
+                notification.normal("Player is in an interior, stopping explosions")
+            else
+                util.toast("Player is in an interior, stopping explosions")
+            end
         else
             SE_add_owned_explosion(playerPed, playerCoords.x, playerCoords.y, playerCoords.z, 3, 10, SEisExploAudible, SEisExploInvis, 0)
         end
@@ -6864,11 +7225,17 @@ end)
                 ENTITY.SET_ENTITY_COORDS_NO_OFFSET(veh, 4500, -4400, 4, false, false, false)
                 wait(100)
             end
-            if SE_Notifications then
+            if senotifys then
+                notification.normal("Teleported " .. getPlayerName_pid(pid) .. " into the farthest ocean")
+            else
                 util.toast("Teleported " .. getPlayerName_pid(pid) .. " into the farthest ocean!")
             end
         else
-            util.toast("Player " .. getPlayerName_pid(pid) .. " is not in a vehicle!")
+            if senotifys then
+                notification.normal("Player " .. getPlayerName_pid(pid) .. " is not in a vehicle")
+            else
+                util.toast("Player " .. getPlayerName_pid(pid) .. " is not in a vehicle!")
+            end
         end
         ENTITY.SET_ENTITY_COORDS_NO_OFFSET(getLocalPed(), oldcoords.x, oldcoords.y, oldcoords.z, false, false, false)
     end)
@@ -6888,11 +7255,17 @@ end)
                 ENTITY.SET_ENTITY_COORDS_NO_OFFSET(veh, -76, -819, 327, false, false, false)
                 wait(100)
             end
-            if SE_Notifications then
+            if senotifys then
+                notification.normal("Teleported " .. getPlayerName_pid(pid) .. " onto the Maze Bank tower")
+            else
                 util.toast("Teleported " .. getPlayerName_pid(pid) .. " onto the Maze Bank tower!")
             end
         else
-            util.toast("Player " .. getPlayerName_pid(pid) .. " is not in a vehicle!")
+            if senotifys then
+                notification.normal("Player " .. getPlayerName_pid(pid) .. " is not in a vehicle")
+            else
+                util.toast("Player " .. getPlayerName_pid(pid) .. " is not in a vehicle!")
+            end
         end
         ENTITY.SET_ENTITY_COORDS_NO_OFFSET(getLocalPed(), oldcoords.x, oldcoords.y, oldcoords.z, false, false, false)
     end)
@@ -6928,7 +7301,11 @@ end)
             ENTITY.SET_ENTITY_VELOCITY(veh, velocity.x, velocity.y, velocity.z)
             wait(500)
         else
-            util.toast("Player " .. getPlayerName_pid(pid) .. " is not in a vehicle!")
+            if senotifys then
+                notification.normal("Player " .. getPlayerName_pid(pid) .. " is not in a vehicle")
+            else
+                util.toast("Player " .. getPlayerName_pid(pid) .. " is not in a vehicle")
+            end
         end
     end)
 
@@ -6947,7 +7324,9 @@ end)
         local junk = WEAPON.GET_PED_LAST_WEAPON_IMPACT_COORD(SE_LocalPed, SE_impactCoord)
         if junk then
             Want = memory.read_vector3(SE_impactCoord)
-            if SE_Notifications then
+            if senotifys then
+                notification.normal(Want.x .. " " .. Want.y .. " " .. Want.z)
+            else
                 util.toast(Want.x .. " " .. Want.y .. " " .. Want.z)
             end
         end
@@ -6955,7 +7334,11 @@ end)
     end)
 
     menuAction(ptossf, "Weapon Impact Debug", {}, "", function ()
-        util.toast(Want.x .. " " .. Want.y .. " " .. Want.z)
+        if senotifys then
+            notification.normal(Want.x .. " " .. Want.y .. " " .. Want.z)
+        else
+            util.toast(Want.x .. " " .. Want.y .. " " .. Want.z)
+        end
     end)
 
     menuAction(ptossf, "Clear location memory", {}, "", function ()
@@ -6975,8 +7358,11 @@ end)
                         SE_add_explosion(targetcoords.x, targetcoords.y, targetcoords.z + 2, 1, 1, SEisExploAudible, SEisExploInvis, 0, true)
                         wait()
                     end
-                    util.toast("Player " .. tostring(PLAYER.GET_PLAYER_NAME(pid)) .. " has reached the desired location.")
-                    util.toast("Shutting off Better Toss.")
+                    if senotifys then
+                        notification.normal("Player " .. tostring(PLAYER.GET_PLAYER_NAME(pid)) .. " has reached the desired location. \nShutting off Better Toss.")
+                    else
+                        util.toast("Player " .. tostring(PLAYER.GET_PLAYER_NAME(pid)) .. " has reached the desired location. \nShutting off Better Toss.")
+                    end
                     menu.trigger_commands("bettertoss" .. PLAYER.GET_PLAYER_NAME(pid) .. " off")
                 end
             end
@@ -7048,13 +7434,19 @@ end)
         local pcoords2 = getEntityCoords(pped)
         if pcoords1.x ~= pcoords2.x or pcoords1.y ~= pcoords2.y or pcoords1.z ~= pcoords2.z then
             local playerName = tostring(PLAYER.GET_PLAYER_NAME(pid))
-            util.toast(playerName .. " is moving!")
+            if senotifys then
+                notification.normal(playerName .. " is moving")
+            else
+                util.toast(playerName .. " is moving!")
+            end
         end
     end)
 
     menu.slider(moche, "Move Check Interval (ms)", {"movecheckms"}, "How many milliseconds need to pass for it to check for movement, 1000ms = 1sec", 1, 60000, 1000, 100, function(value)
         SE_waittime = value
-        if SE_Notifications then
+        if senotifys then
+            notification.normal("Set move chek interval to " .. SE_waittime)
+        else
             util.toast("Set move check interval to " .. SE_waittime)
         end
     end)
@@ -7085,7 +7477,9 @@ end)
             ENTITY.SET_ENTITY_AS_MISSION_ENTITY(Ptools_PanTable[Ptools_PanCount], true, false)
             ENTITY.SET_ENTITY_VISIBLE(Ptools_PanTable[Ptools_PanCount], false, 0)
             ----
-            if SE_Notifications then
+            if senotifys then
+                notification.normal("Spawned with index of " .. Ptools_Pancount)
+            else
                 util.toast("Spawned with index of " .. Ptools_PanCount)
             end
             Ptools_PanCount = Ptools_PanCount + 1
@@ -7115,11 +7509,23 @@ end)
 
     menuAction(gmtool, "God Check", {"godcheck"}, "", function()
         if (players.is_godmode(pid) and not players.is_in_interior(pid)) then
-            util.toast(players.get_name(pid) .. " is in godmode!")
+            if senotifys then
+                notification.normal(players.get_name(pid) .. " is in godmode")
+            else
+                util.toast(players.get_name(pid) .. " is in godmode!")
+            end
         elseif (players.is_in_interior(pid)) then
-            util.toast(players.get_name(pid) .. " is in an interior!")
+            if senotifys then
+                notification.normal(players.get_name(pid) .. " is in an interior")
+            else
+                util.toast(players.get_name(pid) .. " is in an interior")
+            end
         else
-            util.toast(players.get_name(pid) .. " is not in godmode!")
+            if senotifys then
+                notification.normal(players.get_name(pid) .. " is not in godmode")
+            else
+                util.toast(players.get_name(pid) .. " is not in godmode!")
+            end
         end
     end)
 
@@ -7305,17 +7711,29 @@ mainsettings:action("Check for updates", {"updcheck"}, "Checks for updates from 
         githubVersion = tonumber(output)
         response = true
         if myVersion ~= githubVersion then
-            util.toast("Stand Expension updated to " ..githubVersion.. ". Update the lua to get the latest version :D")
+            if senotifys then
+                notification.normal("Stand Expension updated to " ..githubVersion.. ". Update the lua to get the latest version :D")
+            else
+                util.toast("Stand Expension updated to " ..githubVersion.. ". Update the lua to get the latest version :D")
+            end
             menu.action(mainsettings, "Update Lua", {}, "", function()
                 async_http.init('raw.githubusercontent.com','/N0mbyy/nuhuh/main/1%20Nuh%20Uh.lua',function(a)
                     local err = select(2,load(a))
                     if err then
-                        util.toast("Script failed to download. Please try again later. If this continues to happen then manually update via github.")
+                        if senotifys then
+                            notification.normal("Script failed to download. Please try again later. If this continues to happen then manually update via github.")
+                        else
+                            util.toast("Script failed to download. Please try again later. If this continues to happen then manually update via github.")
+                        end
                     return end
                     local f = io.open(filesystem.scripts_dir()..SCRIPT_RELPATH, "wb")
                     f:write(a)
                     f:close()
-                    util.toast("Successfully updated! Restarted the lua for the update to apply <3")
+                    if senotifys then
+                        notification.normal("Successfully updated! Restarted the lua for the update to apply <3")
+                    else
+                        util.toast("Successfully updated! Restarted the lua for the update to apply <3")
+                    end
                     util.stop_script()
                 end)
                 async_http.dispatch()
@@ -7326,6 +7744,14 @@ mainsettings:action("Check for updates", {"updcheck"}, "Checks for updates from 
     repeat 
         util.yield()
     until response 
+    end)
+
+    menu.action(mainsettings, "Test button", {}, "", function()
+    if senotifys then
+        notification.normal("Minimap Notifications are enabled")
+    else
+        util.toast("Minimap notifications are disabled")
+    end
     end)
 
 ----------------------------------------------
