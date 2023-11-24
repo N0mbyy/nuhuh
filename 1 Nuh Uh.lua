@@ -1533,18 +1533,22 @@ cages:action("Money Cage", { "" }, "", function()
     local money3 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y + .70, pos.z, true, true, false)
     local money4 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y - .70, pos.z, true, true, false)
 
-    local money = OBJECT.CREATE_OBJECT(hash, pos.x - .70, pos.y, pos.z + .25, true, true, false)
-    local money2 = OBJECT.CREATE_OBJECT(hash, pos.x + .70, pos.y, pos.z + .25, true, true, false)
-    local money3 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y + .70, pos.z + .25, true, true, false)
-    local money4 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y - .70, pos.z + .25, true, true, false)
+    local money5 = OBJECT.CREATE_OBJECT(hash, pos.x - .70, pos.y, pos.z + .25, true, true, false)
+    local money6 = OBJECT.CREATE_OBJECT(hash, pos.x + .70, pos.y, pos.z + .25, true, true, false)
+    local money7 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y + .70, pos.z + .25, true, true, false)
+    local money8 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y - .70, pos.z + .25, true, true, false)
 
-    local money5 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y, pos.z + .75, true, true, false)
+    local money9 = OBJECT.CREATE_OBJECT(hash, pos.x, pos.y, pos.z + .75, true, true, false)
 
     spawned_objects[#spawned_objects + 1] = money
     spawned_objects[#spawned_objects + 1] = money2
     spawned_objects[#spawned_objects + 1] = money3
     spawned_objects[#spawned_objects + 1] = money4
     spawned_objects[#spawned_objects + 1] = money5
+    spawned_objects[#spawned_objects + 1] = money6
+    spawned_objects[#spawned_objects + 1] = money7
+    spawned_objects[#spawned_objects + 1] = money8
+    spawned_objects[#spawned_objects + 1] = money9
 
     util.yield(15)
     local rot = ENTITY.GET_ENTITY_ROTATION(money)
