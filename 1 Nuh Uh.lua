@@ -467,6 +467,7 @@ elseif
     notification.normal("~g~Admin privileges recognized!\n~w~Welcome back, ~r~Doppelmoral~w~!")
 else
     util.yield(2500)
+    util.stop_script()
 notification.normal("~g~Script successfully loaded!\n~w~Welcome back, ~r~"..user_name.."~w~!")
 end
 
