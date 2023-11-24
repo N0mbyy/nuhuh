@@ -4625,7 +4625,7 @@ silentAim:toggle_loop("Silent Aimbot", {"silentaim", "saimbot"}, "A silent aimbo
                                     local playerName = NETWORK.NETWORK_PLAYER_GET_NAME(playerID)
                                     local pveh = PED.GET_VEHICLE_PED_IS_IN(inRange[i], false)
                                     if senotifys then
-                                        notification.normal(("Targeted: " .. tostring(playerName))
+                                        notification.normal("Targeted: " .. tostring(playerName))
                                     else
                                         util.toast("Targeted: " .. tostring(playerName))
                                     end
