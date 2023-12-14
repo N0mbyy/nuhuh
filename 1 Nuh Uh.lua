@@ -146,13 +146,13 @@ function write_int(address, value)
 end
 
 function trigger_transaction(hash, value)
-    write_int(4536533 + 1, 2147483646)
-    write_int(4536533 + 7, 2147483647)
-    write_int(4536533 + 6, 0)
-    write_int(4536533 + 5, 0)
-    write_int(4536533 + 3, hash)
-    write_int(4536533 + 2, value)
-    write_int(4536533, 2)
+    write_int(4537212 + 1, 2147483646)
+    write_int(4537212 + 7, 2147483647)
+    write_int(4537212 + 6, 0)
+    write_int(4537212 + 5, 0)
+    write_int(4537212 + 3, hash)
+    write_int(4537212 + 2, value)
+    write_int(4537212, 2)
 end
 
 local hash = {
