@@ -5175,7 +5175,7 @@ end)
 
 local debugFeats = menu.list(menuroot, "Debug", {}, "")
 
-local konsole = menu.list(debugfeats, "Console")
+local konsole = menu.list(debugFeats, "Console")
 
 local function get_stand_stdout(tbl, n)
     local all_lines = {}
