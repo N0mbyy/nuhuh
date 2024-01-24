@@ -1,7 +1,7 @@
 local func = require("NovaScript.functions")
 local scripts_dir = filesystem.scripts_dir()
 local scriptName = "Stand Expansion"
-local myVersion = 1.17
+local myVersion = 1.18
 local response = false
 local toast = util.toast
 local log_dir = filesystem.stand_dir() .. '\\Log.txt'
@@ -51,6 +51,13 @@ until response
 local function pid_to_ped(pid)
     return GET_PLAYER_PED(pid)
 end 
+
+local function getgroupsize(group)
+    local unkPtr, sizePtr = memory.alloc(1), memory.alloc(1)
+    PED.GET_GROUP_SIZE(group, unkPtr, sizePtr)
+    return memory.read_int(sizePtr)
+end
+
 
 local crash_tbl = {
     "SWYHWTGYSWTYSUWSLSWTDSEDWSRTDWSOWSW45ERTSDWERTSVWUSWS5RTDFSWRTDFTSRYE",
@@ -324,6 +331,22 @@ local function get_offset_from_camera(distance)
     return destination
 end
 
+local function fuckmedaddy()
+    
+    local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+    local coords = ENTITY.GET_ENTITY_COORDS(ped, true)
+    coords.x = coords['x']
+    coords.y = coords['y']
+    coords.z = coords['z']
+    local hash = 3613262246
+    local hash2 = 3613262246
+    request_model_load(hash2)
+    request_model_load(hash)
+    local crash2 = OBJECT.CREATE_OBJECT_NO_OFFSET(hash2, coords['x'], coords['y'], coords['z'], true, false, false)
+    local crash1 = OBJECT.CREATE_OBJECT_NO_OFFSET(hash, coords['x'], coords['y'], coords['z'], true, false, false)
+    ENTITY.SET_ENTITY_ROTATION(crash1, 0.0, -90.0, 0.0, 1, true)
+end
+
 local function objams(obj_hash, obj, camcoords)
     local CV = CAM.GET_GAMEPLAY_CAM_RELATIVE_HEADING()
     if STREAMING.IS_MODEL_A_VEHICLE(obj_hash) then
@@ -467,14 +490,20 @@ notification = {
 util.show_corner_help('~r~Script is WIP! \n~w~Made by N0mbyy')
 notification.normal("Initializing Stand Expansion...")
 
-if players.get_rockstar_id(players.user()) == 76716180 or 208144868 then
+if players.get_rockstar_id(players.user()) == 76716180 then
     notification.normal("~g~Owner privileges recognized!\n~w~Welcome back, ~r~N0mbyy~w~!")
 elseif
-    players.get_rockstar_id(players.user()) == 226774243 then --Blondie
+    players.get_rockstar_id(players.user()) == 208144868 then
+    notification.normal("~g~Owner privileges recognized!\n~w~Welcome back, ~r~N0mbyy~w~!")
+elseif
+    players.get_rockstar_id(players.user()) == 99967391 then
+    notification.normal("~g~Owner privileges recognized!\n~w~Welcome back, ~r~N0mbyy~w~!")
+elseif
+    players.get_rockstar_id(players.user()) == 226774243 then
     notification.normal("~g~Admin privileges recognized!\n~w~Welcome back, ~r~Doppelmoral~w~!")
 else
     util.yield(2500)
-    util.stop_script()
+    --util.stop_script()
 notification.normal("~g~Script successfully loaded!\n~w~Welcome back, ~r~"..user_name.."~w~!")
 end
 
@@ -2325,6 +2354,10 @@ krustykrab:toggle("Number of spatulas", {}, "Spectating is risky, watch out.", f
             crash_ents = {}
         end
     end)
+end)
+
+crash2_ref:action("Random Lua, idk", {}, "Weird ass 'FUCK ME'.", function()
+        fuckmedaddy()
 end)
 
 crash2_ref:action("Cherax Crash", {}, "Old Yum YUm.", function()
@@ -5175,6 +5208,426 @@ end)
 
 local debugFeats = menu.list(menuroot, "Debug", {}, "")
 
+local gridss = menu.list(debugFeats, "Grid Spawn", {}, "")
+
+griddys = false
+
+local gridon = menu.toggle(gridss, "Enable Grid Spawn", {}, "", function(on)
+    if on then
+        griddys = true
+    else
+        griddys = false
+    end
+
+    if griddys then
+
+local function  left_click()
+    return PAD.IS_DISABLED_CONTROL_JUST_PRESSED(2, 24)
+end
+
+local function  left_click_up()
+    return PAD.IS_DISABLED_CONTROL_JUST_RELEASED(2, 24)
+end
+
+local function left_ctrl_down()
+    return PAD.IS_DISABLED_CONTROL_PRESSED(2, 36)
+end
+
+local function z_click()
+    return PAD.IS_DISABLED_CONTROL_JUST_PRESSED(2, 48)
+end
+
+local function draw_arrow_down (pos, angle, size, colour_a, colour_b)
+    colour_b = colour_b or {r = 255, g = 255, b = 255, a = colour_a.a}
+    local angle_cos = math.cos(angle)
+    local angle_sin = math.sin(angle)
+
+    local width = 0.5 * size
+    local length = 1 * size
+    local height = 0.25 * size
+    
+    GRAPHICS.DRAW_POLY(
+        pos.x + (angle_cos * 0 - angle_sin * 0),
+        pos.y + (angle_sin * 0 + angle_cos * 0),
+        pos.z + 0,
+        pos.x + (angle_cos * 0 - angle_sin * height),
+        pos.y + (angle_sin * 0 + angle_cos * height),
+        pos.z + length + height,
+        pos.x + (angle_cos * width - angle_sin * 0),
+        pos.y + (angle_sin * width + angle_cos * 0),
+        pos.z + length,
+        colour_b.r,
+        colour_b.g,
+        colour_b.b,
+        colour_b.a
+    )
+    GRAPHICS.DRAW_POLY(
+        pos.x + (angle_cos * 0 - angle_sin * -height),
+        pos.y + (angle_sin * 0 + angle_cos * -height),
+        pos.z + length + height,
+        pos.x + (angle_cos * 0 - angle_sin * 0),
+        pos.y + (angle_sin * 0 + angle_cos * 0),
+        pos.z + 0,
+        pos.x + (angle_cos * width - angle_sin * 0),
+        pos.y + (angle_sin * width + angle_cos * 0),
+        pos.z + length,
+        colour_b.r,
+        colour_b.g,
+        colour_b.b,
+        colour_b.a
+    )
+    GRAPHICS.DRAW_POLY(
+        pos.x + (angle_cos * 0 - angle_sin * 0),
+        pos.y + (angle_sin * 0 + angle_cos * 0),
+        pos.z + 0,
+        pos.x + (angle_cos * 0 - angle_sin * -height),
+        pos.y + (angle_sin * 0 + angle_cos * -height),
+        pos.z + length + height,
+        pos.x + (angle_cos * -width - angle_sin * 0),
+        pos.y + (angle_sin * -width + angle_cos * 0),
+        pos.z + length,
+        colour_a.r,
+        colour_a.g,
+        colour_a.b,
+        colour_a.a
+    )
+    GRAPHICS.DRAW_POLY(
+        pos.x + (angle_cos * 0 - angle_sin * height),
+        pos.y + (angle_sin * 0 + angle_cos * height),
+        pos.z + length + height,
+        pos.x + (angle_cos * 0 - angle_sin * 0),
+        pos.y + (angle_sin * 0 + angle_cos * 0),
+        pos.z + 0,
+        pos.x + (angle_cos * -width - angle_sin * 0),
+        pos.y + (angle_sin * -width + angle_cos * 0),
+        pos.z + length,
+        colour_a.r,
+        colour_a.g,
+        colour_a.b,
+        colour_a.a
+    )
+    GRAPHICS.DRAW_POLY(
+        pos.x + (angle_cos * 0 - angle_sin * height),
+        pos.y + (angle_sin * 0 + angle_cos * height),
+        pos.z + length + height,
+        pos.x + (angle_cos * 0 - angle_sin * -height),
+        pos.y + (angle_sin * 0 + angle_cos * -height),
+        pos.z + length + height,
+        pos.x + (angle_cos * width - angle_sin * 0),
+        pos.y + (angle_sin * width + angle_cos * 0),
+        pos.z + length,
+        colour_b.r,
+        colour_b.g,
+        colour_b.b,
+        colour_b.a
+    )
+    GRAPHICS.DRAW_POLY(
+        pos.x + (angle_cos * 0 - angle_sin * -height),
+        pos.y + (angle_sin * 0 + angle_cos * -height),
+        pos.z + length + height,
+        pos.x + (angle_cos * 0 - angle_sin * height),
+        pos.y + (angle_sin * 0 + angle_cos * height),
+        pos.z + length + height,
+        pos.x + (angle_cos * -width - angle_sin * 0),
+        pos.y + (angle_sin * -width + angle_cos * 0),
+        pos.z + length,
+        colour_a.r,
+        colour_a.g,
+        colour_a.b,
+        colour_a.a
+    )
+end
+
+local minimum = memory.alloc()
+local maximum = memory.alloc()
+local upVector_pointer = memory.alloc()
+local rightVector_pointer = memory.alloc()
+local forwardVector_pointer = memory.alloc()
+local position_pointer = memory.alloc()
+local draw_bounding_box = function (entity, colour)
+    ENTITY.GET_ENTITY_MATRIX(entity, rightVector_pointer, forwardVector_pointer, upVector_pointer, position_pointer);
+    local forward_vector = v3.new(forwardVector_pointer)
+    local right_vector = v3.new(rightVector_pointer)
+    local up_vector = v3.new(upVector_pointer)
+
+    MISC.GET_MODEL_DIMENSIONS(ENTITY.GET_ENTITY_MODEL(entity), minimum, maximum)
+    local minimum_vec = v3.new(minimum)
+    local maximum_vec = v3.new(maximum)
+    local dimensions = {x = maximum_vec.y - minimum_vec.y, y = maximum_vec.x - minimum_vec.x, z = maximum_vec.z - minimum_vec.z}
+
+    local top_right =           ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(entity,       maximum_vec.x, maximum_vec.y, maximum_vec.z)
+    local top_right_back =      {x = forward_vector.x * -dimensions.y + top_right.x,        y = forward_vector.y * -dimensions.y + top_right.y,         z = forward_vector.z * -dimensions.y + top_right.z}
+    local bottom_right_back =   {x = up_vector.x * -dimensions.z + top_right_back.x,        y = up_vector.y * -dimensions.z + top_right_back.y,         z = up_vector.z * -dimensions.z + top_right_back.z}
+    local bottom_left_back =    {x = -right_vector.x * dimensions.x + bottom_right_back.x,  y = -right_vector.y * dimensions.x + bottom_right_back.y,   z = -right_vector.z * dimensions.x + bottom_right_back.z}
+    local top_left =            {x = -right_vector.x * dimensions.x + top_right.x,          y = -right_vector.y * dimensions.x + top_right.y,           z = -right_vector.z * dimensions.x + top_right.z}
+    local bottom_right =        {x = -up_vector.x * dimensions.z + top_right.x,             y = -up_vector.y * dimensions.z + top_right.y,              z = -up_vector.z * dimensions.z + top_right.z}
+    local bottom_left =         {x = forward_vector.x * dimensions.y + bottom_left_back.x,  y = forward_vector.y * dimensions.y + bottom_left_back.y,   z = forward_vector.z * dimensions.y + bottom_left_back.z}
+    local top_left_back =       {x = up_vector.x * dimensions.z + bottom_left_back.x,       y = up_vector.y * dimensions.z + bottom_left_back.y,        z = up_vector.z * dimensions.z + bottom_left_back.z}
+
+    GRAPHICS.DRAW_LINE(
+        top_right.x, top_right.y, top_right.z,
+        top_right_back.x, top_right_back.y, top_right_back.z,
+       colour.r, colour.g, colour.b, colour.a
+    )
+    GRAPHICS.DRAW_LINE(
+        top_right.x, top_right.y, top_right.z,
+        top_left.x, top_left.y, top_left.z,
+       colour.r, colour.g, colour.b, colour.a
+    )
+    GRAPHICS.DRAW_LINE(
+        top_right.x, top_right.y, top_right.z,
+        bottom_right.x, bottom_right.y, bottom_right.z,
+       colour.r, colour.g, colour.b, colour.a
+    )
+    GRAPHICS.DRAW_LINE(
+        bottom_left_back.x, bottom_left_back.y, bottom_left_back.z,
+        bottom_right_back.x, bottom_right_back.y, bottom_right_back.z,
+       colour.r, colour.g, colour.b, colour.a
+    )
+    GRAPHICS.DRAW_LINE(
+        bottom_left_back.x, bottom_left_back.y, bottom_left_back.z,
+        bottom_left.x, bottom_left.y, bottom_left.z,
+       colour.r, colour.g, colour.b, colour.a
+    )
+    GRAPHICS.DRAW_LINE(
+        bottom_left_back.x, bottom_left_back.y, bottom_left_back.z,
+        top_left_back.x, top_left_back.y, top_left_back.z,
+       colour.r, colour.g, colour.b, colour.a
+    )
+    GRAPHICS.DRAW_LINE(
+        top_left_back.x, top_left_back.y, top_left_back.z,
+        top_right_back.x, top_right_back.y, top_right_back.z,
+       colour.r, colour.g, colour.b, colour.a
+    )
+    GRAPHICS.DRAW_LINE(
+        top_left_back.x, top_left_back.y, top_left_back.z,
+        top_left.x, top_left.y, top_left.z,
+       colour.r, colour.g, colour.b, colour.a
+    )
+    GRAPHICS.DRAW_LINE(
+        bottom_right_back.x, bottom_right_back.y, bottom_right_back.z,
+        top_right_back.x, top_right_back.y, top_right_back.z,
+       colour.r, colour.g, colour.b, colour.a
+    )
+    GRAPHICS.DRAW_LINE(
+        bottom_left.x, bottom_left.y, bottom_left.z,
+        top_left.x, top_left.y, top_left.z,
+       colour.r, colour.g, colour.b, colour.a
+    )
+    GRAPHICS.DRAW_LINE(
+        bottom_left.x, bottom_left.y, bottom_left.z,
+        bottom_right.x, bottom_right.y, bottom_right.z,
+       colour.r, colour.g, colour.b, colour.a
+    )
+    GRAPHICS.DRAW_LINE(
+        bottom_right_back.x, bottom_right_back.y, bottom_right_back.z,
+        bottom_right.x, bottom_right.y, bottom_right.z,
+       colour.r, colour.g, colour.b, colour.a
+    )
+end
+
+local mod_types = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 16, 23, 24, 25, 27, 28, 30, 33, 34, 35, 38, 48}
+local function max_vehicle(veh)
+    if not ENTITY.DOES_ENTITY_EXIST(veh) then
+        return
+    end
+    VEHICLE.SET_VEHICLE_MOD_KIT(veh, 0)
+    for _, type in pairs(mod_types) do
+        VEHICLE.SET_VEHICLE_MOD(veh, type, VEHICLE.GET_NUM_VEHICLE_MODS(veh, type) - 1, true)
+    end
+end
+
+local minimum = memory.alloc()
+local maximum = memory.alloc()
+local function get_model_dimensions(model)
+    while not STREAMING.HAS_MODEL_LOADED(model) do
+        STREAMING.REQUEST_MODEL(model)
+        util.yield()
+    end
+    MISC.GET_MODEL_DIMENSIONS(model, minimum, maximum)
+        local minimum_vec = v3.new(minimum)
+        local maximum_vec = v3.new(maximum)
+        local dimensions = {y = maximum_vec.y - minimum_vec.y, x = maximum_vec.x - minimum_vec.x, z = maximum_vec.z - minimum_vec.z}
+    return dimensions
+end
+
+
+local car_hash = util.joaat("t20")
+local car_dimensions = get_model_dimensions(car_hash)
+local x_padding = 0
+local y_padding = 0
+
+menu.text_input(gridss, "Vehicle model", {"gridSpawnVeh", "gridVeh", "gridSpawnModel"}, "Set the model to be spawned", function(value)
+    local hash = util.joaat(value)
+    if STREAMING.IS_MODEL_A_VEHICLE(hash) then
+        car_hash = hash
+        car_dimensions = get_model_dimensions(hash)
+    else
+        util.toast("\""..value.."\" is not a valid model.")
+    end
+end, "t20")
+
+local spawn_maxed
+menu.toggle(gridss, "Spawn maxed", {"gridSpawnMaxed", "gridMaxed"}, "Spawn vehicles maxed out", function (value)
+    spawn_maxed = value
+end)
+
+menu.slider(gridss, "X padding", {"gridXpadding"}, "adds padding to the grid on the X axis.", 0, 20, 0, 1, function (value)
+    x_padding = value
+end)
+
+menu.slider(gridss, "Y padding", {"gridYpadding"}, "adds padding to the grid on the Y axis.", 0, 20, 0, 1, function (value)
+    y_padding = value
+end)
+
+menu.action(gridss, "Toggle freecam", {}, "Just toggles stands freecam", function() menu.trigger_commands("freecam") end)
+
+menu.divider(gridss, "Tip: press Ctrl + Z to undo")
+
+local preview_cars = {{}}
+
+local undo_record = {}
+
+local up <const> = v3.new(0, 0, 1)
+local is_placing = false
+local start_pos
+local cam_start_heading
+local start_forward
+local start_right
+local arrow_rot = 0
+util.create_tick_handler(function ()
+    arrow_rot += MISC.GET_FRAME_TIME() * 45
+    local camPos = v3.new(CAM.GET_FINAL_RENDERED_CAM_COORD())
+    local camRot = v3.new(CAM.GET_FINAL_RENDERED_CAM_ROT())
+    local dir = v3.toDir(camRot)
+    v3.mul(dir, 200)
+    v3.add(dir, camPos)
+    local handle = SHAPETEST.START_EXPENSIVE_SYNCHRONOUS_SHAPE_TEST_LOS_PROBE(
+                        camPos.x, camPos.y, camPos.z,
+                        dir.x, dir.y, dir.z,
+                        1, 0, 4
+                    )
+
+    local hit = memory.alloc(8)
+    local end_pos = memory.alloc()
+    local surfaceNormal = memory.alloc()
+    local ent = memory.alloc_int()
+    SHAPETEST.GET_SHAPE_TEST_RESULT(handle, hit, end_pos, surfaceNormal, ent)
+
+    if memory.read_byte(hit) ~= 0 then
+        end_pos = v3.new(end_pos)
+        draw_arrow_down(end_pos, math.rad(arrow_rot), 1, {r = 0, g = 0, b = 255, a = 255})
+
+        if left_click() then
+            is_placing = true
+            start_pos = v3.new(end_pos)
+            local cam_start_rot = v3.new(CAM.GET_FINAL_RENDERED_CAM_ROT(2))
+            cam_start_rot.x = 0
+            cam_start_heading = v3.getHeading(cam_start_rot)
+            start_forward = v3.toDir(cam_start_rot)
+            start_right = v3.crossProduct(start_forward, up)
+        elseif left_click_up() then
+            is_placing = false
+            undo_record[#undo_record+1] = {}
+            local new_record = undo_record[#undo_record]
+            for _, tbl in pairs(preview_cars) do
+                for _, car in pairs(tbl) do
+                    local pos = ENTITY.GET_ENTITY_COORDS(car, false)
+                    entities.delete_by_handle(car)
+                    local new_car = VEHICLE.CREATE_VEHICLE(car_hash, pos.x, pos.y, pos.z, cam_start_heading, true, false, false)
+                    new_record[#new_record+1] = new_car
+                    if spawn_maxed then
+                        max_vehicle(new_car)
+                        util.yield()
+                    end
+                end
+            end
+            preview_cars = {{}}
+        end
+
+        if left_ctrl_down() and z_click() and #undo_record > 0 then
+            for _, car in pairs(undo_record[#undo_record]) do
+                if ENTITY.DOES_ENTITY_EXIST(car) then
+                    entities.delete_by_handle(car)
+                end
+            end
+            undo_record[#undo_record] = nil
+        end
+
+        if is_placing then
+            draw_arrow_down(start_pos, math.rad(arrow_rot), 1, {r = 255, g = 0, b = 0, a = 255})
+            local angle = -math.rad(cam_start_heading)
+            local angle_cos = math.cos(angle)
+            local angle_sin = math.sin(angle)
+            end_pos = v3.new(
+                start_pos.x + (angle_cos * (end_pos.x - start_pos.x) - angle_sin * (end_pos.y - start_pos.y)),
+                start_pos.y + (angle_sin * (end_pos.x - start_pos.x) + angle_cos * (end_pos.y - start_pos.y)),
+                end_pos.z
+            )
+            local car_x_plus_pad = car_dimensions.x + x_padding
+            local car_y_plus_pad = car_dimensions.y + y_padding
+
+            local x_count = math.min(math.floor(math.abs((start_pos.x - end_pos.x) / car_x_plus_pad)), 9)
+            local y_count = math.min(math.floor(math.abs((start_pos.y - end_pos.y) / car_y_plus_pad)), 9)
+            for x = 0, x_count, 1 do
+                for y = 0, y_count, 1 do
+                    local mult_x = if start_pos.x > end_pos.x then -1 else 1
+                    local mult_y = if start_pos.y > end_pos.y then -1 else 1
+                    local temp_forward = v3.new(start_forward)
+                    local temp_right = v3.new(start_right)
+                    v3.mul(temp_forward, (car_y_plus_pad * y) * mult_y)
+                    v3.mul(temp_right, (car_x_plus_pad * x) * mult_x)
+                    v3.add(temp_forward, temp_right)
+                    v3.add(temp_forward, start_pos)
+                    local coords = temp_forward
+
+                    local z_found, z_coord = util.get_ground_z(coords.x, coords.y)
+                    if z_found then
+                        coords.z = z_coord
+                    else
+                        coords.z = start_pos.z
+                    end
+                    local car
+                    if preview_cars[x] then
+                        if preview_cars[x][y] then
+                            car = preview_cars[x][y]
+                        end
+                    else
+                        preview_cars[x] = {}
+                    end
+                    if not car then
+                        car = VEHICLE.CREATE_VEHICLE(car_hash, coords.x, coords.y, coords.z, cam_start_heading, false, false, false)
+                        ENTITY.SET_ENTITY_ALPHA(car, 51, false)
+                        ENTITY.SET_ENTITY_COLLISION(car, false, false)
+                        ENTITY.FREEZE_ENTITY_POSITION(car, true)
+                        if spawn_maxed then
+                            max_vehicle(car)
+                        end
+                        preview_cars[x][y] = car
+                    end
+                    ENTITY.SET_ENTITY_COORDS_NO_OFFSET(car, coords.x, coords.y, coords.z + car_dimensions.z * 0.5, false, false, false)
+                    draw_bounding_box(car, {r = 255, g = 0, b = 255, a = 100})
+                end
+            end
+            for x, tbl in pairs(preview_cars) do
+                for y, car in pairs(tbl) do
+                    if x > x_count or y > y_count then
+                        entities.delete_by_handle(car)
+                        preview_cars[x][y] = nil
+                    end
+                end
+            end
+        end
+
+    end
+end)
+
+else
+    griddys = false
+    return
+end
+end)
+
 local konsole = menu.list(debugFeats, "Console")
 
 local function get_stand_stdout(tbl, n)
@@ -5780,586 +6233,241 @@ end
 
 ---------------------------------------
 
-local pedfeats = menu.list(menuroot, "Peds", {}, "")
+local pets = menu.list(menuroot, "Pets", {}, "The cute little Friends")
 
-local DUKE_ROOT = menu.list(pedfeats, "Duke")
+local mygroup = PLAYER.GET_PLAYER_GROUP(players.user())
 
+local dogs <const> = table.freeze({
+    "MtLion_02",
+    "Husky",
+    "Cow",
+    "Pug_02",
+    "Chop",
+    "Rhesus",
+    "Rat",
+    "Cat_01",
+})
 
-local skin_folders = {'A_C_MtLion_02', 'A_C_Boar_02', 'A_C_Coyote_02', 'A_C_Pug_02', 'A_C_Deer_02'}
+local doganimations = {
+    "WORLD_DOG_SITTING_ROTTWEILER",
+    "WORLD_DOG_SITTING_RETRIEVER",
+    "WORLD_DOG_SITTING_SHEPHERD",
+    "WORLD_DOG_SITTING_SMALL",
+}
 
-local duke = false
-local duke_blip = nil
-local duke_ped = nil
-local duke_mdl_hash = util.joaat("A_C_MtLion_02")
-local duke_call_req = false
-local duke_vehicle = 0
+local activedogs = {}
 
-util.create_tick_handler(function()
-    if duke then
-        if duke_ped == nil or not DOES_ENTITY_EXIST(duke_ped) or GET_ENTITY_HEALTH(duke_ped) <= 50.0 then 
-            if duke_blip ~= nil then 
-                util.remove_blip(duke_blip)
-            end
-            util.request_model(duke_mdl_hash, 2000)
-            duke_ped = entities.create_ped(28, duke_mdl_hash, players.get_position(players.user()), math.random(270))
-            SET_ENTITY_INVINCIBLE(duke_ped, true)
-            SET_PED_CAN_BE_DRAGGED_OUT(duke_ped, false)
-            SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(duke_ped, 1)
-            SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(duke_ped, true)
-            SET_PED_CAN_RAGDOLL(duke_ped, false)    
-            TASK_FOLLOW_TO_OFFSET_OF_ENTITY(duke_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-            duke_blip = ADD_BLIP_FOR_ENTITY(duke_ped)
-            SET_BLIP_COLOUR(duke_blip, 57)
+local function GenerateNametagOnPed(ped, nametag)
+    util.create_thread(function()
+        while ENTITY.DOES_ENTITY_EXIST(ped) do
+            local headpos = PED.GET_PED_BONE_COORDS(ped, 0x796e, 0,0,0)
+            GRAPHICS.SET_DRAW_ORIGIN(headpos.x, headpos.y, headpos.z+0.4, 0)
+
+            HUD.SET_TEXT_COLOUR(200,200,200,220)
+            HUD.SET_TEXT_SCALE(1, 0.5)
+            HUD.SET_TEXT_CENTRE(true)
+            HUD.SET_TEXT_FONT(4)
+            HUD.SET_TEXT_OUTLINE()
+
+            HUD.BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING")
+            HUD.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(nametag)
+            HUD.END_TEXT_COMMAND_DISPLAY_TEXT(0,0,0)
+            GRAPHICS.CLEAR_DRAW_ORIGIN()
+            util.yield()
         end
-        
-
-        if entities.get_owner(duke_ped) ~= players.user() then 
-            request_control_of_entity(duke_ped)
-            TASK_FOLLOW_TO_OFFSET_OF_ENTITY(duke_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-        end
-
-        if duke_call_req then
-            CLEAR_PED_TASKS_IMMEDIATELY(duke_ped)
-            TASK_FOLLOW_TO_OFFSET_OF_ENTITY(duke_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-            duke_call_req = false
-        end
-
-        local cur_car = entities.get_user_vehicle_as_handle(false)
-        if duke_vehicle ~= cur_car then 
-            if cur_car == -1 then
-                CLEAR_PED_TASKS_IMMEDIATELY(duke_ped)
-                TASK_FOLLOW_TO_OFFSET_OF_ENTITY(duke_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-                duke_vehicle = -1
-            else
-                if IS_VEHICLE_SEAT_FREE(cur_car, 0, false) then
-                    SET_PED_INTO_VEHICLE(duke_ped, cur_car, 0)
-                    play_anim(duke_ped, "misschop_vehicle@back_of_van", "chop_sit_loop", -1)
-                    duke_vehicle = cur_car
-                else
-                    if IS_VEHICLE_SEAT_FREE(cur_car, 1, false) then
-                        SET_PED_INTO_VEHICLE(duke_ped, cur_car, 1)
-                        play_anim(duke_ped, "misschop_vehicle@back_of_van", "chop_sit_loop", -1)
-                        duke_vehicle = cur_car
-                    else
-                        if IS_VEHICLE_SEAT_FREE(cur_car, 2, false) then
-                            SET_PED_INTO_VEHICLE(duke_ped, cur_car, 2)
-                            play_anim(duke_ped, "misschop_vehicle@back_of_van", "chop_sit_loop", -1)
-                            duke_vehicle = cur_car
-                end
-            end
-        end
-    end
-end
-
-        
-        local duke_pos =  v3.new(GET_ENTITY_COORDS(duke_ped))
-        local player_pos = v3.new(players.get_position(players.user()))
-        if v3.distance(duke_pos, player_pos) > 100 then 
-            SET_ENTITY_COORDS(duke_ped, player_pos.x, player_pos.y, player_pos.z)
-            TASK_FOLLOW_TO_OFFSET_OF_ENTITY(duke_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-        end
-    else
-        if duke_ped ~= nil then 
-            entities.delete(duke_ped)
-            duke_ped = nil
-            end
-        end
+        HUD.END_TEXT_COMMAND_DISPLAY_TEXT(0,0,0)
+        GRAPHICS.CLEAR_DRAW_ORIGIN()
     end)
---end)
-
-local duketoggle = DUKE_ROOT:toggle('Duke', {}, 'Duke ', function(on)
-    duke = on
-end, false)
-
-local calldebug DUKE_ROOT:action('Call/debug Duke', {}, 'This also clears all of Duke\'s current tasks, so if he gets bugged this should fix it.', function(on)
-    duke_call_req = true
-    if senotifys then
-        notification.darkgreen("Duke should be called successfully")
-    else
-        util.toast("Duke should be called successfully")
-    end
-end)
-
---------------------------------------------------------------------------------------------------------------------------
-
-local MILKIE_ROOT = menu.list(pedfeats, "Milkie")
-
-local milkie = false
-local milkie_blip = nil
-local milkie_ped = nil
-local milkie_mdl_hash = util.joaat("A_C_Cow")
-local milkie_call_req = false
-local milkie_vehicle = 0
-
-util.create_tick_handler(function()
-    if milkie then
-        if milkie_ped == nil or not DOES_ENTITY_EXIST(milkie_ped) or GET_ENTITY_HEALTH(milkie_ped) <= 50.0 then 
-            if milkie_blip ~= nil then 
-                util.remove_blip(milkie_blip)
-            end
-            util.request_model(milkie_mdl_hash, 2000)
-            milkie_ped = entities.create_ped(28, milkie_mdl_hash, players.get_position(players.user()), math.random(270))
-            SET_ENTITY_INVINCIBLE(milkie_ped, true)
-            SET_PED_CAN_BE_DRAGGED_OUT(milkie_ped, false)
-            SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(milkie_ped, 1)
-            SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(milkie_ped, true)
-            SET_PED_CAN_RAGDOLL(milkie_ped, false)    
-            TASK_FOLLOW_TO_OFFSET_OF_ENTITY(milkie_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-            milkie_blip = ADD_BLIP_FOR_ENTITY(milkie_ped)
-            SET_BLIP_COLOUR(milkie_blip, 57)
-        end
-        
-
-        if entities.get_owner(milkie_ped) ~= players.user() then 
-            request_control_of_entity(milkie_ped)
-            TASK_FOLLOW_TO_OFFSET_OF_ENTITY(milkie_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-        end
-
-        if milkie_call_req then
-            CLEAR_PED_TASKS_IMMEDIATELY(milkie_ped)
-            TASK_FOLLOW_TO_OFFSET_OF_ENTITY(milkie_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-            milkie_call_req = false
-        end
-
-        local cur_car = entities.get_user_vehicle_as_handle(false)
-        if milkie_vehicle ~= cur_car then 
-            if cur_car == -1 then
-                CLEAR_PED_TASKS_IMMEDIATELY(milkie_ped)
-                TASK_FOLLOW_TO_OFFSET_OF_ENTITY(milkie_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-                milkie_vehicle = -1
-            else
-                if IS_VEHICLE_SEAT_FREE(cur_car, 0, false) then
-                    SET_PED_INTO_VEHICLE(milkie_ped, cur_car, 0)
-                    play_anim(milkie_ped, "missrat_vehicle@back_of_van", "rat_sit_loop", -1)
-                    milkie_vehicle = cur_car
-                else
-                    if IS_VEHICLE_SEAT_FREE(cur_car, 1, false) then
-                        SET_PED_INTO_VEHICLE(milkie_ped, cur_car, 1)
-                        play_anim(milkie_ped, "missrat_vehicle@back_of_van", "rat_sit_loop", -1)
-                        milkie_vehicle = cur_car
-                    else
-                        if IS_VEHICLE_SEAT_FREE(cur_car, 2, false) then
-                            SET_PED_INTO_VEHICLE(milkie_ped, cur_car, 2)
-                            play_anim(milkie_ped, "missrat_vehicle@back_of_van", "rat_sit_loop", -1)
-                            milkie_vehicle = cur_car
-                end
-            end
-        end
-    end
 end
 
-        
-        local milkie_pos =  v3.new(GET_ENTITY_COORDS(milkie_ped))
-        local player_pos = v3.new(players.get_position(players.user()))
-        if v3.distance(milkie_pos, player_pos) > 100 then 
-            SET_ENTITY_COORDS(milkie_ped, player_pos.x, player_pos.y, player_pos.z)
-            TASK_FOLLOW_TO_OFFSET_OF_ENTITY(milkie_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
+local activepet = menu.list(pets, "Active Pets", {}, "These are your active pets.")
+
+local pettys = false
+local dog_blip = nil
+local dog_vehicle = 0
+local dog_call_req = false
+local sitanim = "WORLD_DOG_SITTING_RETRIEVER"
+local sitanimsmall = "WORLD_DOG_SITTING_SMALL"
+
+
+menu.action_slider(pets, "Spawn a Pet", {}, "Spawns a loyal companion that will follow and defend you.", dogs, function(opt, breeds)
+
+    local hash = util.joaat("A_C_" .. breeds)
+
+    util.request_model(hash, 2000)
+
+    local coords = ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(players.user_ped(), 0, math.random(1,4), 0)
+    local dog_ped = entities.create_ped(26, hash, coords, 0)
+    activedogs[#activedogs+1] = dog_ped
+
+    SET_PED_CAN_BE_DRAGGED_OUT(dog_ped, false)
+    SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(dog_ped, 1)
+    SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(dog_ped, true)   
+    TASK_FOLLOW_TO_OFFSET_OF_ENTITY(dog_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
+    dog_blip = ADD_BLIP_FOR_ENTITY(dog_ped)
+    SET_BLIP_COLOUR(dog_blip, 57)
+
+    pettys = true
+
+    if dog_ped == nil or not DOES_ENTITY_EXIST(dog_ped) or GET_ENTITY_HEALTH(dog_ped) <= 50.0 then
+        entities.delete_by_handle(dog_ped) 
+        if dog_blip ~= nil then 
+            util.remove_blip(dog_blip)
         end
-    else
-        if milkie_ped ~= nil then 
-            entities.delete(milkie_ped)
-            milkie_ped = nil
-            end
+    end
+
+    if entities.get_owner(dog_ped) ~= players.user() then 
+        request_control_of_entity(dog_ped)
+        TASK_FOLLOW_TO_OFFSET_OF_ENTITY(dog_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
+    end
+
+    if dog_call_req then
+        CLEAR_PED_TASKS_IMMEDIATELY(dog_ped)
+        TASK_FOLLOW_TO_OFFSET_OF_ENTITY(dog_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
+        SET_ENTITY_COORDS(dog_ped, player_pos.x, player_pos.y, player_pos.z+5)
+        dog_call_req = false
+    end
+
+    SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(dog_ped, true)
+    TASK_FOLLOW_TO_OFFSET_OF_ENTITY(dog_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
+
+    local thispet = menu.list(name or activepet, breeds, {}, "")
+
+    menu.text_input(thispet, "Set Name", {"setname"}, "", function(name)
+        GenerateNametagOnPed(dog_ped, name)
+        util.toast(name)
+    end)
+
+    local immortality menu.toggle(thispet, "Immortal", {}, "", function(on)
+        if on then
+            ENTITY.SET_ENTITY_INVINCIBLE(dog_ped, true)
+            SET_PED_CAN_RAGDOLL(dog_ped, false) 
+        else
+            ENTITY.SET_ENTITY_INVINCIBLE(dog_ped, false)
+            SET_PED_CAN_RAGDOLL(dog_ped, true) 
         end
     end)
 
-local milkietoggle = MILKIE_ROOT:toggle('Milkie', {}, '', function(on)
-    milkie = on
-end, false)
+    if breeds == "Cat_01" then 
+        menu.toggle(thispet, "Lie Down and Chill", {}, "", function(on)
+            if on then
+                NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(dog_ped)
+                TASK.TASK_START_SCENARIO_IN_PLACE(dog_ped, "WORLD_CAT_SLEEPING_GROUND", 0, true)
+            else
+                TASK.CLEAR_PED_TASKS(dog_ped)
+            end
+        end)
+    end
 
-MILKIE_ROOT:action('Call/debug Milkie', {}, 'This also clears all of milkie\'s current tasks, so if he gets bugged this should fix it.', function(on)
-    milkie_call_req = true
-    if senotifys then
-        notification.darkgreen("Milkie should be called successfully")
-    else
-        util.toast("Milkie should be called successfully")
+    if breeds == "MtLion_02" then 
+        menu.action(thispet, "Wander", {}, "", function(on)
+            if on then
+                NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(dog_ped)
+                TASK.TASK_START_SCENARIO_IN_PLACE(dog_ped, "WORLD_MOUNTAIN_LION_WANDER", 0, true)
+            else
+                TASK.CLEAR_PED_TASKS(dog_ped)
+            end
+        end)
+    end
+
+    if breeds == "Cow" then 
+     menu.action(thispet, "Eat Grass (Ground)", {}, "", function(on)
+            if on then
+                NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(dog_ped)
+                TASK.TASK_START_SCENARIO_IN_PLACE(dog_ped, "WORLD_COW_GRAZIN", 0, true)
+            else
+                TASK.CLEAR_PED_TASKS(dog_ped)
+            end
+        end)
+    end
+
+    if breeds == "Rat" then 
+        menu.action(thispet, "Eat Crumbles", {}, "", function(on)
+            if on then
+                NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(dog_ped)
+                TASK.TASK_START_SCENARIO_IN_PLACE(dog_ped, "WORLD_RATS_EATING", 0, true)
+            else
+                TASK.CLEAR_PED_TASKS(dog_ped)
+            end
+        end)
+    end
+
+    menu.action(thispet, "Delete Pet", {"delped"}, "Rest in Peace, my furry friend.", function()
+        entities.delete_by_handle(dog_ped)
+        menu.delete(thispet)
+    end)
+
+util.create_tick_handler(function()
+    local dog_pos = v3.new(GET_ENTITY_COORDS(dog_ped))
+    local player_pos = v3.new(players.get_position(players.user()))
+    if v3.distance(dog_pos, player_pos) > 50 then 
+        SET_ENTITY_COORDS(dog_ped, player_pos.x, player_pos.y, player_pos.z)
+        TASK_FOLLOW_TO_OFFSET_OF_ENTITY(dog_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
+        wait(500)
     end
 end)
 
---------------------------------------------------------------------------------------------------------------------------
-
-local chop_ROOT = menu.list(pedfeats, "Chop")
-
-local chop = false
-local chop_blip = nil
-local chop_ped = nil
-local chop_mdl_hash = util.joaat("A_C_Chop")
-local chop_call_req = false
-local chop_vehicle = 0
-
-util.create_tick_handler(function()
-    if chop then
-        if chop_ped == nil or not DOES_ENTITY_EXIST(chop_ped) or GET_ENTITY_HEALTH(chop_ped) <= 50.0 then 
-            if chop_blip ~= nil then 
-                util.remove_blip(chop_blip)
-            end
-            util.request_model(chop_mdl_hash, 2000)
-            chop_ped = entities.create_ped(28, chop_mdl_hash, players.get_position(players.user()), math.random(270))
-            SET_ENTITY_INVINCIBLE(chop_ped, true)
-            SET_PED_CAN_BE_DRAGGED_OUT(chop_ped, false)
-            SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(chop_ped, 1)
-            SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(chop_ped, true)
-            SET_PED_CAN_RAGDOLL(chop_ped, false)    
-            TASK_FOLLOW_TO_OFFSET_OF_ENTITY(chop_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-            chop_blip = ADD_BLIP_FOR_ENTITY(chop_ped)
-            SET_BLIP_COLOUR(chop_blip, 57)
-        end
-        
-
-        if entities.get_owner(chop_ped) ~= players.user() then 
-            request_control_of_entity(chop_ped)
-            TASK_FOLLOW_TO_OFFSET_OF_ENTITY(chop_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-        end
-
-        if chop_call_req then
-            CLEAR_PED_TASKS_IMMEDIATELY(chop_ped)
-            TASK_FOLLOW_TO_OFFSET_OF_ENTITY(chop_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-            chop_call_req = false
-        end
+    util.create_tick_handler(function()
 
         local cur_car = entities.get_user_vehicle_as_handle(false)
-        if chop_vehicle ~= cur_car then 
+        if dog_vehicle ~= cur_car then 
             if cur_car == -1 then
-                CLEAR_PED_TASKS_IMMEDIATELY(chop_ped)
-                TASK_FOLLOW_TO_OFFSET_OF_ENTITY(chop_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-                chop_vehicle = -1
+                CLEAR_PED_TASKS_IMMEDIATELY(dog_ped)
+                TASK_FOLLOW_TO_OFFSET_OF_ENTITY(dog_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
+                dog_vehicle = -1
             else
                 if IS_VEHICLE_SEAT_FREE(cur_car, 0, false) then
-                    SET_PED_INTO_VEHICLE(chop_ped, cur_car, 0)
-                    play_anim(chop_ped, "misschop_vehicle@back_of_van", "chop_sit_loop", -1)
-                    chop_vehicle = cur_car
+                    SET_PED_INTO_VEHICLE(dog_ped, cur_car, 0)
+                    play_anim(dog_ped, "misschop_vehicle@back_of_van", "chop_sit_loop", -1)
+                    dog_vehicle = cur_car
                 else
                     if IS_VEHICLE_SEAT_FREE(cur_car, 1, false) then
-                        SET_PED_INTO_VEHICLE(chop_ped, cur_car, 1)
-                        play_anim(chop_ped, "misschop_vehicle@back_of_van", "chop_sit_loop", -1)
-                        chop_vehicle = cur_car
+                        SET_PED_INTO_VEHICLE(dog_ped, cur_car, 1)
+                        play_anim(dog_ped, "misschop_vehicle@back_of_van", "chop_sit_loop", -1)
+                        dog_vehicle = cur_car
                     else
                         if IS_VEHICLE_SEAT_FREE(cur_car, 2, false) then
-                            SET_PED_INTO_VEHICLE(chop_ped, cur_car, 2)
-                            play_anim(chop_ped, "misschop_vehicle@back_of_van", "chop_sit_loop", -1)
-                            chop_vehicle = cur_car
+                            SET_PED_INTO_VEHICLE(dog_ped, cur_car, 2)
+                            play_anim(dog_ped, "misschop_vehicle@back_of_van", "chop_sit_loop", -1)
+                            dog_vehicle = cur_car
+                        end
+                    end
                 end
             end
         end
-    end
-end
 
-        
-        local chop_pos =  v3.new(GET_ENTITY_COORDS(chop_ped))
-        local player_pos = v3.new(players.get_position(players.user()))
-        if v3.distance(chop_pos, player_pos) > 100 then 
-            SET_ENTITY_COORDS(chop_ped, player_pos.x, player_pos.y, player_pos.z)
-            TASK_FOLLOW_TO_OFFSET_OF_ENTITY(chop_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-        end
-    else
-        if chop_ped ~= nil then 
-            entities.delete(chop_ped)
-            chop_ped = nil
-            end
-        end
-    end)
---end)
+        if dog_ped ~= nil then
+            if entities.get_health(dog_ped) <= 50 then 
 
-local choptoggle = chop_ROOT:toggle('chop', {}, '', function(on)
-    chop = on
-end, false)
-
-chop_ROOT:action('Call/debug chop', {}, 'This also clears all of chop\'s current tasks, so if he gets bugged this should fix it.', function(on)
-    chop_call_req = true
-    if senotifys then
-        notification.darkgreen("Chop should be called successfully")
-    else
-        util.toast("Chop should be called successfully")
-    end
-end)
-
---------------------------------------------------------------------------------------------------------------------------
-
-local rhesus_ROOT = menu.list(pedfeats, "Rhesus")
-
-local rhesus = false
-local rhesus_blip = nil
-local rhesus_ped = nil
-local rhesus_mdl_hash = util.joaat("A_C_Rhesus")
-local rhesus_call_req = false
-local rhesus_vehicle = 0
-
-util.create_tick_handler(function()
-    if rhesus then
-        if rhesus_ped == nil or not DOES_ENTITY_EXIST(rhesus_ped) or GET_ENTITY_HEALTH(rhesus_ped) <= 50.0 then 
-            if rhesus_blip ~= nil then 
-                util.remove_blip(rhesus_blip)
-            end
-            util.request_model(rhesus_mdl_hash, 2000)
-            rhesus_ped = entities.create_ped(28, rhesus_mdl_hash, players.get_position(players.user()), math.random(270))
-            SET_ENTITY_INVINCIBLE(rhesus_ped, true)
-            SET_PED_CAN_BE_DRAGGED_OUT(rhesus_ped, false)
-            SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(rhesus_ped, 1)
-            SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(rhesus_ped, true)
-            SET_PED_CAN_RAGDOLL(rhesus_ped, false)    
-            TASK_FOLLOW_TO_OFFSET_OF_ENTITY(rhesus_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-            rhesus_blip = ADD_BLIP_FOR_ENTITY(rhesus_ped)
-            SET_BLIP_COLOUR(rhesus_blip, 57)
-        end
-        
-
-        if entities.get_owner(rhesus_ped) ~= players.user() then 
-            request_control_of_entity(rhesus_ped)
-            TASK_FOLLOW_TO_OFFSET_OF_ENTITY(rhesus_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-        end
-
-        if rhesus_call_req then
-            CLEAR_PED_TASKS_IMMEDIATELY(rhesus_ped)
-            TASK_FOLLOW_TO_OFFSET_OF_ENTITY(rhesus_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-            rhesus_call_req = false
-        end
-
-        local cur_car = entities.get_user_vehicle_as_handle(false)
-        if rhesus_vehicle ~= cur_car then 
-            if cur_car == -1 then
-                CLEAR_PED_TASKS_IMMEDIATELY(rhesus_ped)
-                TASK_FOLLOW_TO_OFFSET_OF_ENTITY(rhesus_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-                rhesus_vehicle = -1
-            else
-                if IS_VEHICLE_SEAT_FREE(cur_car, 0, false) then
-                    SET_PED_INTO_VEHICLE(rhesus_ped, cur_car, 0)
-                    rhesus_vehicle = cur_car
+                if senotifys then
+                    notification.normal("Your Pet ~r~" ..breeds.. " ~w~died")
                 else
-                    if IS_VEHICLE_SEAT_FREE(cur_car, 1, false) then
-                        SET_PED_INTO_VEHICLE(rhesus_ped, cur_car, 1)
-                        rhesus_vehicle = cur_car
-                    else
-                        if IS_VEHICLE_SEAT_FREE(cur_car, 2, false) then
-                            SET_PED_INTO_VEHICLE(rhesus_ped, cur_car, 2)
-                            rhesus_vehicle = cur_car
+                    util.toast("Your Pet " ..breeds.. " died")
                 end
-            end
-        end
-    end
-end
+                wait(500)
+                entities.delete_by_handle(dog_ped)
+                menu.delete(thispet)
 
-        
-        local rhesus_pos =  v3.new(GET_ENTITY_COORDS(rhesus_ped))
-        local player_pos = v3.new(players.get_position(players.user()))
-        if v3.distance(rhesus_pos, player_pos) > 100 then 
-            SET_ENTITY_COORDS(rhesus_ped, player_pos.x, player_pos.y, player_pos.z)
-            TASK_FOLLOW_TO_OFFSET_OF_ENTITY(rhesus_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-        end
-    else
-        if rhesus_ped ~= nil then 
-            entities.delete(rhesus_ped)
-            rhesus_ped = nil
+                if dog_blip ~= nil then 
+                    util.remove_blip(dog_blip)
+                end
+
+                return false;
             end
         end
     end)
---end)
 
-local rhesustoggle = rhesus_ROOT:toggle('Rhesus', {}, '', function(on)
-    rhesus = on
-end, false)
-
-rhesus_ROOT:action('Call/debug Rhesus', {}, 'This also clears all of rhesus\'s current tasks, so if he gets bugged this should fix it.', function(on)
-    rhesus_call_req = true
-    if senotifys then
-        notification.darkgreen("Rhesus should be called successfully")
-    else
-        util.toast("Rhesus should be called successfully")
-    end
 end)
 
---------------------------------------------------------------------------------------------------------------------------
 
-local rat_ROOT = menu.list(pedfeats, "Ratty")
 
-local rat = false
-local rat_blip = nil
-local rat_ped = nil
-local rat_mdl_hash = util.joaat("A_C_Rat")
-local rat_call_req = false
-local rat_vehicle = 0
-
-util.create_tick_handler(function()
-    if rat then
-        if rat_ped == nil or not DOES_ENTITY_EXIST(rat_ped) or GET_ENTITY_HEALTH(rat_ped) <= 50.0 then 
-            if rat_blip ~= nil then 
-                util.remove_blip(rat_blip)
-            end
-            util.request_model(rat_mdl_hash, 2000)
-            rat_ped = entities.create_ped(28, rat_mdl_hash, players.get_position(players.user()), math.random(270))
-            SET_ENTITY_INVINCIBLE(rat_ped, true)
-            SET_PED_CAN_BE_DRAGGED_OUT(rat_ped, false)
-            SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(rat_ped, 1)
-            SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(rat_ped, true)
-            SET_PED_CAN_RAGDOLL(rat_ped, false)    
-            TASK_FOLLOW_TO_OFFSET_OF_ENTITY(rat_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-            rat_blip = ADD_BLIP_FOR_ENTITY(rat_ped)
-            SET_BLIP_COLOUR(rat_blip, 57)
-        end
-        
-
-        if entities.get_owner(rat_ped) ~= players.user() then 
-            request_control_of_entity(rat_ped)
-            TASK_FOLLOW_TO_OFFSET_OF_ENTITY(rat_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-        end
-
-        if rat_call_req then
-            CLEAR_PED_TASKS_IMMEDIATELY(rat_ped)
-            TASK_FOLLOW_TO_OFFSET_OF_ENTITY(rat_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-            rat_call_req = false
-        end
-
-        local cur_car = entities.get_user_vehicle_as_handle(false)
-        if rat_vehicle ~= cur_car then 
-            if cur_car == -1 then
-                CLEAR_PED_TASKS_IMMEDIATELY(rat_ped)
-                TASK_FOLLOW_TO_OFFSET_OF_ENTITY(rat_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-                rat_vehicle = -1
-            else
-                if IS_VEHICLE_SEAT_FREE(cur_car, 0, false) then
-                    SET_PED_INTO_VEHICLE(rat_ped, cur_car, 0)
-                    rat_vehicle = cur_car
-                else
-                    if IS_VEHICLE_SEAT_FREE(cur_car, 1, false) then
-                        SET_PED_INTO_VEHICLE(rat_ped, cur_car, 1)
-                        rat_vehicle = cur_car
-                    else
-                        if IS_VEHICLE_SEAT_FREE(cur_car, 2, false) then
-                            SET_PED_INTO_VEHICLE(rat_ped, cur_car, 2)
-                            rat_vehicle = cur_car
-                end
-            end
-        end
-    end
-end
-
-        
-        local rat_pos =  v3.new(GET_ENTITY_COORDS(rat_ped))
-        local player_pos = v3.new(players.get_position(players.user()))
-        if v3.distance(rat_pos, player_pos) > 100 then 
-            SET_ENTITY_COORDS(rat_ped, player_pos.x, player_pos.y, player_pos.z)
-            TASK_FOLLOW_TO_OFFSET_OF_ENTITY(rat_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-        end
-    else
-        if rat_ped ~= nil then 
-            entities.delete(rat_ped)
-            rat_ped = nil
-            end
-        end
-    end)
---end)
-
-local rattoggle = rat_ROOT:toggle('Ratty', {}, '', function(on)
-    rat = on
-end, false)
-
-rat_ROOT:action('Call/debug Ratty', {}, 'This also clears all of rat\'s current tasks, so if he gets bugged this should fix it.', function(on)
-    rat_call_req = true
+local callpets = menu.action(pets, 'Call Pets', {}, '', function(on)
+    dog_call_req = true
     if senotifys then
-        notification.darkgreen("Ratty should be called successfully")
+        notification.darkgreen("Your pets should be called successfully")
     else
-        util.toast("Ratty should be called successfully")
+        util.toast("Your pets should be called successfully")
     end
-end)
-
---------------------------------------------------------------------------------------------------------------------------
-
-local nudy_ROOT = menu.list(pedfeats, "Nudy")
-
-local nudy = false
-local nudy_blip = nil
-local nudy_ped = nil
-local nudy_mdl_hash = util.joaat("A_F_Y_Topless_01")
-local nudy_call_req = false
-local nudy_vehicle = 0
-
-util.create_tick_handler(function()
-    if nudy then
-        if nudy_ped == nil or not DOES_ENTITY_EXIST(nudy_ped) or GET_ENTITY_HEALTH(nudy_ped) <= 50.0 then 
-            if nudy_blip ~= nil then 
-                util.remove_blip(nudy_blip)
-            end
-            util.request_model(nudy_mdl_hash, 2000)
-            nudy_ped = entities.create_ped(28, nudy_mdl_hash, players.get_position(players.user()), math.random(270))
-            SET_ENTITY_INVINCIBLE(nudy_ped, true)
-            SET_PED_CAN_BE_DRAGGED_OUT(nudy_ped, false)
-            SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(nudy_ped, 1)
-            SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(nudy_ped, true)
-            SET_PED_CAN_RAGDOLL(nudy_ped, false)    
-            TASK_FOLLOW_TO_OFFSET_OF_ENTITY(nudy_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-            nudy_blip = ADD_BLIP_FOR_ENTITY(nudy_ped)
-            SET_BLIP_COLOUR(nudy_blip, 57)
-        end
-        
-
-        if entities.get_owner(nudy_ped) ~= players.user() then 
-            request_control_of_entity(nudy_ped)
-            TASK_FOLLOW_TO_OFFSET_OF_ENTITY(nudy_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-        end
-
-        if nudy_call_req then
-            CLEAR_PED_TASKS_IMMEDIATELY(nudy_ped)
-            TASK_FOLLOW_TO_OFFSET_OF_ENTITY(nudy_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-            nudy_call_req = false
-        end
-
-        local cur_car = entities.get_user_vehicle_as_handle(false)
-        if nudy_vehicle ~= cur_car then 
-            if cur_car == -1 then
-                CLEAR_PED_TASKS_IMMEDIATELY(nudy_ped)
-                TASK_FOLLOW_TO_OFFSET_OF_ENTITY(nudy_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-                nudy_vehicle = -1
-            else
-                if IS_VEHICLE_SEAT_FREE(cur_car, 0, false) then
-                    SET_PED_INTO_VEHICLE(nudy_ped, cur_car, 0)
-                    nudy_vehicle = cur_car
-                else
-                    if IS_VEHICLE_SEAT_FREE(cur_car, 1, false) then
-                        SET_PED_INTO_VEHICLE(nudy_ped, cur_car, 1)
-                        nudy_vehicle = cur_car
-                    else
-                        if IS_VEHICLE_SEAT_FREE(cur_car, 2, false) then
-                            SET_PED_INTO_VEHICLE(nudy_ped, cur_car, 2)
-                            nudy_vehicle = cur_car
-                end
-            end
-        end
-    end
-end
-
-        
-        local nudy_pos =  v3.new(GET_ENTITY_COORDS(nudy_ped))
-        local player_pos = v3.new(players.get_position(players.user()))
-        if v3.distance(nudy_pos, player_pos) > 100 then 
-            SET_ENTITY_COORDS(nudy_ped, player_pos.x, player_pos.y, player_pos.z)
-            TASK_FOLLOW_TO_OFFSET_OF_ENTITY(nudy_ped, players.user_ped(), 0, -1, 0, 7.0, -1, 1, true)
-        end
-    else
-        if nudy_ped ~= nil then 
-            entities.delete(nudy_ped)
-            nudy_ped = nil
-            end
-        end
-    end)
---end)
-
-local nudytoggle = nudy_ROOT:toggle('Nudy', {}, 'nudy ', function(on)
-    nudy = on
-end, false)
-
-nudy_ROOT:action('Call/debug Nudy', {}, 'This also clears all of nudy\'s current tasks, so if she gets bugged this should fix it.', function(on)
-    nudy_call_req = true
-    if senotifys then
-        notification.darkgreen("Nudy should be called successfully")
-    else
-        util.toast("Nudy should be called successfully")
-    end
-end)
-
---------------------------------------------------------------------------------------------------------------------------
-
-play_ref:action("Tp zu Blondie", {"blondie"}, "bring dich zu blondie", function()
-    menu.trigger_commands("tplllIIIlIIlIlIII")
-    menu.trigger_commands("tpvehlllIIIlIIlIlIII")
 end)
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -7859,15 +7967,17 @@ mainsettings:action("Check for updates", {"updcheck"}, "Checks for updates from 
     repeat 
         util.yield()
     until response 
-    end)
+end)
 
-    menu.action(mainsettings, "Test button", {}, "", function()
+menu.action(mainsettings, "Test button", {}, "", function()
     if senotifys then
         notification.normal("Minimap Notifications are enabled")
     else
         util.toast("Minimap notifications are disabled")
     end
-    end)
+end)
+
+    
 
 ----------------------------------------------
 
@@ -7889,6 +7999,11 @@ util.on_stop(function()
     end
     if nudy_ped ~= nil then 
         entities.delete(nudy_ped)
+    end
+    if activedogs ~= nil then
+        for k,v in pairs(activedogs) do
+            entities.delete_by_handle(v)
+        end
     end
 end)
 
