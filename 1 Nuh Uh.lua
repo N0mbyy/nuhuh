@@ -1,7 +1,7 @@
 local func = require("NovaScript.functions")
 local scripts_dir = filesystem.scripts_dir()
 local scriptName = "Stand Expansion"
-local myVersion = 1.18
+local myVersion = 1.19
 local response = false
 local toast = util.toast
 local log_dir = filesystem.stand_dir() .. '\\Log.txt'
@@ -48,6 +48,30 @@ repeat
     util.yield()
 until response
 
+local function both(message)
+    if senotifys then
+        notification.normal(message)
+    else
+        util.toast(message)
+    end
+end
+
+local function bothfail(message)
+    if senotifys then
+        notification.red(message)
+    else
+        util.toast(message)
+    end
+end
+
+local function bothsucceed(message)
+    if senotifys then
+        notification.darkgreen(message)
+    else
+        util.toast(message)
+    end
+end
+
 local function pid_to_ped(pid)
     return GET_PLAYER_PED(pid)
 end 
@@ -58,6 +82,7 @@ local function getgroupsize(group)
     return memory.read_int(sizePtr)
 end
 
+local lib_dir = filesystem.stand_dir("\\lib\\")
 
 local crash_tbl = {
     "SWYHWTGYSWTYSUWSLSWTDSEDWSRTDWSOWSW45ERTSDWERTSVWUSWS5RTDFSWRTDFTSRYE",
@@ -487,6 +512,12 @@ notification = {
     
 }
 
+if not async_http.have_access() and not SCRIPT_SILENT_START then
+    bothfail("You don\'t have internet access enabled. The lua wont start without it.")
+    util.stop_script()
+end
+
+
 util.show_corner_help('~r~Script is WIP! \n~w~Made by N0mbyy')
 notification.normal("Initializing Stand Expansion...")
 
@@ -637,11 +668,7 @@ function SmoothTeleportToCord(v3coords)
         end
         CAM.DESTROY_CAM(CCAM, true)
     else
-        if senotifys then
-            notification.normal("No waypoint set!")
-        else
-            util.toast("No waypoint set!")
-        end
+        bothfail("No waypoint set!")
     end
 end
 
@@ -659,11 +686,7 @@ function SmoothTeleportToVehicle(pedInVehicle)
         end
     end
     if seatFree == false then
-        if senotifys then
-            notification.normal("No seats available in said vehicle")
-        else
-            util.toast("No seats available in said vehicle.")
-        end
+        bothfail("No seats available in said vehicle.")
         continueQ = false
     end
     -- > --
@@ -710,11 +733,7 @@ function SmoothTeleportToVehicle(pedInVehicle)
         end
         CAM.DESTROY_CAM(CCAM, true)
     else
-        if senotifys then
-            notification.normal("No waypoint set")
-        else
-            util.toast("No waypoint set!")
-        end
+        bothfail("No waypoint set!")
     end
 end
 
@@ -749,11 +768,7 @@ local function fastNet(entity, playerID)
         end
     end
     ::continue::
-    if senotifys then
-        notification.normal("Has control")
-    else
-        util.toast("Has control.")
-    end
+    both("Has control")
     NETWORK.NETWORK_REQUEST_CONTROL_OF_NETWORK_ID(netID)
     wait(10)
     NETWORK.SET_NETWORK_ID_EXISTS_ON_ALL_MACHINES(netID)
@@ -1031,11 +1046,17 @@ local function spawnObjectOnPlayer(hash, pid)
     return ob
 end
 
+local model_alias = {
+    lester = util.joaat("cs_lestercrest"),
+    simeon = util.joaat("ig_siemonyetarian"),
+    jesus = util.joaat("u_m_m_jesus_01"),
+    tom = util.joaat("ig_tomcasino"),
+    liveinvader = util.joaat("cs_lifeinvad_01")
+}
 
 local shadow = menu.shadow_root()
 
 local lobbyFeats = menu.list(menuroot, "Lobby", {}, "")
-
 
 local custselc = menu.list(lobbyFeats, "Lobby Crashes")
 
@@ -1059,6 +1080,437 @@ local recovs = rec_ref:list("Stand Expansion", {}, "")
 local protects = menu.ref_by_path("Online>Protections")
 
 protects:attachAfter(detectaction)
+
+local chatcom = menu.list(lobbyFeats, "Chat Commands", {}, "Fügt weitere commands hinzu die von usern in der lobby benutzt werden können")
+
+local function spawn_ped_on_player(model, player)
+    local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player)
+    if ped > 0 then
+        local pos = ENTITY.GET_ENTITY_COORDS(ped, true)
+
+        STREAMING.REQUEST_MODEL(model)
+        while not STREAMING.HAS_MODEL_LOADED(model) do
+            util.yield()
+        end
+        entities.create_ped(1, model, pos, 0)
+        STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(model)
+    end
+end
+
+local function spawn_car_on_player(model, player)
+    local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player)
+    if ped > 0 then
+        local pos = ENTITY.GET_ENTITY_COORDS(ped, true)
+        
+        local model2 = util.joaat(model)
+        util.request_model(model2)
+        entities.create_vehicle(model2, pos, 0)
+
+    end
+end
+
+menu.toggle(chatcom, "Enable Self Commands", {}, "", function()
+    chat.on_message(function(sender_player_id, sender_player_name, message, is_team_chat)
+        local sendername = PLAYER.GET_PLAYER_NAME(sender_player_id)
+        if PLAYER.GET_PLAYER_NAME(sender_player_id) == user_name then
+            if string.startswith(string.lower(message), "-lester") then
+                both(string.format("%s spawned lester", PLAYER.GET_PLAYER_NAME(sender_player_id)))
+                spawn_ped_on_player(model_alias['lester'], sender_player_id)
+
+            elseif string.startswith(string.lower(message), "-restart ") then
+                local name = message:lower():sub(10)
+                menu.trigger_commands("crash" .. name)
+                both(string.format("%s crashed %s", PLAYER.GET_PLAYER_NAME(sender_player_id), name))
+
+            elseif string.startswith(string.lower(message), "-retard ") then
+                local name = message:lower():sub(9)
+                menu.trigger_commands("fuckmedaddy" .. name)
+                both(string.format("Fucked %s", name))
+
+            elseif string.startswith(string.lower(message), "-gift ") then
+                local name = message:lower():sub(7)
+                menu.trigger_commands("gift" .. name)
+                both(string.format("Successfully gifted car to %s", name))
+
+            elseif string.startswith(string.lower(message), "-max") then
+                menu.trigger_commands("upgradeveh" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+                both(string.format("Successfully upgraded your vehicle", PLAYER.GET_PLAYER_NAME(sender_player_id)))
+
+            elseif string.startswith(string.lower(message), "-car ") then
+                local vehicle = message:lower():sub(6)
+                menu.trigger_commands(vehicle)
+                both(string.format("Spawned vehicle %s", vehicle))
+
+            elseif string.startswith(string.lower(message), "-vehgmon") then
+                menu.trigger_commands("vehgodmode on")
+                both(string.format("enabled godmode for your vehicle(s)", PLAYER.GET_PLAYER_NAME(sender_player_id)))
+
+            elseif string.startswith(string.lower(message), "-vehgmoff") then
+                menu.trigger_commands("vehgodmode off")
+                both(string.format("disabled godmode for your vehicle()", PLAYER.GET_PLAYER_NAME(sender_player_id)))
+
+            elseif string.startswith(string.lower(message), "-dv") then
+                menu.trigger_commands("deletevehicle")
+                both(string.format("Deleted your vehicle. Ha!", PLAYER.GET_PLAYER_NAME(sender_player_id), name))
+
+            elseif string.startswith(string.lower(message), "-fix") then
+                menu.trigger_commands("fixvehicle")
+                both(string.format("Repaired your vehicle", PLAYER.GET_PLAYER_NAME(sender_player_id), name))
+
+            elseif string.startswith(string.lower(message), "-jesus ") then
+                local player = message:lower():sub(8)
+                menu.trigger_commands("spectate" .. player .. " on")
+                wait(2500)
+                menu.trigger_commands("jesusjack" .. player)
+                wait(2500)
+                menu.trigger_commands("spectate" .. player .. " off")
+                both(string.format("successfully used the jesus command on %s", player))
+
+            elseif string.startswith(string.lower(message), "-sh") then
+                menu.trigger_commands("scripthost")
+                both(string.format("you took the scripthost", PLAYER.GET_PLAYER_NAME(sender_player_id), name))
+
+            elseif string.startswith(string.lower(message), "-clown ") then
+                local name = message:lower():sub(8)
+                menu.trigger_commands("suclown" .. name)
+                both(string.format("sent a suicide clown on %s", PLAYER.GET_PLAYER_NAME(sender_playerid), name))
+
+            elseif string.startswith(string.lower(message), "-tptoway ") then
+                local name = message:lower():sub(10)
+                menu.trigger_commands("savepos lualastpos")
+                menu.trigger_commands("copywp" .. name)
+                menu.trigger_commands("tpwp")
+                wait(500)
+                menu.trigger_commands("summon" .. name)
+                both(string.format("teleported %s to his waypoint", name))
+                wait (5000)
+                menu.trigger_commands("tplualastpos")
+
+            elseif string.startswith(string.lower(message), "-weapons") then
+                menu.trigger_commands("allguns")
+                wait(100)
+                menu.trigger_commands("fillammo")
+                both(string.format("Gave yourself all weapons and full ammo", PLAYER.GET_PLAYER_NAME(sender_player_id)))
+
+            elseif string.startswith(string.lower(message), "-cage ") then
+                local player = message:lower():sub(7)
+                menu.trigger_commands("chricage" .. player)
+                both(string.format("You caged %s", player))
+
+            elseif string.startswith(string.lower(message), "#delcage ") then
+                local player = message:lower():sub(10)
+                menu.trigger_commands("clearcages" .. player)
+                both(string.format("Deleted the cages from %s", player))
+
+            elseif string.startswith(string.lower(message), "-ped ") then
+                -- cs_lifeinvad_01
+                -- ig_tomcasino
+                local name = message:lower():sub(6)
+                local model = model_alias[name]
+                if model == nil then
+                    model = util.joaat(name)
+                end
+                if STREAMING.IS_MODEL_VALID(model) then
+                    spawn_ped_on_player(model, sender_player_id)
+                    both(string.format("Spawned %s", model))
+                else
+                    both("Failed")
+                end
+
+            end
+
+        elseif PLAYER.GET_PLAYER_NAME(sender_player_id) ~= user_name then
+            chat.send_targeted_message(sender_player_id, players.user(), "Chat commands are only for the LUA user. Maybe ask him to enable chat commands for everyone.", is_team_chat)
+            both(string.format("%s Tried to use your chat commands", PLAYER.GET_PLAYER_NAME(sender_player_id)))
+    
+        end
+    end)
+end)
+
+
+
+menu.toggle(chatcom, "Enable Chat commands", {}, "", function()
+    chat.on_message(function(sender_player_id, sender_player_name, message, is_team_chat)
+        local sendername = PLAYER.GET_PLAYER_NAME(sender_player_id)
+        if string.startswith(string.lower(message), "#lester") then
+            both(string.format("%s spawned lester", PLAYER.GET_PLAYER_NAME(sender_player_id)))
+            spawn_ped_on_player(model_alias['lester'], sender_player_id)
+
+        elseif string.startswith(string.lower(message), "#gift ") then
+            local name = message:lower():sub(7)
+            menu.trigger_commands("gift" .. name)
+            both(string.format("%s used giftcar on %s", PLAYER.GET_PLAYER_NAME(sender_player_id), name))
+
+        elseif string.startswith(string.lower(message), "#max") then
+            menu.trigger_commands("upgradeveh" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            both(string.format("%s upgraded his vehicle", PLAYER.GET_PLAYER_NAME(sender_player_id)))
+
+        elseif string.startswith(string.lower(message), "#car ") then
+            local vehicle = message:lower():sub(6)
+            spawn_car_on_player(vehicle, sender_player_id)
+            chat.send_targeted_message(sender_player_id, players.user(), "If your vehicle " .. vehicle .. " is valid, it spawned under you. If not, ask the modder for the right car", is_team_chat)
+            both(string.format("%s spawned vehicle %s", PLAYER.GET_PLAYER_NAME(sender_player_id), vehicle))
+
+        elseif string.startswith(string.lower(message), "#vehgmon") then
+            menu.trigger_commands("givevehgod" .. PLAYER.GET_PLAYER_NAME(sender_player_id) .. " on")
+            both(string.format("%s enabled godmode for his vehicle(s)", PLAYER.GET_PLAYER_NAME(sender_player_id)))
+
+        elseif string.startswith(string.lower(message), "#vehgmoff") then
+            menu.trigger_commands("givevehgod" .. PLAYER.GET_PLAYER_NAME(sender_player_id) .. " off")
+            both(string.format("%s disabled godmode for his vehicle(s)", PLAYER.GET_PLAYER_NAME(sender_player_id)))
+
+        elseif string.startswith(string.lower(message), "#dv") then
+            menu.trigger_commands("delveh" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            both(string.format("%s deleted his own vehicle", PLAYER.GET_PLAYER_NAME(sender_player_id), name))
+
+        elseif string.startswith(string.lower(message), "#fix") then
+            menu.trigger_commands("repairveh" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            both(string.format("%s repaired his own vehicle", PLAYER.GET_PLAYER_NAME(sender_player_id), name))
+
+        elseif string.startswith(string.lower(message), "#jesus ") then
+            local player = message:lower():sub(8)
+            menu.trigger_commands("spectate" .. player .. " on")
+            wait(2500)
+            menu.trigger_commands("jesusjack" .. player)
+            wait(2500)
+            menu.trigger_commands("spectate" .. player .. " off")
+            both(string.format("%s used the jesus command on %s", PLAYER.GET_PLAYER_NAME(sender_player_id), player))
+
+        elseif string.startswith(string.lower(message), "#clown ") then
+            local name = message:lower():sub(8)
+            menu.trigger_commands("suclown" .. name)
+            both(string.format("%s sent a suicide clown on %s", PLAYER.GET_PLAYER_NAME(sender_player_id), name))
+            
+        elseif string.startswith(string.lower(message), "#tpway") then
+            menu.trigger_commands("savepos lualastpos")
+            menu.trigger_commands("copywp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            menu.trigger_commands("tpwp")
+            wait(500)
+            menu.trigger_commands("summon" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            both(string.format("%s used you to teleport to their waypoint", PLAYER.GET_PLAYER_NAME(sender_player_id), name))
+            wait (5000)
+            menu.trigger_commands("tplualastpos")
+
+        elseif string.startswith(string.lower(message), "#weapons") then
+            menu.trigger_commands("arm" .. PLAYER.GET_PLAYER_NAME(sender_player_id) .. "all")
+            menu.trigger_commands("paragive" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            menu.trigger_commands("ammo" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            both(string.format("%s gave himself all weapons and a parachute", PLAYER.GET_PLAYER_NAME(sender_player_id)))
+
+        elseif string.startswith(string.lower(message), "#cage ") then
+            local player = message:lower():sub(7)
+            menu.trigger_commands("chricage" .. player)
+            both(string.format("%s caged %s", PLAYER.GET_PLAYER_NAME(sender_player_id), player))
+            chat.send_targeted_message(sender_player_id, players.user(), "Successfully caged. Type '#delcage NAME' to remove the cages", is_team_chat)
+
+        elseif string.startswith(string.lower(message), "#delcage ") then
+            local player = message:lower():sub(10)
+            menu.trigger_commands("clearcages" .. player)
+            both(string.format("%s deleted the cages from %s", PLAYER.GET_PLAYER_NAME(sender_player_id), player))
+
+        elseif string.startswith(string.lower(message), "#rankup") then
+
+            both(string.format("%s ranked himself up. This may cause lags", PLAYER.GET_PLAYER_NAME(sender_player_id)))
+
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+            wait(100)
+            menu.trigger_commands("rp" .. PLAYER.GET_PLAYER_NAME(sender_player_id))
+
+        end
+    end)
+end)
+
+menu.action(chatcom, "Command List", {}, "!! Every option that requires a username uses autofill so if you want to gift a car to TiMbOb12833, the command can be '#gift timb' !!\n\n#car VEHICLE_NAME - spawns the mentioned car on the players head. \n#gift PLAYER_NAME - triggers the gift vehicle option for the mentioned user.\n", function()
+    both("1234\n1234")
+end)
 
 menu.action(lobbyFeats, "Alle zum Puff!", {}, "Geh beten ihr NNN versager", function()
     menu.trigger_commands("posx 118")
@@ -1465,7 +1917,7 @@ menu.toggle(playerss, "Exclude Selected", {"excludepussies"}, "If toggled it wil
     menu.action(tp_players, "TP Player To MazeBank", {"tpplayersmazebank"}, "", function()
     menu.trigger_commands("apt90all " .. PLAYER.GET_PLAYER_NAME(pids))
     end)
-    
+
     menu.divider(playerss, "Cunts")
     
     for pids = 0, 31 do
@@ -1489,12 +1941,21 @@ local kick_root = menu.shadow_root():list('Stand Expansion')
 local troll_root = menu.shadow_root():list('Stand Expansion')
 troll_root = menu.player_root(pid):refByRelPath("Trolling"):getChildren()[1]:attachBefore(troll_root)
 
+local friend_root = menu.shadow_root():list('Stand Expansion')
+friend_root = menu.player_root(pid):refByRelPath("Friendly"):getChildren()[1]:attachBefore(friend_root)
+
 local crash2_ref = menu.player_root(pid):refByRelPath("Crash")
 local kick2_ref = menu.player_root(pid):refByRelPath("Kick")
 
 local krustykrab = crash2_ref:list("Mr. Krabs", {}, "Spectating is risky, watch out: works on 2T1 users (prob not lol)")
 
 local nmcrashes = crash2_ref:list("More model crashes", {}, "")
+
+--------------------------------------------------------------------------------------------------------
+
+friend_root:toggle_loop("Give RP Loop", {"rploop"}, "", function()
+    menu.trigger_commands("rp" .. players.get_name(pid))
+end)
 
 --------------------------------------------------------------------------------------------------------
 
@@ -1592,7 +2053,7 @@ cages:action("Money Cage", { "" }, "", function()
     STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(money)
 end)
 
-cages:action("Christmas Cage", { "" }, "", function()
+cages:action("Christmas Cage", { "chricage" }, "", function()
     local pos = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid))
     local hash = util.joaat("ch_prop_tree_02a")
     STREAMING.REQUEST_MODEL(hash)
@@ -2360,7 +2821,7 @@ crash2_ref:action("Random Lua, idk", {}, "Weird ass 'FUCK ME'.", function()
         fuckmedaddy()
 end)
 
-crash2_ref:action("Cherax Crash", {}, "Old Yum YUm.", function()
+crash2_ref:action("Cherax Crash", {"fuckmedaddy"}, "Old Yum YUm.", function()
     local player = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
     local mdl = util.joaat("cs_taostranslator2")
     while not STREAMING.HAS_MODEL_LOADED(mdl) do
@@ -4351,7 +4812,7 @@ allplayoth:action("Check entire lobby for godmode", {}, "Checks the entire lobby
             end
         end
     end
-    notification.normal(godcount .. " player(s) in ~r~godmode~w~!")
+    both(godcount .. " player(s) in ~r~godmode~w~!")
 end)
 
 
@@ -5969,11 +6430,7 @@ vehh:toggle_loop("Unlock vehicle that you try to get into", {"unlockvehget"}, "U
                 end
                 goto start
             else
-                if senotifys then
-                    notificaion.normal("Has control")
-                else
-                    util.toast("Has control.")
-                end
+                both("Has control")
             end
             VEHICLE.SET_VEHICLE_DOORS_LOCKED(veh, 1)
             VEHICLE.SET_VEHICLE_DOORS_LOCKED_FOR_ALL_PLAYERS(veh, false)
@@ -6233,7 +6690,7 @@ end
 
 ---------------------------------------
 
-local pets = menu.list(menuroot, "Pets", {}, "The cute little Friends")
+local pets = menu.list(menuroot, "Pets", {}, "")
 
 local mygroup = PLAYER.GET_PLAYER_GROUP(players.user())
 
@@ -6461,12 +6918,12 @@ end)
 
 
 
-local callpets = menu.action(pets, 'Call Pets', {}, '', function(on)
+local calldebug = menu.action(pets, 'Call/debug Pets', {}, '', function(on)
     dog_call_req = true
     if senotifys then
-        notification.darkgreen("Your pets should be called successfully")
+        notification.darkgreen("Duke should be called successfully")
     else
-        util.toast("Your pets should be called successfully")
+        util.toast("Duke should be called successfully")
     end
 end)
 
@@ -7074,7 +7531,7 @@ local function playerActionsSetup(pid)
 
 -----------------------------------------------------------------------------------------------------------------------------------
 
-    playerOtherTrolling:action("Send suicide Clown", {}, "", function()
+    playerOtherTrolling:action("Send suicide Clown", {"suclown"}, "", function()
         local ped = get_player_ped_script_index(pid)
         local random_offset = get_offset_from_entity_in_world_coords(ped, math.random(-8, 8), math.random(-8, 8), 0)
         local clown_hash = util.joaat("s_m_y_clown_01")
@@ -7969,15 +8426,41 @@ mainsettings:action("Check for updates", {"updcheck"}, "Checks for updates from 
     until response 
 end)
 
-menu.action(mainsettings, "Test button", {}, "", function()
-    if senotifys then
-        notification.normal("Minimap Notifications are enabled")
-    else
-        util.toast("Minimap notifications are disabled")
-    end
+local function selfesp(self_ped, selfname)
+    util.create_thread(function()
+        local self_ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(players.user())
+        local selfname = players.get_name(players.user())
+        while ENTITY.DOES_ENTITY_EXIST(self_ped) do
+            local headpos = PED.GET_PED_BONE_COORDS(self_ped, 0x796e, 0,0,0)
+            GRAPHICS.SET_DRAW_ORIGIN(headpos.x, headpos.y, headpos.z+0.4, 0)
+
+            HUD.SET_TEXT_COLOUR(200,200,200,220)
+            HUD.SET_TEXT_SCALE(1, 0.5)
+            HUD.SET_TEXT_CENTRE(true)
+            HUD.SET_TEXT_FONT(4)
+            HUD.SET_TEXT_OUTLINE()
+
+            HUD.BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING")
+            HUD.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(selfname)
+            HUD.END_TEXT_COMMAND_DISPLAY_TEXT(0,0,0)
+            GRAPHICS.CLEAR_DRAW_ORIGIN()
+            util.yield()
+        end
+        HUD.END_TEXT_COMMAND_DISPLAY_TEXT(0,0,0)
+        GRAPHICS.CLEAR_DRAW_ORIGIN()
+    end)
+end
+
+menu.toggle(mainsettings, "Show own Name", {}, "this will show your own name above your head like other players see it", function()
+    selfesp()
 end)
 
-    
+menu.action(mainsettings, "Restart script", {}, "restarts the script, best for hotkey cuz im lazy", function()
+    util.show_corner_help("Restarting script...")
+    both("Restarting script...")
+    util.restart_script()
+end)
+
 
 ----------------------------------------------
 
