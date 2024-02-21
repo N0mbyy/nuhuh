@@ -1,7 +1,7 @@
 local func = require("NovaScript.functions")
 local scripts_dir = filesystem.scripts_dir()
 local scriptName = "Stand Expansion"
-local myVersion = 1.19
+local myVersion = 1.20
 local response = false
 local toast = util.toast
 local log_dir = filesystem.stand_dir() .. '\\Log.txt'
@@ -2214,6 +2214,15 @@ end)
 
 ---------------------------------------------------------------------------------------------------KICKS-------------------------------------------------------------------------------------------------------------
 
+kick2_ref:toggle_loop("Kick Stand", { "" }, "", function()
+    if pid == players.user() then
+        bothfail("retard, dont try to kick yourself")
+        return
+    end
+    menu.trigger_commands("kick" .. PLAYER.GET_PLAYER_NAME(players.user()))
+end)
+
+
 kick2_ref:action("SE Kick", { "" }, "", function()
     if pid == players.user() then
         if senotifys then
@@ -3419,10 +3428,6 @@ crash2_ref:action("Ghost Crash", { "" }, "", function()
     menu.trigger_commands("anticrashcam off")
 end)
 
-crash2_ref:action("SE Crash", {}, "Crash player with SE", function()
-    util.trigger_script_event(1 << PlayerID, { 962740265, PlayerID, 115831, 9999449 })
-end)
-
 crash2_ref:action("Invalid Entity Crash", {}, "Crash player with invalid entity", function()
     menu.trigger_commands("anticrashcam on")
     local TargetPlayerPed = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(PlayerID)
@@ -4163,6 +4168,7 @@ end)
 local allplay_ref = menu.ref_by_path("Players>All Players")
 local allplaylist = allplay_ref:list("Stand Expansion", {}, "")
 local allplaymal = allplaylist:list("Malicious", {}, "")
+local allplaytroll = allplaylist:list("Trolling", {}, "")
 local allplayoth = allplaylist:list("Other", {}, "")
 
 local weap_ref = menu.ref_by_path("Self>Weapons")
@@ -4569,6 +4575,37 @@ local function pizzaCAll()
         end
     end
 end
+
+-----------------------------------------------------------------------------------------------------------------
+
+orbiall = allplaytroll:action("Orbital all with sounds", {"orbinignog"}, "Sends an Air Defence sound and explodes everybody", function()
+    if util.is_session_started() then
+        for i, pid in players.list(false, true, true) do
+            local position = players.get_position(pid)
+
+            AUDIO.PLAY_SOUND_FROM_COORD(-1, "Air_Defences_Activated", position.x, position.y, position.z, "DLC_sum20_Business_Battle_AC_Sounds", true, 99999, false)
+            AUDIO.PLAY_SOUND_FROM_COORD(-1, "Air_Defences_Activated", position.x, position.y, position.z, "DLC_sum20_Business_Battle_AC_Sounds", true, 99999, false)
+
+            wait(1000)
+
+            local newcord = players.get_position(pid)
+
+            func.use_fx_asset("scr_xm_orbital")
+            add_explosion(newcord.x, newcord.y, newcord.z, 59, 1, true, false, 1.0, false)
+            start_networked_particle_fx_non_looped_at_coord("scr_xm_orbital_blast", newcord.x, newcord.y, newcord.z, 0, 180, 0, 1.0, true, true, true)
+            for k = 1, 4 do
+                AUDIO.PLAY_SOUND_FROM_COORD(-1, "DLC_XM_Explosions_Orbital_Cannon", newcord.x, newcord.y, newcord.z, 0, true, 99999, false)
+            end
+
+            both("User " .. PLAYER.GET_PLAYER_NAME(pid) .. " finished")
+
+        end
+    else
+        bothfail("Only availible in online")
+    end
+
+end)
+
 
 -----------------------------------------------------------------------------------------------------------------
 
@@ -5215,6 +5252,18 @@ rapid_khanjali = weplist:toggle_loop("Rapid fire Khanjali", {}, "", function()
         end
         menu.trigger_command(rapid_khanjali, "off")
     end
+end)
+
+weplist:toggle_loop("Orbital Strike Gun", {}, "", function()
+	local hit_coords = v3.new()
+	if get_ped_last_weapon_impact_coord(players.user_ped(), hit_coords) then
+        func.use_fx_asset("scr_xm_orbital")
+        add_explosion(hit_coords.x, hit_coords.y, hit_coords.z, 59, 1, true, false, 1.0, false)
+        start_networked_particle_fx_non_looped_at_coord("scr_xm_orbital_blast", hit_coords.x, hit_coords.y, hit_coords.z, 0, 180, 0, 1.0, true, true, true)
+        for i = 1, 4 do
+            play_sound_from_entity(-1, "DLC_XM_Explosions_Orbital_Cannon", players.user_ped(), 0, true, false)
+        end
+	end
 end)
 
 
@@ -6746,7 +6795,6 @@ local dog_call_req = false
 local sitanim = "WORLD_DOG_SITTING_RETRIEVER"
 local sitanimsmall = "WORLD_DOG_SITTING_SMALL"
 
-
 menu.action_slider(pets, "Spawn a Pet", {}, "Spawns a loyal companion that will follow and defend you.", dogs, function(opt, breeds)
 
     local hash = util.joaat("A_C_" .. breeds)
@@ -7790,6 +7838,19 @@ end)
             end
             util.yield_once()
         end
+    end)
+
+    menu.action(scriptev, "ficken is das laut", {}, "", function()
+        local pc = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id))
+        AUDIO.PLAY_SOUND_FROM_COORD(-1, "Air_Defences_Activated", pc.x, pc.y, pc.z, "DLC_sum20_Business_Battle_AC_Sounds", true, 99999, false)
+        AUDIO.PLAY_SOUND_FROM_COORD(-1, "Air_Defences_Activated", pc.x, pc.y, pc.z, "DLC_sum20_Business_Battle_AC_Sounds", true, 99999, false)
+        util.yield(11500)
+        AUDIO.PLAY_SOUND_FROM_COORD(-1, "Air_Defences_Activated", pc.x, pc.y, pc.z, "DLC_sum20_Business_Battle_AC_Sounds", true, 99999, false)
+        AUDIO.PLAY_SOUND_FROM_COORD(-1, "Air_Defences_Activated", pc.x, pc.y, pc.z, "DLC_sum20_Business_Battle_AC_Sounds", true, 99999, false)
+        util.yield(11500)
+        AUDIO.PLAY_SOUND_FROM_COORD(-1, "Air_Defences_Activated", pc.x, pc.y, pc.z, "DLC_sum20_Business_Battle_AC_Sounds", true, 99999, false)
+        AUDIO.PLAY_SOUND_FROM_COORD(-1, "Air_Defences_Activated", pc.x, pc.y, pc.z, "DLC_sum20_Business_Battle_AC_Sounds", true, 99999, false)
+        util.yield(11500)
     end)
 
 -----------------------------------------------------------------------------------------------------------------------------------
