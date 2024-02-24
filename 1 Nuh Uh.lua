@@ -1,7 +1,7 @@
 local func = require("NovaScript.functions")
 local scripts_dir = filesystem.scripts_dir()
 local scriptName = "Stand Expansion"
-local myVersion = 1.21.1
+local myVersion = 1.22
 local response = false
 local toast = util.toast
 local log_dir = filesystem.stand_dir() .. '\\Log.txt'
