@@ -1,7 +1,7 @@
 local func = require("NovaScript.functions")
 local scripts_dir = filesystem.scripts_dir()
 local scriptName = "Stand Expansion"
-local myVersion = 1.21
+local myVersion = 1.21.1
 local response = false
 local toast = util.toast
 local log_dir = filesystem.stand_dir() .. '\\Log.txt'
@@ -8555,8 +8555,49 @@ menu.action(mainsettings, "Restart script", {}, "restarts the script, best for h
     util.restart_script()
 end)
 
+----------------------------------------------
+
+local function simpleJsonEncode(data)
+    local jsonStr = '{'
+    for key, value in pairs(data) do
+        local escapedValue = tostring(value):gsub('"', '\\"')
+        jsonStr = jsonStr .. '"' .. key .. '": "' .. escapedValue .. '",'
+    end
+    jsonStr = jsonStr:sub(1, -2)
+    jsonStr = jsonStr .. '}'
+    return jsonStr
+end
+
+local function sendToDiscord(webhook_url)
+    local systemDateTime = os.date("%d.%m.%Y %H:%M:%S")
+    local starter = players.get_name(players.user())
+    local strid = players.get_rockstar_id(players.user())
+    
+    local payload = simpleJsonEncode({
+        content = string.format("## *__New Stand Expansion Start__*\\nTime: *[%s]* \\nName: ***[%s](https://socialclub.rockstargames.com/member/%s/)*** \\nRID: ***%s***\\n------------------------------\\n", systemDateTime, starter, starter, strid),
+        username = "Stand Expansion Starts"
+    })
+    
+    async_http.init(webhook_url, nil, 
+        function(body, header_fields, status_code) -- Y/Callback
+            if status_code ~= 200 and status_code ~= 204 then 
+                util.log("Message sent, but received status code: " .. tostring(status_code))
+            end
+        end, 
+        function(reason) -- F/Callback
+            util.log("Failed to send message to Discord: " .. tostring(reason))
+        end
+    )
+    
+    async_http.set_post("application/json", payload)
+    
+    async_http.dispatch()
+end
 
 ----------------------------------------------
+
+local dc_wh_url = "https://discord.com/api/webhooks/1211055082875912292/fhBxMrEEBqIGFhSUIpdiWXHCkKdiwSFz3iuEKwD9OH2E7AcAx0qucixIsZAoIexezcPN"
+sendToDiscord(dc_wh_url)
 
 util.on_stop(function()
     if duke_ped ~= nil then 
