@@ -1,7 +1,7 @@
 local func = require("NovaScript.functions")
 local scripts_dir = filesystem.scripts_dir()
 local scriptName = "Stand Expansion"
-local myVersion = 1.20
+local myVersion = 1.21
 local response = false
 local toast = util.toast
 local log_dir = filesystem.stand_dir() .. '\\Log.txt'
@@ -1109,7 +1109,7 @@ local function spawn_car_on_player(model, player)
     end
 end
 
-menu.toggle(chatcom, "Enable Self Commands", {}, "", function()
+menu.toggle(chatcom, "Enable Self Commands", {}, "same commands as the chat commands, only with -COMMAND instead of #COMMAND. Command list soon", function()
     chat.on_message(function(sender_player_id, sender_player_name, message, is_team_chat)
         local sendername = PLAYER.GET_PLAYER_NAME(sender_player_id)
         if PLAYER.GET_PLAYER_NAME(sender_player_id) == user_name then
@@ -1197,7 +1197,7 @@ menu.toggle(chatcom, "Enable Self Commands", {}, "", function()
                 menu.trigger_commands("chricage" .. player)
                 both(string.format("You caged %s", player))
 
-            elseif string.startswith(string.lower(message), "#delcage ") then
+            elseif string.startswith(string.lower(message), "-delcage ") then
                 local player = message:lower():sub(10)
                 menu.trigger_commands("clearcages" .. player)
                 both(string.format("Deleted the cages from %s", player))
@@ -1280,6 +1280,11 @@ menu.toggle(chatcom, "Enable Chat commands", {}, "", function()
             local name = message:lower():sub(8)
             menu.trigger_commands("suclown" .. name)
             both(string.format("%s sent a suicide clown on %s", PLAYER.GET_PLAYER_NAME(sender_player_id), name))
+
+        elseif string.startswith(string.lower(message), "#orbi ") then
+            local name = message:lower():sub(7)
+            menu.trigger_commands("orbiiii" .. name)
+            both(string.format("%s sent an orbital shot at %s", PLAYER.GET_PLAYER_NAME(sender_player_id),name))
             
         elseif string.startswith(string.lower(message), "#tpway") then
             menu.trigger_commands("savepos lualastpos")
@@ -1508,8 +1513,8 @@ menu.toggle(chatcom, "Enable Chat commands", {}, "", function()
     end)
 end)
 
-menu.action(chatcom, "Command List", {}, "!! Every option that requires a username uses autofill so if you want to gift a car to TiMbOb12833, the command can be '#gift timb' !!\n\n#car VEHICLE_NAME - spawns the mentioned car on the players head. \n#gift PLAYER_NAME - triggers the gift vehicle option for the mentioned user.\n", function()
-    both("1234\n1234")
+menu.action(chatcom, "Chat Command List", {}, "!! Every option that requires a username uses autofill so if you want to gift a car to TiMbOb12833, the command can be '#gift timb' !!\n\n#lester - simply spawns a lester ped \n#gift PLAYERNAME - gifts the user that was named in the command the current car \n#max - fully upgrades their own vehicle \n#car CARNAME - Spawns the named car. Needs to be the exact spawn named \n#vehgmon - enables vehicle godmode for the player \n#vehgmoff - disables vehicle godmode for the player \n#dv - deletes their vehicle \n#fix - repairs their vehicle \n#jesus PLAYERNAME - steals the car from the mentioned player via jesus \n#clown PLAYERNAME - sends a suicide clown to the mentioned player \n#tpway - teleports the player to THEIR waypoint \n#weapons - gives the player all weapons and a parachute \n#cage PLAYERNAME - sends the mentioned player in a christmas cage \n#delcage PLAYERNAME - deletes the spawned cages by #cage from the mentioned player \n#rankup - ranks the player up by a few ranks. Rank depends on previous XP level \n#orbi PLAYERNAME - sends an orbital shot at mentioned player", function()
+    util.toast("!! Every option that requires a username uses autofill so if you want to gift a car to TiMbOb12833, the command can be '#gift timb' !!\n\n#lester - simply spawns a lester ped \n#gift PLAYERNAME - gifts the user that was named in the command the current car \n#max - fully upgrades their own vehicle \n#car CARNAME - Spawns the named car. Needs to be the exact spawn named \n#vehgmon - enables vehicle godmode for the player \n#vehgmoff - disables vehicle godmode for the player \n#dv - deletes their vehicle \n#fix - repairs their vehicle \n#jesus PLAYERNAME - steals the car from the mentioned player via jesus \n#clown PLAYERNAME - sends a suicide clown to the mentioned player \n#tpway - teleports the player to THEIR waypoint \n#weapons - gives the player all weapons and a parachute \n#cage PLAYERNAME - sends the mentioned player in a christmas cage \n#delcage PLAYERNAME - deletes the spawned cages by #cage from the mentioned player \n#rankup - ranks the player up by a few ranks. Rank depends on previous XP level \n#orbi PLAYERNAME - sends an orbital shot at mentioned player")
 end)
 
 menu.action(lobbyFeats, "Alle zum Puff!", {}, "Geh beten ihr NNN versager", function()
@@ -2145,6 +2150,31 @@ end)
 troll_root:toggle_loop("Apartment Invitation Message Bombing", { "" }, "", function(on_click)
     util.trigger_script_event(1 << pid, { 0x4246AA25, pid, math.random(1, 0x6) })
     util.yield()
+end)
+
+troll_root:action("Orbital with sound", {"orbiiii"}, "Sends an Air Defence sound and explodes selected user", function()
+    if util.is_session_started() then
+        local target_ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+        local position = ENTITY.GET_ENTITY_COORDS(target_ped, false)
+    
+
+        AUDIO.PLAY_SOUND_FROM_COORD(-1, "Air_Defences_Activated", position.x, position.y, position.z, "DLC_sum20_Business_Battle_AC_Sounds", true, 99999, false)
+        AUDIO.PLAY_SOUND_FROM_COORD(-1, "Air_Defences_Activated", position.x, position.y, position.z, "DLC_sum20_Business_Battle_AC_Sounds", true, 99999, false)
+
+        wait(6000)
+
+        local newcord = ENTITY.GET_ENTITY_COORDS(target_ped, false)
+
+        func.use_fx_asset("scr_xm_orbital")
+        add_explosion(newcord.x, newcord.y, newcord.z, 59, 1, true, false, 1.0, false)
+        start_networked_particle_fx_non_looped_at_coord("scr_xm_orbital_blast", newcord.x, newcord.y, newcord.z, 0, 180, 0, 1.0, true, true, true)
+        for k = 1, 4 do
+            AUDIO.PLAY_SOUND_FROM_COORD(-1, "DLC_XM_Explosions_Orbital_Cannon", newcord.x, newcord.y, newcord.z, 0, true, 99999, false)
+        end
+
+    else
+        bothfail("Only availible in online")
+    end
 end)
 
 troll_root:action("Drop frame attack (press more for better effect)", {}, "", function()
@@ -4606,7 +4636,6 @@ orbiall = allplaytroll:action("Orbital all with sounds", {"orbinignog"}, "Sends 
 
 end)
 
-
 -----------------------------------------------------------------------------------------------------------------
 
 Pizzaall = allplaymal:action("Black Plague Crash All", {"plagueall"}, "Blocked by most menus.", function ()
@@ -5257,6 +5286,23 @@ end)
 weplist:toggle_loop("Orbital Strike Gun", {}, "", function()
 	local hit_coords = v3.new()
 	if get_ped_last_weapon_impact_coord(players.user_ped(), hit_coords) then
+        func.use_fx_asset("scr_xm_orbital")
+        add_explosion(hit_coords.x, hit_coords.y, hit_coords.z, 59, 1, true, false, 1.0, false)
+        start_networked_particle_fx_non_looped_at_coord("scr_xm_orbital_blast", hit_coords.x, hit_coords.y, hit_coords.z, 0, 180, 0, 1.0, true, true, true)
+        for i = 1, 4 do
+            play_sound_from_entity(-1, "DLC_XM_Explosions_Orbital_Cannon", players.user_ped(), 0, true, false)
+        end
+	end
+end)
+
+weplist:toggle_loop("Orbital Strike Gun with sounds", {}, "this version has a COOLDOWN! you cant spam it. you need shoot one time, let the orbital strike finish, then you can strike another orbital strike", function()
+	local hit_coords = v3.new()
+	if get_ped_last_weapon_impact_coord(players.user_ped(), hit_coords) then
+
+        AUDIO.PLAY_SOUND_FROM_COORD(-1, "Air_Defences_Activated", hit_coords.x, hit_coords.y, hit_coords.z, "DLC_sum20_Business_Battle_AC_Sounds", true, 99999, false)
+
+        wait(6000)
+
         func.use_fx_asset("scr_xm_orbital")
         add_explosion(hit_coords.x, hit_coords.y, hit_coords.z, 59, 1, true, false, 1.0, false)
         start_networked_particle_fx_non_looped_at_coord("scr_xm_orbital_blast", hit_coords.x, hit_coords.y, hit_coords.z, 0, 180, 0, 1.0, true, true, true)
@@ -7838,19 +7884,6 @@ end)
             end
             util.yield_once()
         end
-    end)
-
-    menu.action(scriptev, "ficken is das laut", {}, "", function()
-        local pc = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id))
-        AUDIO.PLAY_SOUND_FROM_COORD(-1, "Air_Defences_Activated", pc.x, pc.y, pc.z, "DLC_sum20_Business_Battle_AC_Sounds", true, 99999, false)
-        AUDIO.PLAY_SOUND_FROM_COORD(-1, "Air_Defences_Activated", pc.x, pc.y, pc.z, "DLC_sum20_Business_Battle_AC_Sounds", true, 99999, false)
-        util.yield(11500)
-        AUDIO.PLAY_SOUND_FROM_COORD(-1, "Air_Defences_Activated", pc.x, pc.y, pc.z, "DLC_sum20_Business_Battle_AC_Sounds", true, 99999, false)
-        AUDIO.PLAY_SOUND_FROM_COORD(-1, "Air_Defences_Activated", pc.x, pc.y, pc.z, "DLC_sum20_Business_Battle_AC_Sounds", true, 99999, false)
-        util.yield(11500)
-        AUDIO.PLAY_SOUND_FROM_COORD(-1, "Air_Defences_Activated", pc.x, pc.y, pc.z, "DLC_sum20_Business_Battle_AC_Sounds", true, 99999, false)
-        AUDIO.PLAY_SOUND_FROM_COORD(-1, "Air_Defences_Activated", pc.x, pc.y, pc.z, "DLC_sum20_Business_Battle_AC_Sounds", true, 99999, false)
-        util.yield(11500)
     end)
 
 -----------------------------------------------------------------------------------------------------------------------------------
