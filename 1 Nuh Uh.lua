@@ -1,7 +1,7 @@
 local func = require("NovaScript.functions")
 local scripts_dir = filesystem.scripts_dir()
 local scriptName = "Stand Expansion"
-local myVersion = 1.22
+local myVersion = 1.23
 local response = false
 local toast = util.toast
 local log_dir = filesystem.stand_dir() .. '\\Log.txt'
@@ -2249,7 +2249,7 @@ kick2_ref:toggle_loop("Kick Stand", { "" }, "", function()
         bothfail("retard, dont try to kick yourself")
         return
     end
-    menu.trigger_commands("kick" .. PLAYER.GET_PLAYER_NAME(players.user()))
+    menu.trigger_commands("kick" .. PLAYER.GET_PLAYER_NAME(pid))
 end)
 
 
