@@ -1,7 +1,7 @@
 local func = require("NovaScript.functions")
 local scripts_dir = filesystem.scripts_dir()
 local scriptName = "Stand Expansion"
-local myVersion = 1.23
+local myVersion = 1.24
 local response = false
 local toast = util.toast
 local log_dir = filesystem.stand_dir() .. '\\Log.txt'
@@ -3165,17 +3165,17 @@ end)
 crash2_ref:action("Yi Yu Crash", { "" }, "", function()
     local TargetPlayerPed = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(PlayerID)
     local TargetPlayerPos = ENTITY.GET_ENTITY_COORDS(TargetPlayerPed, true)
-    local Object_jb1 = CreateObject(0xD75E01A6, TargetPlayerPos)
-    local Object_jb2 = CreateObject(0x675D244E, TargetPlayerPos)
-    local Object_jb3 = CreateObject(0x799B48CA, TargetPlayerPos)
-    local Object_jb4 = CreateObject(0x68E49D4D, TargetPlayerPos)
-    local Object_jb5 = CreateObject(0x66F34017, TargetPlayerPos)
-    local Object_jb6 = CreateObject(0xDE1807BB, TargetPlayerPos)
-    local Object_jb7 = CreateObject(0xC4C9551E, TargetPlayerPos)
-    local Object_jb8 = CreateObject(0xCF37BA1F, TargetPlayerPos)
-    local Object_jb9 = CreateObject(0xB69AD9F8, TargetPlayerPos)
-    local Object_jb10 = CreateObject(0x5D750529, TargetPlayerPos)
-    local Object_jb11 = CreateObject(0x1705D85C, TargetPlayerPos)
+    local Object_jb1 = entities.create_object(0xD75E01A6, TargetPlayerPos)
+    local Object_jb2 = entities.create_object(0x675D244E, TargetPlayerPos)
+    local Object_jb3 = entities.create_object(0x799B48CA, TargetPlayerPos)
+    local Object_jb4 = entities.create_object(0x68E49D4D, TargetPlayerPos)
+    local Object_jb5 = entities.create_object(0x66F34017, TargetPlayerPos)
+    local Object_jb6 = entities.create_object(0xDE1807BB, TargetPlayerPos)
+    local Object_jb7 = entities.create_object(0xC4C9551E, TargetPlayerPos)
+    local Object_jb8 = entities.create_object(0xCF37BA1F, TargetPlayerPos)
+    local Object_jb9 = entities.create_object(0xB69AD9F8, TargetPlayerPos)
+    local Object_jb10 = entities.create_object(0x5D750529, TargetPlayerPos)
+    local Object_jb11 = entities.create_object(0x1705D85C, TargetPlayerPos)
     for i = 0, 1000 do
         local TargetPlayerPos = ENTITY.GET_ENTITY_COORDS(TargetPlayerPed, true);
         ENTITY.SET_ENTITY_COORDS_NO_OFFSET(Object_jb1, TargetPlayerPos.x, TargetPlayerPos.y, TargetPlayerPos.z, false
@@ -3321,7 +3321,7 @@ crash2_ref:action("Medusa crash", { "" }, "", function()
     local hunter = {}
     for i = 1, 3 do
         for n = 0, 120 do
-            hunter[n] = CreateVehicle(1077420264, plauuepos, 0)
+            hunter[n] = entities.create_vehicle(1077420264, plauuepos, 0)
             util.yield(0)
             ENTITY.FREEZE_ENTITY_POSITION(hunter[n], true)
             util.yield(0)
@@ -3377,10 +3377,10 @@ crash2_ref:action("Invalid model crashes", { "" }, "", function()
     menu.trigger_commands("anticrashcam on")
     local TargetPlayerPed = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(PlayerID)
     local TargetPlayerPos = ENTITY.GET_ENTITY_COORDS(TargetPlayerPed, true)
-    local Object_pizza1 = CreateObject(3613262246, TargetPlayerPos)
-    local Object_pizza2 = CreateObject(2155335200, TargetPlayerPos)
-    local Object_pizza3 = CreateObject(3026699584, TargetPlayerPos)
-    local Object_pizza4 = CreateObject(-1348598835, TargetPlayerPos)
+    local Object_pizza1 = entities.create_object(3613262246, TargetPlayerPos)
+    local Object_pizza2 = entities.create_object(2155335200, TargetPlayerPos)
+    local Object_pizza3 = entities.create_object(3026699584, TargetPlayerPos)
+    local Object_pizza4 = entities.create_object(-1348598835, TargetPlayerPos)
     for i = 0, 100 do
         local TargetPlayerPos = ENTITY.GET_ENTITY_COORDS(TargetPlayerPed, true);
         ENTITY.SET_ENTITY_COORDS_NO_OFFSET(Object_pizza1, TargetPlayerPos.x, TargetPlayerPos.y, TargetPlayerPos.z,
@@ -3434,16 +3434,16 @@ crash2_ref:action("Ghost Crash", { "" }, "", function()
     local TargetPlayerPed = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(PlayerID)
     local SelfPlayerPed = PLAYER.PLAYER_PED_ID()
     local SelfPlayerPos = ENTITY.GET_ENTITY_COORDS(SelfPlayerPed, true)
-    local Spawned_tr3 = CreateVehicle(util.joaat("tr3"), SelfPlayerPos, ENTITY.GET_ENTITY_HEADING(SelfPlayerPed),
+    local Spawned_tr3 = entities.create_vehicle(util.joaat("tr3"), SelfPlayerPos, ENTITY.GET_ENTITY_HEADING(SelfPlayerPed),
         true)
     ENTITY.ATTACH_ENTITY_TO_ENTITY(Spawned_tr3, SelfPlayerPed, 0, 0, 0, 0, 0, 0, 0, 0, true, true, false, 0, true)
     ENTITY.SET_ENTITY_VISIBLE(Spawned_tr3, false, 0)
-    local Spawned_chernobog = CreateVehicle(util.joaat("chernobog"), SelfPlayerPos,
+    local Spawned_chernobog = entities.create_vehicle(util.joaat("chernobog"), SelfPlayerPos,
         ENTITY.GET_ENTITY_HEADING(SelfPlayerPed), true)
     ENTITY.ATTACH_ENTITY_TO_ENTITY(Spawned_chernobog, SelfPlayerPed, 0, 0, 0, 0, 0, 0, 0, 0, true, true, false, 0,
         true)
     ENTITY.SET_ENTITY_VISIBLE(Spawned_chernobog, false, 0)
-    local Spawned_avenger = CreateVehicle(util.joaat("avenger"), SelfPlayerPos,
+    local Spawned_avenger = entities.create_vehicle(util.joaat("avenger"), SelfPlayerPos,
         ENTITY.GET_ENTITY_HEADING(SelfPlayerPed), true)
     ENTITY.ATTACH_ENTITY_TO_ENTITY(Spawned_avenger, SelfPlayerPed, 0, 0, 0, 0, 0, 0, 0, 0, true, true, false, 0, true)
     ENTITY.SET_ENTITY_VISIBLE(Spawned_avenger, false, 0)
@@ -3479,10 +3479,10 @@ crash2_ref:action("Invalid Object Crash", {}, "Crash player with invalid object"
     menu.trigger_commands("anticrashcam on")
     local TargetPlayerPed = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(PlayerID)
     local TargetPlayerPos = ENTITY.GET_ENTITY_COORDS(TargetPlayerPed, true)
-    local Object_pizza1 = CreateObject(3613262246, TargetPlayerPos)
-    local Object_pizza2 = CreateObject(2155335200, TargetPlayerPos)
-    local Object_pizza3 = CreateObject(3026699584, TargetPlayerPos)
-    local Object_pizza4 = CreateObject(-1348598835, TargetPlayerPos)
+    local Object_pizza1 = entities.create_object(3613262246, TargetPlayerPos)
+    local Object_pizza2 = entities.create_object(2155335200, TargetPlayerPos)
+    local Object_pizza3 = entities.create_object(3026699584, TargetPlayerPos)
+    local Object_pizza4 = entities.create_object(-1348598835, TargetPlayerPos)
     for i = 0, 100 do
         local TargetPlayerPos = ENTITY.GET_ENTITY_COORDS(TargetPlayerPed, true);
         ENTITY.SET_ENTITY_COORDS_NO_OFFSET(Object_pizza1, TargetPlayerPos.x, TargetPlayerPos.y, TargetPlayerPos.z,
@@ -3510,7 +3510,7 @@ crash2_ref:action("Chernobog Crash", {}, "Crash player with chernobog", function
     SpawnedVehicleList = {};
     for i = 1, 80 do
         local TargetPlayerPos = ENTITY.GET_ENTITY_COORDS(TargetPlayerPed, true);
-        SpawnedVehicleList[i] = CreateVehicle(util.joaat("chernobog"), TargetPlayerPos,
+        SpawnedVehicleList[i] = entities.create_vehicle(util.joaat("chernobog"), TargetPlayerPos,
             ENTITY.GET_ENTITY_HEADING(TargetPlayerPed), true)
         ENTITY.FREEZE_ENTITY_POSITION(SpawnedVehicleList[i], true)
         ENTITY.SET_ENTITY_VISIBLE(SpawnedVehicleList[i], false, 0)
@@ -3530,7 +3530,7 @@ crash2_ref:action("Hunter Crash", {}, "Crash player with hunter", function()
     local SpawnedVehicleList = {};
     for i = 1, 60 do
         local TargetPlayerPos = ENTITY.GET_ENTITY_COORDS(TargetPlayerPed, true)
-        SpawnedVehicleList[i] = CreateVehicle(util.joaat("hunter"), TargetPlayerPos,
+        SpawnedVehicleList[i] = entities.create_vehicle(util.joaat("hunter"), TargetPlayerPos,
             ENTITY.GET_ENTITY_HEADING(TargetPlayerPed), true)
         ENTITY.FREEZE_ENTITY_POSITION(SpawnedVehicleList[i], true)
         ENTITY.SET_ENTITY_VISIBLE(SpawnedVehicleList[i], false, 0)
@@ -3552,7 +3552,7 @@ crash2_ref:action("Chernobog Pro Crash", {}, "Crash player with chernobog pro", 
     SpawnedVehicleList1 = {};
     for i = 1, 60 do
         local TargetPlayerPos = ENTITY.GET_ENTITY_COORDS(TargetPlayerPed, true);
-        SpawnedVehicleList1[i] = CreateVehicle(util.joaat("chernobog"), TargetPlayerPos,
+        SpawnedVehicleList1[i] = entities.create_vehicle(util.joaat("chernobog"), TargetPlayerPos,
             ENTITY.GET_ENTITY_HEADING(TargetPlayerPed), true)
         ENTITY.FREEZE_ENTITY_POSITION(SpawnedVehicleList1[i], true)
         ENTITY.SET_ENTITY_VISIBLE(SpawnedVehicleList1[i], false, 0)
@@ -3567,7 +3567,7 @@ crash2_ref:action("Chernobog Pro Crash", {}, "Crash player with chernobog pro", 
     SpawnedVehicleList2 = {};
     for i = 1, 50 do
         local TargetPlayerPos = ENTITY.GET_ENTITY_COORDS(TargetPlayerPed, true);
-        SpawnedVehicleList2[i] = CreateVehicle(util.joaat("chernobog"), TargetPlayerPos,
+        SpawnedVehicleList2[i] = entities.create_vehicle(util.joaat("chernobog"), TargetPlayerPos,
             ENTITY.GET_ENTITY_HEADING(TargetPlayerPed), true)
         ENTITY.FREEZE_ENTITY_POSITION(SpawnedVehicleList2[i], true)
         ENTITY.SET_ENTITY_VISIBLE(SpawnedVehicleList2[i], false, 0)
@@ -3623,23 +3623,23 @@ end)
 crash2_ref:action("Trailer Crash", {}, "Crash player with trailer", function()
     local TargetPlayerPed = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(PlayerID)
     local TargetPlayerPos = ENTITY.GET_ENTITY_COORDS(TargetPlayerPed, true)
-    SpawnedDune1 = CreateVehicle(util.joaat("dune"), TargetPlayerPos, ENTITY.GET_ENTITY_HEADING(TargetPlayerPed))
+    SpawnedDune1 = entities.create_vehicle(util.joaat("dune"), TargetPlayerPos, ENTITY.GET_ENTITY_HEADING(TargetPlayerPed))
     ENTITY.FREEZE_ENTITY_POSITION(SpawnedDune1, true)
-    SpawnedDune2 = CreateVehicle(util.joaat("dune"), TargetPlayerPos, ENTITY.GET_ENTITY_HEADING(TargetPlayerPed))
+    SpawnedDune2 = entities.create_vehicle(util.joaat("dune"), TargetPlayerPos, ENTITY.GET_ENTITY_HEADING(TargetPlayerPed))
     ENTITY.FREEZE_ENTITY_POSITION(SpawnedDune2, true)
-    SpawnedBarracks1 = CreateVehicle(util.joaat("barracks"), TargetPlayerPos,
+    SpawnedBarracks1 = entities.create_vehicle(util.joaat("barracks"), TargetPlayerPos,
         ENTITY.GET_ENTITY_HEADING(TargetPlayerPed))
     ENTITY.FREEZE_ENTITY_POSITION(SpawnedBarracks1, true)
-    SpawnedBarracks2 = CreateVehicle(util.joaat("barracks"), TargetPlayerPos,
+    SpawnedBarracks2 = entities.create_vehicle(util.joaat("barracks"), TargetPlayerPos,
         ENTITY.GET_ENTITY_HEADING(TargetPlayerPed))
     ENTITY.FREEZE_ENTITY_POSITION(SpawnedBarracks2, true)
-    SpawnedTowtruck = CreateVehicle(util.joaat("towtruck2"), TargetPlayerPos,
+    SpawnedTowtruck = entities.create_vehicle(util.joaat("towtruck2"), TargetPlayerPos,
         ENTITY.GET_ENTITY_HEADING(TargetPlayerPed))
     ENTITY.FREEZE_ENTITY_POSITION(SpawnedTowtruck, true)
-    SpawnedBarracks31 = CreateVehicle(util.joaat("barracks3"), TargetPlayerPos,
+    SpawnedBarracks31 = entities.create_vehicle(util.joaat("barracks3"), TargetPlayerPos,
         ENTITY.GET_ENTITY_HEADING(TargetPlayerPed))
     ENTITY.FREEZE_ENTITY_POSITION(SpawnedBarracks31, true)
-    SpawnedBarracks32 = CreateVehicle(util.joaat("barracks3"), TargetPlayerPos,
+    SpawnedBarracks32 = entities.create_vehicle(util.joaat("barracks3"), TargetPlayerPos,
         ENTITY.GET_ENTITY_HEADING(TargetPlayerPed))
     ENTITY.FREEZE_ENTITY_POSITION(SpawnedBarracks32, true)
 
@@ -4610,14 +4610,32 @@ end
 
 orbiall = allplaytroll:action("Orbital all with sounds", {"orbinignog"}, "Sends an Air Defence sound and explodes everybody", function()
     if util.is_session_started() then
+
         for i, pid in players.list(false, true, true) do
+
             local position = players.get_position(pid)
 
             AUDIO.PLAY_SOUND_FROM_COORD(-1, "Air_Defences_Activated", position.x, position.y, position.z, "DLC_sum20_Business_Battle_AC_Sounds", true, 99999, false)
+            wait(200)
             AUDIO.PLAY_SOUND_FROM_COORD(-1, "Air_Defences_Activated", position.x, position.y, position.z, "DLC_sum20_Business_Battle_AC_Sounds", true, 99999, false)
 
-            wait(1000)
+        end
 
+        wait(7500)
+
+        for i, pid in players.list(false, true, true) do
+
+            local position = players.get_position(pid)
+
+            AUDIO.PLAY_SOUND_FROM_COORD(-1, "Air_Defences_Activated", position.x, position.y, position.z, "DLC_sum20_Business_Battle_AC_Sounds", true, 99999, false)
+            wait(200)
+            AUDIO.PLAY_SOUND_FROM_COORD(-1, "Air_Defences_Activated", position.x, position.y, position.z, "DLC_sum20_Business_Battle_AC_Sounds", true, 99999, false)
+
+        end
+
+        wait(3000)
+
+        for i, pid in players.list(false, true, true) do
             local newcord = players.get_position(pid)
 
             func.use_fx_asset("scr_xm_orbital")
@@ -4629,7 +4647,10 @@ orbiall = allplaytroll:action("Orbital all with sounds", {"orbinignog"}, "Sends 
 
             both("User " .. PLAYER.GET_PLAYER_NAME(pid) .. " finished")
 
+            wait(1000)
+
         end
+
     else
         bothfail("Only availible in online")
     end
@@ -7315,7 +7336,7 @@ menu.action(custselc, "Ruiner Crash V1", {}, "", function()
     local ppos = ENTITY.GET_ENTITY_COORDS(spped, true)
     for i = 1, 15 do
         local SelfPlayerPos = ENTITY.GET_ENTITY_COORDS(spped, true)
-        local Ruiner2 = CreateVehicle(util.joaat("Ruiner2"), SelfPlayerPos, ENTITY.GET_ENTITY_HEADING(TTPed), true)
+        local Ruiner2 = entities.create_vehicle(util.joaat("Ruiner2"), SelfPlayerPos, ENTITY.GET_ENTITY_HEADING(TTPed), true)
         PED.SET_PED_INTO_VEHICLE(spped, Ruiner2, -1)
         ENTITY.SET_ENTITY_COORDS_NO_OFFSET(Ruiner2, SelfPlayerPos.x, SelfPlayerPos.y, 1000, false, true, true)
         util.yield(200)
@@ -7333,7 +7354,7 @@ menu.action(custselc, "Ruiner Crash V2", {}, "", function()
     local ppos = ENTITY.GET_ENTITY_COORDS(spped, true)
     for i = 1, 30 do
         local SelfPlayerPos = ENTITY.GET_ENTITY_COORDS(spped, true)
-        local Ruiner2 = CreateVehicle(util.joaat("Ruiner2"), SelfPlayerPos, ENTITY.GET_ENTITY_HEADING(TTPed), true)
+        local Ruiner2 = entities.create_vehicle(util.joaat("Ruiner2"), SelfPlayerPos, ENTITY.GET_ENTITY_HEADING(TTPed), true)
         PED.SET_PED_INTO_VEHICLE(spped, Ruiner2, -1)
         ENTITY.SET_ENTITY_COORDS_NO_OFFSET(Ruiner2, SelfPlayerPos.x, SelfPlayerPos.y, 2200, false, true, true)
         util.yield(130)
@@ -7546,9 +7567,9 @@ menu.action(custselc, "Cargobob Crash", {}, "Invalid Rope", function()
     menu.trigger_commands("anticrashcam on")
     local cspped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(PlayerID)
     local TPpos = ENTITY.GET_ENTITY_COORDS(cspped, true)
-    local cargobob = CreateVehicle(0XFCFCB68B, TPpos, ENTITY.GET_ENTITY_HEADING(SelfPlayerPed), true)
+    local cargobob = entities.create_vehicle(0XFCFCB68B, TPpos, ENTITY.GET_ENTITY_HEADING(SelfPlayerPed), true)
     local cargobobPos = ENTITY.GET_ENTITY_COORDS(cargobob, true)
-    local veh = CreateVehicle(0X187D938D, TPpos, ENTITY.GET_ENTITY_HEADING(SelfPlayerPed), true)
+    local veh = entities.create_vehicle(0X187D938D, TPpos, ENTITY.GET_ENTITY_HEADING(SelfPlayerPed), true)
     local vehPos = ENTITY.GET_ENTITY_COORDS(veh, true)
     local newRope = PHYSICS.ADD_ROPE(TPpos.x, TPpos.y, TPpos.z, 0, 0, 10, 1, 1, 0, 1, 1, false, false, false, 1.0, false
         , 0)
