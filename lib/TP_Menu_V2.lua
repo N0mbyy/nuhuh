@@ -57,9 +57,6 @@ UI.new = function()
         ['a'] = 1
     }
 
-    local cursor_texture = directx.create_texture(filesystem.resources_dir() .. "imGUI_cursor.png")
-    local checkmark_texture = directx.create_texture(filesystem.resources_dir() .. "imGUI_checkmark.png")
-
     local plain_text_size = 0.5
     local subhead_text_size = 0.6
 
